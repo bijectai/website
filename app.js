@@ -44,7 +44,7 @@
     // A — canonical
     '<span class="kicker">↦ Formal verification for agentic AI</span>' +
       '<h1 style="margin-top:20px;">Your AI agents,<br /><span class="line2">mathematically compliant.</span></h1>' +
-      '<p class="subline">While other guardrails <b>estimate</b> compliance at 98%, biject <b>proves</b> it — or the action never executes.</p>' +
+      '<p class="subline">While other guardrails <b>estimate</b> compliance, biject <b>proves</b> it — or the action never executes.</p>' +
       heroBody + ctas,
     // B — proof-gate forward
     '<span class="kicker">↦ Proof-gated execution</span>' +
@@ -59,20 +59,7 @@
   ];
 
   var heroCopy = document.getElementById("heroCopy");
-  function setVariant(i) {
-    heroCopy.innerHTML = variants[i];
-    document.querySelectorAll(".vs-btn").forEach(function (b) {
-      b.classList.toggle("active", +b.dataset.v === i);
-    });
-    try { localStorage.setItem("biject-hero-variant", i); } catch (e) {}
-  }
-  var saved = 0;
-  try { saved = +(localStorage.getItem("biject-hero-variant") || 0); } catch (e) {}
-  if (isNaN(saved) || saved < 0 || saved > 2) saved = 0;
-  setVariant(saved);
-  document.querySelectorAll(".vs-btn").forEach(function (b) {
-    b.addEventListener("click", function () { setVariant(+b.dataset.v); });
-  });
+  heroCopy.innerHTML = variants[0];
 
   /* ============================================================
      HERO TERMINAL — Lean 4 conjecture → verdict, looping
