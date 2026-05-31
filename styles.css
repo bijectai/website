@@ -147,7 +147,7 @@ section { position: relative; }
   white-space: nowrap;
 }
 .btn:active { transform: translateY(1px); }
-.btn-primary { background: var(--proved); color: #FFFFFF; border-color: var(--proved); }
+.btn-primary { background: var(--proved); color: #FFFFFF; border-color: var(--proved); font-weight: 600; }
 .btn-primary:hover { background: #15d98c; box-shadow: 0 0 0 4px rgba(0,197,122,.16); }
 .btn-ghost { background: transparent; color: var(--ink-dark); border-color: var(--hairline-dark); }
 .btn-ghost:hover { border-color: var(--ink-dark-dim); background: rgba(255,255,255,.03); }
@@ -626,6 +626,15 @@ section { position: relative; }
 .awsc-kicker { font-family: var(--mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--proved); margin-bottom: 10px; }
 .aws-callout p { font-size: 15px; line-height: 1.62; color: var(--ink-dark-dim); }
 .aws-callout b { color: var(--ink-dark); font-weight: 500; }
+
+/* Research section button spacing */
+.research-left .btn {
+  display: block;
+  margin-top: 10px;
+}
+.research-left .btn:first-of-type {
+  margin-top: 26px;
+}
 
 /* ============================================================
    Demo footnote, footer CTA extras
