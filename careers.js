@@ -332,7 +332,7 @@ function initForm() {
     } catch (err) {
       console.error("[careers] submit failed", err);
       showResult("err", "Something went wrong",
-        "We couldn't submit your application just now. Please try again, or email it to <a href=\"mailto:hello@biject.ai\">hello@biject.ai</a>.");
+        "We couldn't submit your application just now. Please try again, or email it to <a href=\"mailto:contact@bijectai.com\">contact@bijectai.com</a>.");
     } finally {
       btn.disabled = false;
       btn.innerHTML = original;
