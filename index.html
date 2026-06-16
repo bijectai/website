@@ -112,7 +112,7 @@
         <div class="step-n">Step 01 · Policy formalization</div>
         <div class="step-glyph">∀</div>
         <div class="step-tagline">Write once. Prove forever.</div>
-        <p>Compliance officers author policies in plain English — capital thresholds, position limits, risk parameters. The Aristotle neural-symbolic model translates each into a Lean 4 axiom, compiled and stored in an immutable Policy Environment. They do not change at runtime. They do not drift. They cannot be jailbroken.</p>
+        <p>Compliance officers author policies in plain English — capital thresholds, position limits, risk parameters. An in-house model, fine-tuned for financial regulatory language, translates each into a Lean 4 axiom, compiled and stored in an immutable Policy Environment. They do not change at runtime. They do not drift. They cannot be jailbroken.</p>
         <div class="step-code"><span class="c-com">-- "No trade above 10% of available daily capital."</span>
 <span class="c-kw">theorem</span> <span class="hl">maxTradeValue</span> (qty price capital maxBps : <span class="c-fn">Nat</span>) :
   tradeValue qty price ≤ capital * maxBps / <span class="c-num">10000</span></div>
