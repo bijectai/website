@@ -1,497 +1,547 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>biject | proof, not probability.</title>
-<link rel="icon" href="favicon.png" />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="styles.css" />
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>biject — proof, not probability.</title>
+<meta name="description" content="biject builds custom, formally verified regulation-check platforms — hand-written Lean specifications that turn your rules and internal policy into machine-checked, mathematical proof.">
+<link rel="icon" href="favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:#060606;}
+  ::selection{background:#F2F2EC;color:#060606;}
+  a{color:inherit;}
+  @keyframes bj-draw{from{transform:scaleX(0);}to{transform:scaleX(1);}}
+  @keyframes bj-blink{0%,50%{opacity:1;}51%,100%{opacity:0;}}
+  @keyframes bj-pulse{0%,100%{opacity:1;}50%{opacity:0.2;}}
+  a:focus-visible,button:focus-visible{outline:2px solid #F2F2EC;outline-offset:3px;}
+  @media (max-width:760px){.bj-navlinks{display:none !important;}}
+  @media (prefers-reduced-motion:reduce){.bj-underline,.bj-cursor,.bj-dot{animation:none !important;}.bj-underline{transform:scaleX(1) !important;}}
+</style>
 </head>
 <body>
+<div style="background:#060606;color:#F2F2EC;font-family:'Inter',-apple-system,sans-serif;min-height:100vh;width:100%;-webkit-font-smoothing:antialiased;overflow-x:hidden;">
 
-<!-- ============================ NAV ============================ -->
-<nav class="nav" id="nav">
-  <div class="wrap">
-    <a href="#top" class="wordmark"><span class="maps">↦</span> biject</a>
-    <div class="nav-links">
-      <a href="#how" class="nl-hide">How it works</a>
-      <a href="#coverage" class="nl-hide">Regulatory coverage</a>
-      <a href="#compare" class="nl-hide">Comparison</a>
-      <a href="#docs" class="nl-hide">Integration</a>
-      <a href="#research" class="nl-hide">Research</a>
-      <a href="careers.html" class="nl-hide">Careers</a>
-      <a href="https://calendar.app.google/EXwJkGgxK3hLghND8" class="btn btn-primary btn-sm">Request pilot access</a>
-    </div>
-  </div>
-</nav>
-
-<!-- ============================ HERO ============================ -->
-<section class="mode-dark hero" id="top">
-  <div class="wrap">
-    <div class="hero-grid">
-      <div class="hero-copy" id="heroCopy">
-        <!-- hero variants injected here by JS -->
+  <nav style="position:sticky;top:0;z-index:50;background:rgba(6,6,6,0.78);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid #1C1C19;">
+    <div style="max-width:1180px;margin:0 auto;padding:17px 32px;display:flex;align-items:center;justify-content:space-between;gap:24px;">
+      <a href="#top" style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:19px;letter-spacing:-0.01em;text-decoration:none;color:#F2F2EC;">biject</a>
+      <div class="bj-navlinks" style="display:flex;align-items:center;gap:30px;font-family:'JetBrains Mono',monospace;font-size:12.5px;letter-spacing:0.03em;">
+        <a href="#problem" style="color:#8C8C84;text-decoration:none;transition:color .2s;" onmouseover="this.style.color='#F2F2EC'" onmouseout="this.style.color='#8C8C84'">Problem</a>
+        <a href="#approach" style="color:#8C8C84;text-decoration:none;transition:color .2s;" onmouseover="this.style.color='#F2F2EC'" onmouseout="this.style.color='#8C8C84'">Approach</a>
+        <a href="#architecture" style="color:#8C8C84;text-decoration:none;transition:color .2s;" onmouseover="this.style.color='#F2F2EC'" onmouseout="this.style.color='#8C8C84'">Architecture</a>
+        <a href="#research" style="color:#8C8C84;text-decoration:none;transition:color .2s;" onmouseover="this.style.color='#F2F2EC'" onmouseout="this.style.color='#8C8C84'">Research</a>
+        <a href="#builtfor" style="color:#8C8C84;text-decoration:none;transition:color .2s;" onmouseover="this.style.color='#F2F2EC'" onmouseout="this.style.color='#8C8C84'">Built for</a>
+        <a href="careers.html" style="color:#8C8C84;text-decoration:none;transition:color .2s;" onmouseover="this.style.color='#F2F2EC'" onmouseout="this.style.color='#8C8C84'">Careers</a>
       </div>
+      <a href="#contact" style="font-family:'JetBrains Mono',monospace;font-size:12.5px;letter-spacing:0.02em;text-decoration:none;color:#060606;background:#F2F2EC;padding:9px 16px;white-space:nowrap;transition:opacity .2s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">Request a build →</a>
+    </div>
+  </nav>
 
-      <div class="hero-term">
-        <div class="terminal" id="heroTerminal">
-          <div class="term-bar">
-            <span class="term-path">biject-verify · Lean 4 kernel</span>
-            <span class="term-live"><span class="live-dot"></span>live</span>
-          </div>
-          <div class="term-body" id="termBody"></div>
+  <a id="top"></a>
+  <header style="max-width:1180px;margin:0 auto;padding:72px 32px 0;">
+    <div id="bj-hero-status" style="display:flex;align-items:center;gap:9px;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.08em;color:#8C8C84;">
+      <span class="bj-dot" style="width:7px;height:7px;border-radius:50%;background:#F2F2EC;display:inline-block;animation:bj-pulse 2s ease-in-out infinite;"></span>
+      KERNEL STATUS: OPERATIONAL
+    </div>
+    <div id="bj-hero-eyebrow" style="font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:0.03em;color:#8C8C84;margin-top:40px;">/ Formal Verification Infrastructure</div>
+    <h1 id="bj-hero-h1" style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(44px,7.4vw,104px);line-height:0.98;letter-spacing:-0.03em;margin:18px 0 0;max-width:13ch;">We conquer <span style="position:relative;white-space:nowrap;">ambiguity<span class="bj-underline" style="position:absolute;left:0;bottom:0.04em;height:0.06em;width:100%;background:#F2F2EC;transform-origin:left;transform:scaleX(0);animation:bj-draw 1.45s cubic-bezier(.2,.8,.2,1) 0.55s forwards;"></span></span><span class="bj-cursor" style="font-weight:400;color:#8C8C84;animation:bj-blink 1.1s step-end infinite;">_</span></h1>
+    <p id="bj-hero-sub" style="font-family:'Inter',sans-serif;font-size:clamp(16px,1.55vw,19px);line-height:1.6;color:#8C8C84;max-width:62ch;margin:32px 0 0;">biject embeds with regulated organizations to build custom, formally verified regulation-check platforms — a hand-written Lean specification of your rules and internal policy that compiles to machine-checked, mathematical proof. Not a probabilistic guess. A verdict you can prove.</p>
+    <div id="bj-hero-ctas" style="display:flex;flex-wrap:wrap;gap:14px;margin-top:38px;">
+      <a href="#contact" style="font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:0.02em;text-decoration:none;color:#060606;background:#F2F2EC;padding:13px 22px;transition:opacity .2s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">Request a build →</a>
+      <a href="#research" style="font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:0.02em;text-decoration:none;color:#F2F2EC;background:transparent;padding:13px 22px;border:1px solid #303029;transition:border-color .2s,color .2s;" onmouseover="this.style.borderColor='#F2F2EC'" onmouseout="this.style.borderColor='#303029'">Read the research</a>
+    </div>
+
+    <div id="bj-attract-wrap" style="position:relative;width:100%;aspect-ratio:16/9;margin-top:56px;background:#0C0C0A;border:1px solid #303029;overflow:hidden;">
+      <canvas id="bj-attract" style="position:absolute;inset:0;width:100%;height:100%;display:block;"></canvas>
+      <div style="position:absolute;left:0;bottom:0;max-width:62%;padding:20px 22px;pointer-events:none;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:0.07em;color:#8C8C84;">/ AIZAWA ATTRACTOR</div>
+        <div style="font-family:'Inter',sans-serif;font-size:13.5px;line-height:1.5;color:#C9C9C2;margin-top:8px;">Chaotic to the eye, fully determined underneath — every point fixed by exact equations. The same claim we make about regulation: apparent ambiguity, governed by something that can be made exact.</div>
+      </div>
+      <div style="position:absolute;right:0;bottom:0;padding:20px 22px;text-align:right;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.02em;color:#8C8C84;pointer-events:none;line-height:1.7;">
+        <div>x <span id="bj-tx" style="color:#F2F2EC;">+0.000</span></div>
+        <div>y <span id="bj-ty" style="color:#F2F2EC;">+0.000</span></div>
+        <div>z <span id="bj-tz" style="color:#F2F2EC;">+0.000</span></div>
+      </div>
+    </div>
+  </header>
+
+  <section id="problem" data-reveal style="border-top:1px solid #1C1C19;padding:100px 0;margin-top:96px;">
+    <div style="max-width:1180px;margin:0 auto;padding:0 32px;">
+      <div data-eyebrow style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#8C8C84;letter-spacing:0.03em;">/ 01 — The Problem</div>
+      <h2 style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(30px,4.4vw,52px);letter-spacing:-0.025em;line-height:1.04;margin:18px 0 0;max-width:16ch;">Compliance runs on translation, not proof.</h2>
+      <div id="bj-problem-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:56px;margin-top:54px;align-items:start;">
+        <div style="font-family:'Inter',sans-serif;font-size:17px;line-height:1.66;color:#8C8C84;">
+          <p style="margin:0 0 20px;">A regulation is written in natural language. A person interprets it. An engineer turns that interpretation into code or a checklist. Every step leaks meaning — and the gap between what the rule <em style="color:#C9C9C2;font-style:normal;">says</em> and what the system <em style="color:#C9C9C2;font-style:normal;">does</em> is exactly where failures live.</p>
+          <p style="margin:0;">Hand-coded rules engines freeze one team's reading and silently rot as regulation moves. LLM guardrails swap brittle rules for a confident guess — fluent, plausible, impossible to prove correct. Neither closes the gap. They move it somewhere harder to see.</p>
         </div>
-        <div class="term-caption">Explore the research preview</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============================ PROBLEM ============================ -->
-<section class="mode-dark section-pad" id="problem">
-  <div class="wrap">
-    <div class="sec-head reveal">
-      <div class="sec-tag"><span class="sec-no">§01</span><span class="sec-label">Why probability fails regulation</span></div>
-      <h2>98% confident.<br />100% liable.</h2>
-      <p>Financial regulation does not operate on confidence intervals. SEC Rule 15c3-5 requires broker-dealers to maintain controls with automated, pre-trade hard blocks — binary, deterministic, and under the direct and exclusive control of the firm. A probabilistic classifier cannot satisfy this. It can only approximate it.</p>
-    </div>
-
-    <div class="callouts reveal">
-      <div class="callout">
-        <div class="callout-n amber">$440M</div>
-        <p>Lost by Knight Capital in 45 minutes to an unchecked algorithmic error. No probabilistic guardrail would have prevented it — only a hard, formal constraint.</p>
-      </div>
-      <div class="callout">
-        <div class="callout-n">~500ms</div>
-        <p>The latency cost of an LLM-as-a-judge guardrail call. At that speed, high-frequency agentic systems aren't just slow — they are architecturally broken.</p>
-      </div>
-      <div class="callout">
-        <div class="callout-n">0%</div>
-        <p>The acceptable false-negative rate under SEC Rule 15c3-5. A 98.3%-accurate guardrail has a 1.7% failure rate — across thousands of actions an hour, that is a violation waiting to happen.</p>
-      </div>
-    </div>
-
-    <div class="prob-cards reveal">
-      <div class="prob-card">
-        <div class="pc-mark">≈</div>
-        <h3>Probabilistic is not compliant</h3>
-        <p>NeMo Guardrails and similar tools use LLM inference and vector similarity to evaluate actions. Vector spaces are continuous — adversarial inputs can shift semantic distance and misclassify a restricted action as permitted. This is not a limitation to manage; it is a fundamental incompatibility with financial regulation.</p>
-      </div>
-      <div class="prob-card">
-        <div class="pc-mark">{ }</div>
-        <h3>Syntactic is not deep enough</h3>
-        <p>Schema validators like Pydantic confirm that a trade-volume field is an integer. They cannot prove that the specific integer, combined with current capital and historical margin usage, satisfies a multi-tiered regulatory constraint. Type-checking structure is not verifying semantics.</p>
-      </div>
-      <div class="prob-card">
-        <div class="pc-mark">⟲</div>
-        <h3>LLM judging LLM is not auditable</h3>
-        <p>When an LLM evaluates another LLM's output, the decision trail is probabilistic all the way down. There is no machine-verifiable proof of why an action was permitted — only a natural-language explanation that may itself be hallucinated. FINRA Rule 3110 requires tamper-evident records. A log of LLM outputs is not that.</p>
-      </div>
-    </div>
-
-    <blockquote class="pullquote reveal">
-      <p>"The rule requires that brokers have risk management controls and supervisory procedures reasonably designed to manage the financial, regulatory, and other risks of this business activity."</p>
-      <cite>— SEC Rule 15c3-5, Market Access Rule</cite>
-    </blockquote>
-  </div>
-</section>
-
-<!-- ============================ HOW IT WORKS ============================ -->
-<section class="mode-light section-pad" id="how">
-  <div class="wrap">
-    <div class="sec-head reveal">
-      <div class="sec-tag"><span class="sec-no">§02</span><span class="sec-label">The architecture</span></div>
-      <h2>Three steps. One mathematical proof. Binary certainty.</h2>
-      <p>Compliance becomes code, every action becomes a theorem, and the Lean 4 kernel returns a verdict — not a confidence score.</p>
-    </div>
-    <div class="steps reveal">
-      <div class="step">
-        <div class="step-n">Step 01 · Policy formalization</div>
-        <div class="step-glyph">∀</div>
-        <div class="step-tagline">Write once. Prove forever.</div>
-        <p>Compliance officers author policies in plain English — capital thresholds, position limits, risk parameters. An in-house model, fine-tuned for financial regulatory language, translates each into a Lean 4 axiom, compiled and stored in an immutable Policy Environment. They do not change at runtime. They do not drift. They cannot be jailbroken.</p>
-        <div class="step-code"><span class="c-com">-- "No trade above 10% of available daily capital."</span>
-<span class="c-kw">theorem</span> <span class="hl">maxTradeValue</span> (qty price capital maxBps : <span class="c-fn">Nat</span>) :
-  tradeValue qty price ≤ capital * maxBps / <span class="c-num">10000</span></div>
-      </div>
-      <div class="step">
-        <div class="step-n">Step 02 · Conjecture formulation</div>
-        <div class="step-glyph">⊢</div>
-        <div class="step-tagline">Every action becomes a theorem.</div>
-        <p>When an agent proposes a trade, rebalance, or credit decision, the biject orchestrator intercepts the call before the execution layer. It extracts the parameters, maps them against the Policy Environment, and serializes the action as a formal Lean 4 conjecture — the claim that this action satisfies all applicable policies.</p>
-        <div class="step-code"><span class="c-com">-- proposed action, serialized</span>
-<span class="c-kw">example</span> : PolicyEnv.<span class="hl">maxTradeValue</span> 5000 21250
-  10000000 1000 = <span class="c-kw">true</span> := <span class="c-kw">by</span> decide</div>
-      </div>
-      <div class="step">
-        <div class="step-n">Step 03 · Kernel verification</div>
-        <div class="step-glyph">↦</div>
-        <div class="step-tagline">Proved executes. Refuted is blocked.</div>
-        <p>The conjecture is submitted to the Lean 4 type-checker. The kernel either produces a machine-verifiable proof or determines none exists — a binary, deterministic decision, not a score. PROVED routes to execution; REFUTED is blocked, and the error trace is back-translated into a plain-language adverse-action notice satisfying ECOA and CFPB.</p>
-        <div class="step-code">PROVED  <span class="hl">↦ execute()</span>
-REFUTED <span class="am">↦ block()</span> + adverse action notice</div>
-      </div>
-    </div>
-    <p class="arch-note reveal">The Lean 4 kernel runs at ~5µs per verification on warm cache. The decision is independent of request complexity — it is a type-check, not an inference. biject adds no meaningful latency to agent execution.</p>
-  </div>
-</section>
-
-<!-- ============================ COMPARISON ============================ -->
-<section class="mode-light section-pad" id="compare" style="padding-top:0;">
-  <div class="wrap">
-    <div class="sec-head reveal">
-      <div class="sec-tag"><span class="sec-no">§03</span><span class="sec-label">Competitive landscape</span></div>
-      <h2>The only paradigm that satisfies financial regulation.</h2>
-      <p>NeMo Guardrails and Guardrails AI were built for consumer-facing LLM applications — not regulated environments where compliance is binary, latency is critical, and every decision must be auditable. The difference is not of degree. It is of kind.</p>
-    </div>
-    <div class="cmp reveal">
-      <table>
-        <thead>
-          <tr>
-            <th></th>
-            <th>NVIDIA NeMo Guardrails</th>
-            <th>Guardrails AI</th>
-            <th class="col-biject">↦ biject</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="row-label">Core architecture</td>
-            <td>Colang dialog flows, vector similarity, LLM prompts</td>
-            <td>RAIL spec, Pydantic schema validation</td>
-            <td class="col-biject">Fine-tuned formalization model + Lean 4 kernel</td>
-          </tr>
-          <tr>
-            <td class="row-label">Verification paradigm</td>
-            <td>Probabilistic</td>
-            <td>Syntactic</td>
-            <td class="col-biject">Deterministic</td>
-          </tr>
-          <tr>
-            <td class="row-label">Latency</td>
-            <td class="mono">~500ms (secondary LLM)</td>
-            <td class="mono">Low (Python-level)</td>
-            <td class="col-biject mono">~5µs (kernel type-check)</td>
-          </tr>
-          <tr>
-            <td class="row-label">Regulatory fit · SEC 15c3-5</td>
-            <td><span class="no">Inadequate</span> — vector space drifts under adversarial input</td>
-            <td><span class="no">Inadequate</span> — cannot verify multi-variable capital logic</td>
-            <td class="col-biject"><span class="chk">⊢</span> Optimal — immutable axioms, mathematical certainty</td>
-          </tr>
-          <tr>
-            <td class="row-label">Adverse action notices</td>
-            <td><span class="no">Not provided</span></td>
-            <td><span class="no">Not provided</span></td>
-            <td class="col-biject">Auto-generated from Lean trace (ECOA / CFPB)</td>
-          </tr>
-          <tr>
-            <td class="row-label">Audit trail</td>
-            <td>LLM output logs</td>
-            <td>Schema validation logs</td>
-            <td class="col-biject">Cryptographic, hash-linked proof record</td>
-          </tr>
-          <tr>
-            <td class="row-label">Adversarial robustness</td>
-            <td><span class="no">Vulnerable</span> to semantic perturbation</td>
-            <td><span class="no">Vulnerable</span> to type-coercion edge cases</td>
-            <td class="col-biject"><span class="chk">⊢</span> Immune — a proof exists or it does not</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <blockquote class="pullquote reveal">
-      <p>"The Lean-Agent Protocol transcends both paradigms. By shifting the verification burden to the Lean 4 kernel, the platform abandons probabilistic vector matching in favor of deep mathematical theorem proving, while vastly exceeding the logical depth of simple schema validation."</p>
-      <cite>— Rashie &amp; Rashi (2026), arXiv:2604.01483</cite>
-    </blockquote>
-  </div>
-</section>
-
-<!-- ============================ USE CASES ============================ -->
-<section class="mode-dark section-pad" id="usecases">
-  <div class="wrap">
-    <div class="sec-head reveal">
-      <div class="sec-tag"><span class="sec-no">§04</span><span class="sec-label">Who uses biject</span></div>
-      <h2>Built for every desk that answers to a regulator.</h2>
-      <p>The same proof gate, encoding whichever obligations govern your desk — from market-access hard blocks to automatic adverse-action notices.</p>
-    </div>
-    <div class="usecases reveal">
-      <div class="usecase">
-        <div class="uc-label">Broker-dealer · SEC Rule 15c3-5 pre-trade controls</div>
-        <p>The Market Access Rule requires automated, pre-trade hard blocks on orders that exceed capital thresholds or create undue risk. biject provides these at the mathematical layer — not a heuristic, but a formal proof requirement. An order that cannot be proved compliant is blocked before it reaches the exchange.</p>
-        <div class="uc-eg"><span class="uc-eg-t">scenario</span>execute_trade(symbol=<span class="tl-str">"TSLA"</span>, qty=<span class="tl-num">50000</span>, type=<span class="tl-str">"market"</span>)
-conjecture <span class="tl-comment">maxTradeValue 50000 394500 1000</span> → <span class="am">✗ REFUTED · 4.7µs</span>
-adverse action generated and logged.</div>
-      </div>
-      <div class="usecase">
-        <div class="uc-label">Asset manager · Position limits &amp; rebalancing guardrails</div>
-        <p>Managers under mandated portfolio constraints — sector exposure, concentration limits, benchmark deviation — encode these directly as Lean axioms. Every rebalancing action an autonomous agent proposes is verified against the full constraint set before execution.</p>
-        <div class="uc-eg"><span class="uc-eg-t">scenario</span>rebalance_portfolio(asset=<span class="tl-str">"BTC"</span>, target_weight=<span class="tl-num">0.30</span>)
-policy: max crypto allocation <span class="tl-num">0.15</span> → <span class="am">✗ REFUTED</span>
-rebalance blocked · full proof trace logged.</div>
-      </div>
-      <div class="usecase">
-        <div class="uc-label">Fintech / AI infra · Any LLM agent, 30-minute integration</div>
-        <p>biject exposes a Python SDK and a Model Context Protocol server. Any agent on Claude, GPT-4, LangGraph, or any framework can be wrapped without architectural changes. The agent calls tools as normal — biject intercepts at the API layer.</p>
-        <div class="uc-eg"><span class="tl-key">from</span> biject <span class="tl-key">import</span> BijectGateway
-gateway = <span class="tl-fn">BijectGateway</span>(policy_env=<span class="tl-str">"./policies/"</span>)
-agent = gateway.<span class="tl-fn">wrap</span>(your_existing_agent)</div>
-      </div>
-      <div class="usecase">
-        <div class="uc-label">Compliance officer · ECOA / CFPB adverse-action notices</div>
-        <p>The CFPB requires automated systems denying financial actions to provide specific, machine-generated explanations. biject's back-translation pipeline converts every Lean error trace into a plain-language notice citing the exact policy violated — automatically, at the point of refutation, with no additional inference.</p>
-        <div class="uc-eg"><span class="uc-eg-t">notice</span>Order rejected. Trade value <span class="tl-num">$19.7M</span> exceeds 10% of
-available daily capital <span class="tl-num">$3.94M</span> — policy <span class="tl-str">CAP-001</span>
-(SEC Rule 15c3-5).</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============================ REGULATORY COVERAGE ============================ -->
-<section class="mode-light section-pad" id="coverage">
-  <div class="wrap">
-    <div class="sec-head reveal">
-      <div class="sec-tag"><span class="sec-no">§05</span><span class="sec-label">Regulatory framework</span></div>
-      <h2>Built to the specification of the regulations that govern you.</h2>
-      <p>biject was designed against the specific technical requirements of financial regulation — not adapted from a consumer guardrail product. Each regulation maps directly to an architectural property.</p>
-    </div>
-    <div class="reg-grid reveal" id="regGrid"></div>
-  </div>
-</section>
-
-<!-- ============================ LIVE DEMO / CONSOLE ============================ -->
-<section class="mode-dark section-pad" id="demo">
-  <div class="wrap">
-    <div class="sec-head reveal">
-      <div class="sec-tag"><span class="sec-no">§06</span><span class="sec-label">See it run</span></div>
-      <h2>The kernel doesn't estimate. Watch it decide.</h2>
-      <p>This demo runs against pre-compiled Lean 4 policy axioms modelling SEC Rule 15c3-5 capital constraints and position concentration limits. Select a scenario to submit it to the real biject orchestrator — the kernel verdict returns in microseconds.</p>
-    </div>
-
-    <div class="console reveal" id="console">
-      <div class="console-head">
-        <div class="console-title">
-          <span class="term-dot"></span><span class="term-dot"></span><span class="term-dot"></span>
-          <span>biject-orchestrator · <span class="hl-live">Lean 4 worker online</span></span>
-        </div>
-        <div class="console-live"><span class="pulse"></span> kernel warm · cache hot</div>
-      </div>
-
-      <div class="console-tabs" id="consoleTabs">
-        <button class="ctab active" data-panel="verifier">Verifier</button>
-        <button class="ctab" data-panel="feed">Proof feed</button>
-        <button class="ctab" data-panel="specs">Policy axioms</button>
-        <button class="ctab" data-panel="latency">Latency</button>
-        <button class="ctab" data-panel="audit">Audit log</button>
-      </div>
-
-      <div class="console-body">
-        <aside class="stat-rail" id="statRail"></aside>
-        <div class="console-main">
-
-          <!-- VERIFIER -->
-          <div class="cpanel active" data-panel="verifier">
-            <div class="demo-wrap">
-              <div class="demo-scenarios" id="scnList"></div>
-              <div class="verifier-right">
-                <div class="terminal demo-term">
-                  <div class="term-bar">
-                    <span class="term-path">verify · Lean 4 kernel</span>
-                    <span class="term-live"><span class="live-dot"></span>sandbox</span>
-                  </div>
-                  <div class="term-body" id="demoBody"></div>
-                </div>
-                <div class="run-row">
-                  <button class="btn btn-primary" id="runBtn">⊢ Submit to kernel</button>
-                  <span class="run-hint" id="runHint">Pick a scenario, then submit.</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- PROOF FEED -->
-          <div class="cpanel" data-panel="feed">
-            <div class="panel-head"><span>Live proof feed</span><span class="panel-meta" id="feedMeta">streaming · 0 actions</span></div>
-            <div class="feed-table">
-              <div class="feed-row feed-head">
-                <span>time</span><span>action</span><span>caller</span><span>verdict</span><span>latency</span>
-              </div>
-              <div id="feedRows"></div>
-            </div>
-          </div>
-
-          <!-- POLICY AXIOMS -->
-          <div class="cpanel" data-panel="specs">
-            <div class="panel-head"><span>Compiled policy axioms</span><span class="panel-meta" id="specMeta">.olean binaries · enforced on every action</span></div>
-            <div class="spec-table" id="specRows"></div>
-          </div>
-
-          <!-- LATENCY -->
-          <div class="cpanel" data-panel="latency">
-            <div class="panel-head"><span>Kernel latency</span><span class="panel-meta" id="latMeta">last 200 verdicts · wall-clock</span></div>
-            <div class="lat-stats" id="latStats"></div>
-            <div class="lat-spark"><div class="spark-bars" id="sparkBars"></div><div class="spark-axis"><span>0 µs</span><span>SLA · 10 µs</span></div></div>
-          </div>
-
-          <!-- AUDIT -->
-          <div class="cpanel" data-panel="audit">
-            <div class="panel-head"><span>Audit log</span><span class="panel-meta">hash-linked · machine-verifiable <button class="export-btn" id="exportBtn">↧ export</button></span></div>
-            <div class="audit-table" id="auditRows"></div>
-          </div>
-
+        <div style="border-top:1px solid #303029;padding-top:24px;">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:0.07em;color:#8C8C84;">/ TESTED ≠ PROVABLY CORRECT</div>
+          <div id="bj-countup" style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(48px,7vw,76px);letter-spacing:-0.03em;line-height:1;margin:18px 0 0;">$460M</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#8C8C84;margin-top:10px;">Lost in 45 minutes — Knight Capital, 2012</div>
+          <p style="font-family:'Inter',sans-serif;font-size:14.5px;line-height:1.6;color:#8C8C84;margin:20px 0 0;">Thoroughly tested software, deployed to production, behaving exactly as written — and catastrophically wrong. Testing samples behavior. Proof covers all of it.</p>
         </div>
       </div>
     </div>
-    <p class="demo-foot reveal">Reference demo against pre-compiled Lean 4 <span class="mono">.olean</span> policy binaries. The kernel runs <span class="mono">decide</span>-tactic resolution on integer basis-point arithmetic; latency shown is wall-clock time at the orchestrator layer.</p>
-  </div>
-</section>
+  </section>
 
-<!-- ============================ INTEGRATION ============================ -->
-<section class="mode-light section-pad" id="docs">
-  <div class="wrap">
-    <div class="sec-head reveal">
-      <div class="sec-tag"><span class="sec-no">§07</span><span class="sec-label">Integration</span></div>
-      <h2>Your existing agent. Formally verified. In under 30 minutes.</h2>
-      <p>The orchestrator sits between your agent and its execution layer — intercepting tool calls, verifying them against the Policy Environment, and routing or blocking them. Your agent code does not change.</p>
+  <section id="approach" data-reveal style="border-top:1px solid #1C1C19;padding:100px 0;">
+    <div style="max-width:1180px;margin:0 auto;padding:0 32px;">
+      <div data-eyebrow style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#8C8C84;letter-spacing:0.03em;">/ 02 — Approach</div>
+      <h2 style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(30px,4.4vw,52px);letter-spacing:-0.025em;line-height:1.04;margin:18px 0 0;">We embed and build your kernel by hand.</h2>
+      <p style="font-family:'Inter',sans-serif;font-size:17px;line-height:1.64;color:#8C8C84;max-width:62ch;margin:20px 0 48px;">No model sits between your regulation and the verdict. Our engineers deploy alongside your compliance and engineering teams and write the Lean specification by hand — every obligation read, debated, and formalized with the people who own it. The result is a kernel built to your rules, not adapted from a generic product.</p>
+      <div id="bj-stages"></div>
     </div>
+  </section>
 
-    <div class="integ-options reveal">
-      <div class="integ-option">
-        <div class="io-head"><span class="io-n">01</span><span class="io-label">Python SDK</span></div>
-        <div class="code-block">
-          <div class="term-bar"><span class="term-path">agent.py</span><span class="term-live">python</span></div>
-          <div class="code-body"><pre><span class="c-com">pip install biject-sdk</span>
-
-<span class="c-kw">from</span> biject <span class="c-kw">import</span> BijectGateway
-
-gateway = <span class="c-fn">BijectGateway</span>(
-  api_url=<span class="c-str">"https://api.biject.ai"</span>,
-  policy_env=<span class="c-str">"./policies/"</span>,
-)
-
-<span class="c-com"># wrap your existing agent — calls now verified pre-execution</span>
-verified = gateway.<span class="c-fn">wrap</span>(your_agent)
-result = verified.<span class="c-fn">run</span>(<span class="c-str">"Reduce tech exposure"</span>)</pre></div>
+  <section id="architecture" data-reveal style="border-top:1px solid #1C1C19;padding:100px 0;">
+    <div style="max-width:1180px;margin:0 auto;padding:0 32px;">
+      <div data-eyebrow style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#8C8C84;letter-spacing:0.03em;">/ 03 — Architecture</div>
+      <h2 style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(30px,4.4vw,52px);letter-spacing:-0.025em;line-height:1.04;margin:18px 0 0;max-width:18ch;">No model in the decision path.</h2>
+      <p style="font-family:'Inter',sans-serif;font-size:17px;line-height:1.64;color:#8C8C84;max-width:62ch;margin:20px 0 0;">We used to build a model to formalize regulation. We don't anymore. The specification is written by people and compiled to a kernel, so the thing making the call is a proof checker — auditable end to end, with nothing probabilistic in the loop.</p>
+      <div id="bj-arch-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:40px;margin-top:54px;">
+        <div style="border-top:1px solid #303029;padding-top:22px;">
+          <div style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:22px;letter-spacing:-0.01em;">Deterministic</div>
+          <p style="font-family:'Inter',sans-serif;font-size:15px;line-height:1.62;color:#8C8C84;margin:14px 0 0;">Binary verdicts. The kernel returns allow or deny against the specification — no probability, no temperature, no drift between runs.</p>
+        </div>
+        <div style="border-top:1px solid #303029;padding-top:22px;">
+          <div style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:22px;letter-spacing:-0.01em;">Fast</div>
+          <p style="font-family:'Inter',sans-serif;font-size:15px;line-height:1.62;color:#8C8C84;margin:14px 0 0;">Microsecond latency. Verdicts are evaluated, not generated, so the kernel sits in the hot path of real-time systems without becoming the bottleneck.</p>
+        </div>
+        <div style="border-top:1px solid #303029;padding-top:22px;">
+          <div style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:22px;letter-spacing:-0.01em;">Auditable</div>
+          <p style="font-family:'Inter',sans-serif;font-size:15px;line-height:1.62;color:#8C8C84;margin:14px 0 0;">Signed proof trace. Every decision carries a cryptographically signed derivation back to the source obligation — reproducible by anyone, years later.</p>
         </div>
       </div>
+    </div>
+  </section>
 
-      <div class="integ-option">
-        <div class="io-head"><span class="io-n">02</span><span class="io-label">MCP server</span></div>
-        <div class="code-block">
-          <div class="term-bar"><span class="term-path">mcp.config.json</span><span class="term-live">json</span></div>
-          <div class="code-body"><pre><span class="c-com">// add biject as a Model Context Protocol tool server</span>
-{
-  <span class="c-prop">"mcpServers"</span>: {
-    <span class="c-prop">"biject"</span>: {
-      <span class="c-prop">"url"</span>: <span class="c-str">"https://mcp.biject.ai"</span>,
-      <span class="c-prop">"apiKey"</span>: <span class="c-str">"your-api-key"</span>
-    }
+  <section id="research" data-reveal style="border-top:1px solid #1C1C19;padding:100px 0;">
+    <div style="max-width:1180px;margin:0 auto;padding:0 32px;">
+      <div data-eyebrow style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#8C8C84;letter-spacing:0.03em;">/ 04 — Research</div>
+      <h2 style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(30px,4.4vw,52px);letter-spacing:-0.025em;line-height:1.04;margin:18px 0 0;max-width:20ch;">Built on published, peer-reviewable work.</h2>
+      <a href="https://arxiv.org/abs/2604.01483" target="_blank" rel="noopener" style="display:block;text-decoration:none;border-top:1px solid #303029;padding:24px 0;margin-top:48px;transition:opacity .2s;" onmouseover="this.style.opacity='0.75'" onmouseout="this.style.opacity='1'">
+        <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px;align-items:baseline;">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#8C8C84;letter-spacing:0.03em;">arXiv:2604.01483 · Rashie &amp; Rashi, 2026</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#F2F2EC;">Read the preprint →</div>
+        </div>
+        <div style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(20px,2.6vw,28px);letter-spacing:-0.015em;margin-top:12px;color:#F2F2EC;">Compiling Regulation into Machine-Checked Decision Kernels</div>
+      </a>
+      <div id="bj-research-cols" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:56px;margin-top:48px;align-items:start;">
+        <div>
+          <div style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:20px;letter-spacing:-0.01em;">Proven under regulatory pressure first</div>
+          <p style="font-family:'Inter',sans-serif;font-size:15.5px;line-height:1.64;color:#8C8C84;margin:14px 0 0;">We built the first kernel where correctness was non-negotiable and latency was brutal: financial trading compliance. If the method survives there, it generalizes. That deployment was the proving ground — proof of concept, not the product. The product is the engagement, repeated across any regulated domain.</p>
+        </div>
+        <div>
+          <div style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:20px;letter-spacing:-0.01em;">The dataset the field is missing</div>
+          <p style="font-family:'Inter',sans-serif;font-size:15.5px;line-height:1.64;color:#8C8C84;margin:14px 0 0;">The whole field is bottlenecked on one thing: there is no foundational corpus of formalized regulation to learn from. Every kernel we hand-write is exactly that — machine-checked legal specification, the structured ground truth nobody else has. Each engagement makes the next one faster, and compounds into the dataset for an overarching model down the line. The long arc is formalizing everything; this is how we earn the data to get there.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="builtfor" data-reveal style="border-top:1px solid #1C1C19;padding:100px 0;">
+    <div style="max-width:1180px;margin:0 auto;padding:0 32px;">
+      <div data-eyebrow style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#8C8C84;letter-spacing:0.03em;">/ 05 — Built For</div>
+      <h2 style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(30px,4.4vw,52px);letter-spacing:-0.025em;line-height:1.04;margin:18px 0 0;max-width:20ch;">Any organization with rules it can't afford to get wrong.</h2>
+      <div id="bj-builtfor-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:40px;margin-top:54px;">
+        <div style="border-top:1px solid #303029;padding-top:22px;">
+          <div style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:19px;letter-spacing:-0.01em;">Financial services &amp; funds</div>
+          <p style="font-family:'Inter',sans-serif;font-size:14.5px;line-height:1.6;color:#8C8C84;margin:13px 0 0;">Trade surveillance, suitability, position and exposure limits — rules where a wrong verdict is measured in fines and headlines.</p>
+        </div>
+        <div style="border-top:1px solid #303029;padding-top:22px;">
+          <div style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:19px;letter-spacing:-0.01em;">Regulated manufacturing</div>
+          <p style="font-family:'Inter',sans-serif;font-size:14.5px;line-height:1.6;color:#8C8C84;margin:13px 0 0;">Process specs, material provenance, safety interlocks — compliance that has to hold on the line, not just on paper.</p>
+        </div>
+        <div style="border-top:1px solid #303029;padding-top:22px;">
+          <div style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:19px;letter-spacing:-0.01em;">Healthcare &amp; life sciences</div>
+          <p style="font-family:'Inter',sans-serif;font-size:14.5px;line-height:1.6;color:#8C8C84;margin:13px 0 0;">Clinical protocol, billing, and data-handling rules where "probably correct" is not an acceptable standard of care.</p>
+        </div>
+        <div style="border-top:1px solid #303029;padding-top:22px;">
+          <div style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:19px;letter-spacing:-0.01em;">Insurance</div>
+          <p style="font-family:'Inter',sans-serif;font-size:14.5px;line-height:1.6;color:#8C8C84;margin:13px 0 0;">Underwriting guidelines, claims adjudication, and reserving rules turned into verdicts you can defend to a regulator.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" data-reveal style="border-top:1px solid #1C1C19;padding:120px 0;">
+    <div style="max-width:1180px;margin:0 auto;padding:0 32px;">
+      <div data-eyebrow style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#8C8C84;letter-spacing:0.03em;">/ Contact</div>
+      <h2 style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(36px,6vw,76px);letter-spacing:-0.03em;line-height:1;margin:18px 0 0;">Let's build your kernel.</h2>
+      <div style="display:flex;flex-wrap:wrap;gap:18px;align-items:center;margin-top:36px;">
+        <a href="https://calendar.app.google/EXwJkGgxK3hLghND8" target="_blank" rel="noopener" style="font-family:'JetBrains Mono',monospace;font-size:13.5px;letter-spacing:0.02em;text-decoration:none;color:#060606;background:#F2F2EC;padding:14px 24px;transition:opacity .2s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">Request a build →</a>
+        <a href="mailto:contact@bijectai.com" style="font-family:'JetBrains Mono',monospace;font-size:13.5px;color:#8C8C84;text-decoration:none;transition:color .2s;" onmouseover="this.style.color='#F2F2EC'" onmouseout="this.style.color='#8C8C84'">contact@bijectai.com</a>
+      </div>
+    </div>
+  </section>
+
+  <footer style="position:relative;border-top:1px solid #1C1C19;overflow:hidden;">
+    <div aria-hidden="true" style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:25vw;line-height:0.8;letter-spacing:-0.04em;color:#F2F2EC;opacity:0.045;white-space:nowrap;text-align:center;user-select:none;padding-top:40px;">biject</div>
+    <div style="max-width:1180px;margin:0 auto;padding:28px 32px 36px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:14px;align-items:center;position:relative;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#545450;letter-spacing:0.02em;">© 2026 biject</div>
+      <div style="display:flex;flex-wrap:wrap;gap:22px;align-items:center;font-family:'JetBrains Mono',monospace;font-size:12px;color:#545450;letter-spacing:0.02em;">
+        <a href="https://arxiv.org/abs/2604.01483" style="color:#545450;text-decoration:none;transition:color .2s;" onmouseover="this.style.color='#F2F2EC'" onmouseout="this.style.color='#545450'">Research</a>
+        <a href="careers.html" style="color:#545450;text-decoration:none;transition:color .2s;" onmouseover="this.style.color='#F2F2EC'" onmouseout="this.style.color='#545450'">Careers</a>
+        <a href="mailto:contact@bijectai.com" style="color:#545450;text-decoration:none;transition:color .2s;" onmouseover="this.style.color='#F2F2EC'" onmouseout="this.style.color='#545450'">contact@bijectai.com</a>
+        <span style="letter-spacing:0.04em;">AXIOM PROTOCOL — KERNEL v1.0</span>
+      </div>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var state = { raf: null, t: null, onResize: null, scrollSweep: null, renderer: null };
+
+  function buildStages() {
+    var host = document.getElementById('bj-stages');
+    if (!host) return;
+    var stages = [
+      ['01', 'Ingest', 'We take in the full corpus — statutes, regulator guidance, internal policy, the edge cases your compliance team argues about. Nothing is summarized away.'],
+      ['02', 'Formalize', 'Every obligation is rewritten by hand as a precise logical specification. Ambiguity is surfaced and resolved with your experts before anything compiles — not papered over.'],
+      ['03', 'Compile', 'The specification is compiled into a verified decision kernel. Correctness is established by machine-checked proof, not by a test suite that can only ever sample.'],
+      ['04', 'Deploy', 'The kernel runs in your decision path as a deterministic service. Same input, same verdict, every time — microsecond latency, no model inference.'],
+      ['05', 'Audit', 'Every verdict emits a signed proof trace. Regulators and auditors get a mathematical object they can independently verify, not a log they have to trust.']
+    ];
+    host.innerHTML = stages.map(function (s) {
+      return '<div style="display:grid;grid-template-columns:80px minmax(0,1fr);gap:24px;border-top:1px solid #1C1C19;padding:28px 0;align-items:start;">' +
+        '<div style="font-family:\'JetBrains Mono\',monospace;font-size:13px;color:#545450;letter-spacing:0.04em;padding-top:5px;">' + s[0] + '</div>' +
+        '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px 48px;align-items:baseline;">' +
+          '<div style="font-family:\'Space Grotesk\',sans-serif;font-weight:600;font-size:clamp(22px,3vw,30px);letter-spacing:-0.02em;">' + s[1] + '</div>' +
+          '<p style="font-family:\'Inter\',sans-serif;font-size:15.5px;line-height:1.62;color:#8C8C84;margin:0;max-width:54ch;">' + s[2] + '</p>' +
+        '</div>' +
+      '</div>';
+    }).join('');
   }
-}</pre></div>
-        </div>
-      </div>
 
-      <div class="integ-option">
-        <div class="io-head"><span class="io-n">03</span><span class="io-label">REST API</span></div>
-        <div class="code-block">
-          <div class="term-bar"><span class="term-path">verify</span><span class="term-live">curl</span></div>
-          <div class="code-body"><pre><span class="c-fn">curl</span> -X POST https://api.biject.ai/verify \
-  -H <span class="c-str">"Authorization: Bearer YOUR_KEY"</span> \
-  -d <span class="c-str">'{ "tool": "execute_trade",
-       "params": { "symbol": "AAPL", "qty": 5000,
-                   "price": 212.50,
-                   "available_capital": 10000000 } }'</span>
+  function setupReveal() {
+    var els = Array.prototype.slice.call(document.querySelectorAll('[data-reveal]'));
+    if (reduced || !('IntersectionObserver' in window)) return;
+    els.forEach(function (el) {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(16px)';
+      el.style.transition = 'opacity 0.7s cubic-bezier(.2,.7,.2,1), transform 0.7s cubic-bezier(.2,.7,.2,1)';
+    });
+    var reveal = function (el) {
+      el.style.opacity = '1';
+      el.style.transform = 'translateY(0)';
+    };
+    var inView = function (el) {
+      var r = el.getBoundingClientRect();
+      var vh = window.innerHeight || document.documentElement.clientHeight;
+      return r.top < vh * 0.92 && r.bottom > 0;
+    };
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { reveal(e.target); obs.unobserve(e.target); }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+    els.forEach(function (el) { obs.observe(el); });
 
-<span class="c-com">→ { "verdict": "PROVED", "latency_us": 3.1,</span>
-<span class="c-com">    "audit_id": "aud_01HXYZ…" }</span></pre></div>
-        </div>
-      </div>
-    </div>
+    var sweep = function () {
+      els.forEach(function (el) {
+        if (el.style.opacity !== '1' && inView(el)) { reveal(el); obs.unobserve(el); }
+      });
+    };
+    sweep();
+    state.scrollSweep = sweep;
+    window.addEventListener('scroll', sweep, { passive: true });
+    window.addEventListener('resize', sweep, { passive: true });
+    setTimeout(function () { els.forEach(reveal); }, 1400);
+  }
 
-    <div class="docker-note reveal">
-      <div class="dn-glyph">⎈</div>
-      <div>
-        <h3>Self-hosted &amp; air-gapped</h3>
-        <p>Broker-dealers and asset managers in air-gapped environments deploy the orchestrator and Lean worker as on-premise Docker containers. Trade data never leaves your infrastructure; policy compilation runs locally; the audit log is written to your own storage.</p>
-        <div class="dn-code"><span class="c-fn">docker</span> compose up biject-orchestrator lean-worker</div>
-      </div>
-    </div>
+  function setupHeroEntrance() {
+    if (reduced) return;
+    var items = [
+      ['bj-hero-status', 0],
+      ['bj-hero-eyebrow', 110],
+      ['bj-hero-h1', 230],
+      ['bj-hero-sub', 380],
+      ['bj-hero-ctas', 510],
+      ['bj-attract-wrap', 650]
+    ];
+    items.forEach(function (item) {
+      var el = document.getElementById(item[0]);
+      if (!el) return;
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(18px)';
+      el.style.transition = 'opacity 0.8s cubic-bezier(.2,.8,.2,1) ' + item[1] + 'ms, transform 0.8s cubic-bezier(.2,.8,.2,1) ' + item[1] + 'ms';
+    });
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        items.forEach(function (item) {
+          var el = document.getElementById(item[0]);
+          if (!el) return;
+          el.style.opacity = '1';
+          el.style.transform = 'translateY(0)';
+        });
+      });
+    });
+  }
 
-    <p class="arch-note reveal">Full documentation at docs.biject.ai · github.com/bijectai/biject · contact@bijectai.com</p>
-  </div>
-</section>
+  function setupEyebrows() {
+    if (reduced) return;
+    var els = Array.prototype.slice.call(document.querySelectorAll('[data-eyebrow]'));
+    els.forEach(function (el) {
+      el.style.opacity = '0';
+      el.style.transform = 'translateX(-10px)';
+      el.style.transition = 'opacity 0.5s cubic-bezier(.2,.8,.2,1), transform 0.5s cubic-bezier(.2,.8,.2,1)';
+      var obs = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) {
+            el.style.opacity = '1';
+            el.style.transform = 'translateX(0)';
+            obs.unobserve(el);
+          }
+        });
+      }, { threshold: 0.8 });
+      obs.observe(el);
+    });
+    setTimeout(function () {
+      els.forEach(function (el) {
+        el.style.opacity = '1'; el.style.transform = 'translateX(0)';
+      });
+    }, 2500);
+  }
 
-<!-- ============================ RESEARCH ============================ -->
-<section class="mode-dark section-pad" id="research">
-  <div class="wrap">
-    <div class="sec-head reveal">
-      <div class="sec-tag"><span class="sec-no">§08</span><span class="sec-label">Peer-reviewed research</span></div>
-      <h2>The architecture is published. The claim is verifiable.</h2>
-      <p>biject is built on a formal architecture described in a peer-reviewed paper — the full theoretical basis for the Lean-Agent Protocol, including the regulatory mapping, adversarial threat model, latency benchmarks, and competitive analysis. Available in full on arXiv.</p>
-    </div>
+  function setupStaggerGroups() {
+    if (reduced) return;
+    var groupIds = ['bj-problem-grid', 'bj-arch-grid', 'bj-research-cols', 'bj-builtfor-grid'];
+    groupIds.forEach(function (id) {
+      var group = document.getElementById(id);
+      if (!group) return;
+      var children = Array.prototype.slice.call(group.children);
+      children.forEach(function (child) {
+        child.style.opacity = '0';
+        child.style.transform = 'translateY(16px)';
+        child.style.transition = 'opacity 0.62s cubic-bezier(.2,.8,.2,1), transform 0.62s cubic-bezier(.2,.8,.2,1)';
+      });
+      var obs = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) {
+            children.forEach(function (child, i) {
+              setTimeout(function () {
+                child.style.opacity = '1'; child.style.transform = 'translateY(0)';
+              }, i * 115);
+            });
+            obs.unobserve(group);
+          }
+        });
+      }, { threshold: 0.1 });
+      obs.observe(group);
+    });
+    var stages = document.getElementById('bj-stages');
+    if (stages) {
+      var rows = Array.prototype.slice.call(stages.children);
+      rows.forEach(function (row) {
+        row.style.opacity = '0';
+        row.style.transform = 'translateY(12px)';
+        row.style.transition = 'opacity 0.55s cubic-bezier(.2,.8,.2,1), transform 0.55s cubic-bezier(.2,.8,.2,1)';
+      });
+      var sobs = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) {
+            rows.forEach(function (row, i) {
+              setTimeout(function () {
+                row.style.opacity = '1'; row.style.transform = 'translateY(0)';
+              }, i * 95);
+            });
+            sobs.unobserve(stages);
+          }
+        });
+      }, { threshold: 0.06 });
+      sobs.observe(stages);
+      setTimeout(function () {
+        rows.forEach(function (r) { r.style.opacity = '1'; r.style.transform = 'translateY(0)'; });
+      }, 3000);
+    }
+    setTimeout(function () {
+      groupIds.forEach(function (id) {
+        var g = document.getElementById(id);
+        if (!g) return;
+        Array.prototype.slice.call(g.children).forEach(function (c) {
+          c.style.opacity = '1'; c.style.transform = 'translateY(0)';
+        });
+      });
+    }, 3000);
+  }
 
-    <div class="research-grid reveal">
-      <div class="research-left">
-        <div class="citation">
-          <div class="citation-authors">Rashie, D. &amp; Rashi, V. (2026)</div>
-          <div class="citation-title">Type-Checked Compliance: Deterministic Guardrails for Agentic Financial Systems Using Lean 4 Theorem Proving</div>
-          <div class="citation-arxiv">arXiv:2604.01483 [cs.LO]</div>
-        </div>
-        <a href="https://arxiv.org/abs/2604.01483" class="btn btn-primary">Read the full paper on arXiv →</a>
-        <a href="https://axiom.devrashie.space/" class="btn btn-ghost">Explore the research preview →</a>
-      </div>
-      <blockquote class="paper-abstract">
-        <div class="pa-label">Abstract</div>
-        <p>The rapid evolution of autonomous, agentic AI within financial services has introduced an architectural crisis: large language models are probabilistic, non-deterministic systems operating in domains that demand absolute, mathematically verifiable compliance guarantees. This paper presents the Lean-Agent Protocol — a formal-verification guardrail platform that leverages the Aristotle neural-symbolic model to auto-formalize institutional policies into Lean 4 code. Every proposed agentic action is treated as a mathematical conjecture: execution is permitted if and only if the Lean 4 kernel proves the action satisfies pre-compiled regulatory axioms.</p>
-      </blockquote>
-    </div>
+  function setupCountUp() {
+    if (reduced) return;
+    var el = document.getElementById('bj-countup');
+    if (!el) return;
+    var done = false;
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting && !done) {
+          done = true;
+          obs.unobserve(el);
+          var target = 460, dur = 1400, start = performance.now();
+          var tick = function (now) {
+            var t = Math.min((now - start) / dur, 1);
+            var v = 1 - Math.pow(1 - t, 3);
+            el.textContent = '$' + Math.round(v * target) + 'M';
+            if (t < 1) requestAnimationFrame(tick);
+          };
+          requestAnimationFrame(tick);
+        }
+      });
+    }, { threshold: 0.6 });
+    obs.observe(el);
+  }
 
-    <div class="aws-callout reveal">
-      <div class="awsc-mark">⊢</div>
-      <div>
-        <div class="awsc-kicker">Proven at enterprise scale</div>
-        <p>This is not the first production deployment of Lean 4 at scale. AWS uses Lean 4 to formally verify <b>Cedar</b> — its authorization policy language — across quadrillions of production authorizations. biject applies the same approach to financial compliance.</p>
-      </div>
-    </div>
-  </div>
-</section>
+  function initAttractor() {
+    var THREE = window.THREE;
+    var canvas = document.getElementById('bj-attract');
+    var wrap = document.getElementById('bj-attract-wrap');
+    if (!canvas || !wrap) return;
 
-<!-- ============================ FOOTER CTA ============================ -->
-<section class="mode-dark footcta" id="pilot">
-  <div class="wrap">
-    <div class="reveal">
-      <h2>Ready to make compliance <span class="g">provable?</span></h2>
-      <p>
-biject is accepting pilot partners. Pilot access includes a pre-compiled SEC Rule 15c3-5 policy library, API access to the orchestrator, Python SDK and MCP integration support, and direct access to the research team.</p>
-      <div class="hero-ctas footcta-ctas">
-        <a href="https://calendar.app.google/EXwJkGgxK3hLghND8" class="btn btn-primary">Request pilot access</a>
-        <a href="https://arxiv.org/abs/2604.01483" class="btn btn-ghost">Read the paper on arXiv ↗</a>
-        <a href="https://github.com/arkanemystic/lean-agent-protocol" class="btn btn-ghost">View on GitHub ↗</a>
-      </div>
-    </div>
-  </div>
-</section>
+    // Integrate the Aizawa attractor
+    var a = 0.95, b = 0.7, c = 0.6, d = 3.5, e = 0.25, f = 0.1;
+    var dt = 0.0052, transient = 1400, count = 22000;
+    var x = 0.1, y = 0, z = 0;
+    var step = function () {
+      var dx = (z - b) * x - d * y;
+      var dy = d * x + (z - b) * y;
+      var dz = c + a * z - (z * z * z) / 3 - (x * x + y * y) * (1 + e * z) + f * z * x * x * x;
+      x += dx * dt; y += dy * dt; z += dz * dt;
+    };
+    var i;
+    for (i = 0; i < transient; i++) step();
+    var raw = new Float32Array(count * 3);
+    var minX = 1e9, minY = 1e9, minZ = 1e9, maxX = -1e9, maxY = -1e9, maxZ = -1e9;
+    for (i = 0; i < count; i++) {
+      step();
+      raw[i * 3] = x; raw[i * 3 + 1] = y; raw[i * 3 + 2] = z;
+      if (x < minX) minX = x; if (x > maxX) maxX = x;
+      if (y < minY) minY = y; if (y > maxY) maxY = y;
+      if (z < minZ) minZ = z; if (z > maxZ) maxZ = z;
+    }
+    var cx = (minX + maxX) / 2, cy = (minY + maxY) / 2, cz = (minZ + maxZ) / 2;
+    var span = Math.max(maxX - minX, maxY - minY, maxZ - minZ);
+    var scale = 4.3 / span;
+    var positions = new Float32Array(count * 3);
+    var colors = new Float32Array(count * 3);
+    for (i = 0; i < count; i++) {
+      positions[i * 3] = (raw[i * 3] - cx) * scale;
+      positions[i * 3 + 1] = (raw[i * 3 + 1] - cy) * scale;
+      positions[i * 3 + 2] = (raw[i * 3 + 2] - cz) * scale;
+      var g = 0.4 + 0.34 * (0.5 + 0.5 * Math.sin(i * (6.2832 * 3 / count)));
+      colors[i * 3] = g; colors[i * 3 + 1] = g; colors[i * 3 + 2] = g * 0.985;
+    }
 
-<footer class="mode-dark footer">
-  <div class="wrap">
-    <a href="#top" class="wordmark"><span class="maps">↦</span> biject</a>
-    <div class="f-links">
-      <a href="https://arxiv.org/abs/2604.01483">Research paper</a>
-      <a href="https://github.com/arkanemystic/lean-agent-protocol">GitHub</a>
-      <a href="#demo">Live demo</a>
-      <a href="#docs">Documentation</a>
-      <a href="careers.html">Careers</a>
-      <a href="mailto:contact@bijectai.com">contact@bijectai.com</a>
-    </div>
-    <div class="f-copy">© 2026 biject · arXiv:2604.01483 · Lean 4 by the Lean FRO</div>
-  </div>
-</footer>
+    var scene = new THREE.Scene();
+    var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+    renderer.setClearColor(0x000000, 0);
+    state.renderer = renderer;
+    var camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
+    camera.position.set(0, 0, 8.4);
 
-<script src="app.js"></script>
-<script src="console.js"></script>
+    var geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+    var mat = new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, opacity: 0.92 });
+    var line = new THREE.Line(geo, mat);
+
+    var marker = new THREE.Mesh(
+      new THREE.SphereGeometry(0.07, 16, 16),
+      new THREE.MeshBasicMaterial({ color: 0xF2F2EC })
+    );
+    var halo = new THREE.Mesh(
+      new THREE.SphereGeometry(0.16, 16, 16),
+      new THREE.MeshBasicMaterial({ color: 0xF2F2EC, transparent: true, opacity: 0.18 })
+    );
+
+    var group = new THREE.Group();
+    group.add(line); group.add(marker); group.add(halo);
+    group.rotation.x = 0.45;
+    scene.add(group);
+
+    var resize = function () {
+      var w = wrap.clientWidth, hh = wrap.clientHeight;
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      renderer.setSize(w, hh, false);
+      camera.aspect = w / hh; camera.updateProjectionMatrix();
+    };
+    state.onResize = resize; window.addEventListener('resize', resize); resize();
+
+    var tx = document.getElementById('bj-tx'), ty = document.getElementById('bj-ty'), tz = document.getElementById('bj-tz');
+    var fmt = function (v) { var s = v >= 0 ? '+' : '-'; return s + Math.abs(v).toFixed(3); };
+    var prog = 0, lastTel = 0;
+
+    // Place the marker at a fractional position, interpolating between samples
+    // so it reads as a continuous point travelling the curve, not jumping vertices.
+    var place = function (p) {
+      var i0 = Math.floor(p) % count;
+      var i1 = (i0 + 1) % count;
+      var fr = p - Math.floor(p);
+      var ax = positions[i0 * 3], ay = positions[i0 * 3 + 1], az = positions[i0 * 3 + 2];
+      var bx = positions[i1 * 3], by = positions[i1 * 3 + 1], bz = positions[i1 * 3 + 2];
+      marker.position.set(ax + (bx - ax) * fr, ay + (by - ay) * fr, az + (bz - az) * fr);
+      halo.position.copy(marker.position);
+      return i0;
+    };
+
+    if (reduced) {
+      var ir = place(Math.floor(count * 0.62));
+      if (tx) { tx.textContent = fmt(raw[ir * 3]); ty.textContent = fmt(raw[ir * 3 + 1]); tz.textContent = fmt(raw[ir * 3 + 2]); }
+      renderer.render(scene, camera);
+      return;
+    }
+
+    // Parabolic velocity: the point eases in, accelerates through the midpoint of
+    // each traversal, then decelerates — speed follows 4p(1-p) across the loop.
+    var vMax = 6.4, vFloor = 0.1;
+    var animate = function (t) {
+      state.raf = requestAnimationFrame(animate);
+      group.rotation.y += 0.0009;
+      group.rotation.x = 0.45 + 0.15 * Math.sin(t * 0.00015);
+      var p = prog / count;
+      var speed = vMax * (vFloor + (1 - vFloor) * 4 * p * (1 - p));
+      prog = (prog + speed) % count;
+      var idx = place(prog);
+      if (t - lastTel > 200) {
+        lastTel = t;
+        if (tx) { tx.textContent = fmt(raw[idx * 3]); ty.textContent = fmt(raw[idx * 3 + 1]); tz.textContent = fmt(raw[idx * 3 + 2]); }
+      }
+      renderer.render(scene, camera);
+    };
+    state.raf = requestAnimationFrame(animate);
+  }
+
+  function startAttractor() {
+    if (window.THREE) { initAttractor(); }
+    else { state.t = setTimeout(startAttractor, 60); }
+  }
+
+  function init() {
+    buildStages();
+    setupReveal();
+    setupHeroEntrance();
+    setupEyebrows();
+    setupStaggerGroups();
+    setupCountUp();
+    startAttractor();
+  }
+
+  if (document.readyState !== 'loading') init();
+  else document.addEventListener('DOMContentLoaded', init);
+
+  window.addEventListener('pagehide', function () {
+    if (state.raf) cancelAnimationFrame(state.raf);
+    if (state.t) clearTimeout(state.t);
+    if (state.onResize) window.removeEventListener('resize', state.onResize);
+    if (state.renderer && state.renderer.dispose) state.renderer.dispose();
+  });
+})();
+</script>
 </body>
 </html>
