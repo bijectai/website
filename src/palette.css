@@ -1,0 +1,16 @@
+/* ============================================================
+   biject — brand color palette
+   Single source of truth for the core brand colors.
+   Imported by src/style.css.
+   ============================================================ */
+:root {
+  --color-black: #080808;
+  /* near-black — text, dark UI */
+  --color-ink: #1a1a1a;
+  --color-green: #10b981;
+  /* brand green — accents, hovers, CTA */
+  --color-red: #ef4444;
+  /* brand red — accents, hovers, CTA */
+  --color-white: #ffffff;
+  /* pure white — surfaces, page background */
+}
