@@ -15,6 +15,27 @@ export function TopBar() {
   const barRef = useRef<HTMLElement>(null);
   const ctaRef = useRef<HTMLButtonElement>(null);
   const [partnerOpen, setPartnerOpen] = useState(false);
+  // The mobile nav: the centered links collapse into a corner button below a
+  // breakpoint (see .nav-toggle / .nav-menu in style.css) and open this panel.
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  // Close the mobile menu on Escape, and whenever the viewport grows wide
+  // enough that the inline links are back (the toggle is hidden there, so a
+  // lingering open panel would have no way to be dismissed).
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMenuOpen(false);
+    };
+    const mq = window.matchMedia("(min-width: 721px)");
+    const onChange = () => mq.matches && setMenuOpen(false);
+    window.addEventListener("keydown", onKey);
+    mq.addEventListener("change", onChange);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      mq.removeEventListener("change", onChange);
+    };
+  }, [menuOpen]);
 
   useEffect(() => {
     const bar = barRef.current;
@@ -80,6 +101,22 @@ export function TopBar() {
           >
             Partner with Us
           </button>
+          {/* Corner menu button — only shown below the mobile breakpoint, where
+              the inline links + CTA are hidden. */}
+          <button
+            type="button"
+            className={`nav-toggle${menuOpen ? " is-open" : ""}`}
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={menuOpen}
+            aria-controls="nav-menu"
+            onClick={() => setMenuOpen((open) => !open)}
+          >
+            <span className="nav-toggle-box" aria-hidden="true">
+              <span className="nav-toggle-bar" />
+              <span className="nav-toggle-bar" />
+              <span className="nav-toggle-bar" />
+            </span>
+          </button>
         </div>
       </div>
 
@@ -95,6 +132,36 @@ export function TopBar() {
           <span className="nav-spacer nav-spacer-right" aria-hidden="true" />
         </nav>
       </header>
+
+      {/* Mobile menu: a glass dropdown holding the nav links + the CTA,
+          opened by the corner toggle. Hidden (display:none) on desktop. */}
+      <div className={`nav-menu${menuOpen ? " is-open" : ""}`} id="nav-menu">
+        <button
+          type="button"
+          className="nav-menu-backdrop"
+          aria-label="Close menu"
+          tabIndex={menuOpen ? 0 : -1}
+          onClick={() => setMenuOpen(false)}
+        />
+        <div className="nav-menu-inner">
+          <nav className="nav-menu-panel" aria-label="Primary">
+            <a href="https://arxiv.org/abs/2604.01483" onClick={() => setMenuOpen(false)}>Research</a>
+            <a href="/#demo" onClick={() => setMenuOpen(false)}>Solutions</a>
+            <a href="/about" onClick={() => setMenuOpen(false)}>About us</a>
+            <a href="/careers" onClick={() => setMenuOpen(false)}>Careers</a>
+            <button
+              type="button"
+              className="nav-menu-cta"
+              onClick={() => {
+                setMenuOpen(false);
+                setPartnerOpen(true);
+              }}
+            >
+              Partner with Us
+            </button>
+          </nav>
+        </div>
+      </div>
 
       <PartnerDrawer
         open={partnerOpen}

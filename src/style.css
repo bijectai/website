@@ -37,22 +37,6 @@ html::-webkit-scrollbar {
   /* Chrome, Safari, modern Edge */
 }
 
-/* Gentle scroll-snap between the hero and the Problem section: scroll a
-   little past the hero and the page settles onto Problem; scroll back up and
-   it settles on the hero. Proximity (not mandatory) so only these two points
-   snap — the sections below, and any section taller than the viewport, still
-   scroll freely. Disabled under reduced-motion. */
-@media (prefers-reduced-motion: no-preference) {
-  html {
-    scroll-snap-type: y proximity;
-  }
-
-  .hero-spacer,
-  .problem {
-    scroll-snap-align: start;
-  }
-}
-
 body {
   margin: 0;
   min-height: 100vh;
@@ -139,7 +123,7 @@ body {
 }
 
 .hero-title .hero-line:first-child {
-  font-size: clamp(2.3rem, 6.5vw, 4.4rem);
+  font-size: clamp(2rem, 8vw, 4.4rem);
   animation-delay: 0.05s;
 }
 
@@ -148,7 +132,7 @@ body {
    continuous unit rather than two. */
 .hero-subline {
   margin-top: 0.12em;
-  font-size: clamp(1.9rem, 5.4vw, 3.7rem);
+  font-size: clamp(1.6rem, 6.6vw, 3.7rem);
   font-weight: 600;
   color: var(--ink);
   animation-delay: 0.2s;
@@ -275,7 +259,9 @@ body {
 
 .brand-logo {
   display: block;
-  height: calc(42 * 2px);
+  /* Scales with the viewport: full size on desktop (where it intentionally
+     overhangs the bar a touch), shrinking down to fit the bar on phones. */
+  height: clamp(46px, 9vw, 84px);
   width: auto;
 }
 
@@ -349,14 +335,207 @@ body {
   box-shadow: 0 0 0 4px rgba(16, 185, 129, .14);
 }
 
-/* on small screens, keep logo + CTA */
-@media (max-width: 600px) {
-  .nav-links {
-    gap: 18px;
+/* ============================================================
+   Mobile nav — corner toggle + glass dropdown menu.
+   Below the breakpoint the centered links and the corner CTA are
+   hidden, replaced by a hamburger button that opens .nav-menu.
+   Both the toggle and the menu are display:none on desktop.
+   ============================================================ */
+.nav-toggle {
+  display: none;
+  /* on desktop */
+  pointer-events: auto;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-toggle-box {
+  position: relative;
+  display: block;
+  width: 22px;
+  height: 16px;
+}
+
+.nav-toggle-bar {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--ink);
+  transition: transform 0.28s ease, opacity 0.2s ease;
+}
+
+.nav-toggle-bar:nth-child(1) {
+  top: 0;
+}
+
+.nav-toggle-bar:nth-child(2) {
+  top: 7px;
+}
+
+.nav-toggle-bar:nth-child(3) {
+  top: 14px;
+}
+
+/* Morph the three bars into an X when open. */
+.nav-toggle.is-open .nav-toggle-bar:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.nav-toggle.is-open .nav-toggle-bar:nth-child(2) {
+  opacity: 0;
+}
+
+.nav-toggle.is-open .nav-toggle-bar:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* The dropdown layer. Mirrors the corners' centered box so the panel's right
+   edge lines up under the toggle. Hidden on desktop. */
+.nav-menu {
+  display: none;
+}
+
+.nav-menu-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 102;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  cursor: default;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.nav-menu.is-open .nav-menu-backdrop {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.nav-menu-inner {
+  position: fixed;
+  top: calc(var(--bar-gap) + var(--nav-h) + 8px);
+  left: 0;
+  right: 0;
+  z-index: 103;
+  width: 90%;
+  max-width: var(--maxw);
+  margin-inline: auto;
+  display: flex;
+  justify-content: flex-end;
+  pointer-events: none;
+}
+
+.nav-menu-panel {
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 4px;
+  min-width: 200px;
+  padding: 10px;
+  border-radius: 16px;
+  background: rgba(34, 36, 40, 0.82);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  backdrop-filter: blur(16px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.5);
+  /* Slide + fade in from just above when opened. */
+  transform: translateY(-10px);
+  opacity: 0;
+  transition: transform 0.26s cubic-bezier(0.2, 0.7, 0.2, 1), opacity 0.2s ease;
+}
+
+.nav-menu.is-open .nav-menu-panel {
+  pointer-events: auto;
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.nav-menu-panel a {
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--ink);
+  text-decoration: none;
+  padding: 13px 14px;
+  border-radius: 10px;
+  transition: background 0.16s ease, color 0.16s ease;
+}
+
+.nav-menu-panel a:hover {
+  background: rgba(255, 255, 255, 0.07);
+  color: var(--accent);
+}
+
+/* CTA at the foot of the menu — mirrors the desktop .nav-cta look. */
+.nav-menu-cta {
+  margin-top: 6px;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--page);
+  background: var(--ink);
+  border: 1px solid var(--ink);
+  padding: 13px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: color 0.18s ease, background 0.18s ease, border-color 0.18s ease;
+}
+
+.nav-menu-cta:hover {
+  color: #fff;
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .nav-menu-panel,
+  .nav-toggle-bar {
+    transition: none;
+  }
+}
+
+/* Below this width: collapse the inline nav into the corner toggle + menu,
+   and let the home-page content boxes use more of the screen. */
+@media (max-width: 720px) {
+
+  /* Hide the desktop inline links and corner CTA; show the toggle + menu. */
+  .nav-links,
+  .topbar-corners-inner .nav-cta {
+    display: none;
   }
 
-  .nav-links .nl-hide {
-    display: none;
+  .nav-toggle {
+    display: inline-flex;
+  }
+
+  .nav-menu {
+    display: block;
+  }
+
+  /* Widen the shared boxes so content isn't squeezed into a narrow column.
+     These all share the same width so the bar and section copy stay aligned. */
+  .topbar-corners-inner,
+  .topbar-inner,
+  .problem-inner,
+  .solution-inner,
+  .demo-inner,
+  .about-inner,
+  .careers-inner {
+    width: 90%;
+    padding-inline: 0;
   }
 }
 
@@ -875,6 +1054,77 @@ body {
   gap: clamp(20px, 3vh, 32px);
 }
 
+/* Sentinel below the lazily-rendered list; its "Loading more…" line is shown
+   while the next page of cards is mounted in. */
+.careers-sentinel {
+  display: flex;
+  justify-content: center;
+  padding: 8px 0;
+}
+
+.careers-sentinel .careers-status {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+/* Shimmering placeholders shown during the initial (slow) sheet fetch. */
+.job-skeleton {
+  pointer-events: none;
+}
+
+.skel {
+  border-radius: 8px;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.06) 25%,
+    rgba(255, 255, 255, 0.12) 37%,
+    rgba(255, 255, 255, 0.06) 63%
+  );
+  background-size: 400% 100%;
+  animation: skel-shimmer 1.4s ease infinite;
+}
+
+.skel-title {
+  width: min(60%, 320px);
+  height: 1.6rem;
+}
+
+.skel-meta {
+  display: flex;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.skel-pill {
+  width: 92px;
+  height: 26px;
+  border-radius: 999px;
+}
+
+.skel-line {
+  height: 1rem;
+  margin-top: 16px;
+}
+
+.skel-line-short {
+  width: 70%;
+}
+
+@keyframes skel-shimmer {
+  0% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0 50%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skel {
+    animation: none;
+  }
+}
+
 /* Each role — subtle glass to echo the top bar and the problem cards. */
 .job-card {
   border-radius: 16px;
@@ -886,7 +1136,7 @@ body {
 
 .job-head {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
   gap: 16px;
   flex-wrap: wrap;
@@ -902,10 +1152,32 @@ body {
   color: var(--ink);
 }
 
-.job-date {
+/* "Details" toggle in the card header — white pill that lights up green when
+   hovered or while the details are expanded, matching the "Partner with Us"
+   CTA. Sits in the slot the "Opened" date used to occupy. */
+.job-details-btn {
   flex: none;
-  font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.5);
+  appearance: none;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--page);
+  background: var(--ink);
+  border: 1px solid var(--ink);
+  border-radius: 8px;
+  padding: 9px 18px;
+  cursor: pointer;
+  transition: color 0.18s ease, background 0.18s ease, border-color 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.job-details-btn:hover,
+.job-details-btn[aria-expanded="true"] {
+  color: #fff;
+  background: var(--accent);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.14);
 }
 
 /* Inline pills: field · location · work type. */
@@ -931,6 +1203,18 @@ body {
   font-size: clamp(1rem, 1.3vw, 1.1rem);
   line-height: 1.6;
   color: rgba(255, 255, 255, 0.82);
+}
+
+/* Expanded details panel, revealed by the "Details" toggle. A faint divider
+   sets the extra fields apart from the always-visible abstract. */
+.job-details {
+  margin-top: clamp(20px, 3vh, 28px);
+  padding-top: clamp(20px, 3vh, 28px);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.job-details .job-field:first-child {
+  margin-top: 0;
 }
 
 .job-field {
@@ -970,22 +1254,28 @@ body {
   margin-top: clamp(24px, 3.5vh, 34px);
 }
 
+/* "Apply" — white pill by default, lights up green on hover/press, matching
+   the "Partner with Us" CTA. */
 .job-apply {
   appearance: none;
-  border: 0;
   border-radius: 999px;
-  background: var(--accent);
+  background: var(--ink);
+  border: 1px solid var(--ink);
   color: var(--page);
   font-family: inherit;
   font-size: 0.95rem;
   font-weight: 600;
   padding: 11px 28px;
   cursor: pointer;
-  transition: opacity 0.15s ease, transform 0.1s ease;
+  transition: color 0.18s ease, background 0.18s ease, border-color 0.18s ease,
+    box-shadow 0.18s ease, transform 0.1s ease;
 }
 
 .job-apply:hover {
-  opacity: 0.9;
+  color: #fff;
+  background: var(--accent);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.14);
 }
 
 .job-apply:active {
@@ -998,7 +1288,9 @@ body {
 .apply-overlay {
   position: fixed;
   inset: 0;
-  z-index: 100;
+  /* Above the top bar layers (corners 101, mobile toggle 102) so the modal
+     covers them — on mobile the full-screen sheet fully hides the top bar. */
+  z-index: 300;
   display: flex;
   align-items: flex-start;
   justify-content: center;
@@ -1071,6 +1363,8 @@ body {
 .apply-field {
   display: flex;
   flex: 1;
+  /* Allow paired fields to shrink rather than overflow the modal. */
+  min-width: 0;
   flex-direction: column;
   gap: 7px;
 }
@@ -1086,6 +1380,7 @@ body {
 .apply-field textarea {
   font-family: inherit;
   font-size: 0.98rem;
+  width: 100%;
   color: var(--ink);
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.14);
@@ -1141,14 +1436,21 @@ body {
   transition: opacity 0.15s ease, background 0.15s ease;
 }
 
+/* White by default, lights up green on hover/press like the "Partner with Us"
+   CTA. */
 .apply-submit {
-  border: 0;
-  background: var(--accent);
+  background: var(--ink);
+  border: 1px solid var(--ink);
   color: var(--page);
+  transition: color 0.18s ease, background 0.18s ease, border-color 0.18s ease,
+    box-shadow 0.18s ease, opacity 0.15s ease;
 }
 
 .apply-submit:hover {
-  opacity: 0.9;
+  color: #fff;
+  background: var(--accent);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.14);
 }
 
 .apply-submit:disabled {
@@ -1196,6 +1498,34 @@ body {
 
 .apply-done .apply-submit {
   margin-top: 26px;
+}
+
+/* On phones the modal becomes a full-screen sheet that rises from the bottom
+   and covers the whole viewport, so the only way out is the × button. */
+@media (max-width: 640px) {
+  .apply-overlay {
+    align-items: stretch;
+    padding: 0;
+  }
+
+  .apply-modal {
+    width: 100%;
+    max-width: none;
+    min-height: 100vh;
+    min-height: 100dvh;
+    border: 0;
+    border-radius: 0;
+    animation: apply-sheet-up 0.34s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+@keyframes apply-sheet-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
 }
 
 /* Stack the paired fields on narrow screens. */
@@ -1285,7 +1615,8 @@ body {
   color: rgba(255, 255, 255, 0.66);
 }
 
-/* Primary "Schedule a meeting" link — full-width green button. */
+/* Primary "Schedule a meeting" link — white by default, lights up green on
+   hover/press to match the "Partner with Us" CTA. */
 .partner-schedule {
   display: block;
   margin-top: 26px;
@@ -1294,14 +1625,18 @@ body {
   font-size: 1rem;
   font-weight: 600;
   color: var(--page);
-  background: var(--accent);
+  background: var(--ink);
+  border: 1px solid var(--ink);
   border-radius: 10px;
   padding: 14px 20px;
-  transition: opacity 0.15s ease, box-shadow 0.18s ease;
+  transition: color 0.18s ease, background 0.18s ease, border-color 0.18s ease,
+    box-shadow 0.18s ease;
 }
 
 .partner-schedule:hover {
-  opacity: 0.92;
+  color: #fff;
+  background: var(--accent);
+  border-color: var(--accent);
   box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.14);
 }
 
@@ -1339,6 +1674,10 @@ body {
 .partner-field {
   display: flex;
   flex: 1;
+  /* Let paired fields shrink instead of forcing the drawer to scroll
+     horizontally — flex items default to min-width:auto (their content
+     width), which an <input>'s intrinsic size would otherwise overflow. */
+  min-width: 0;
   flex-direction: column;
   gap: 7px;
 }
@@ -1354,6 +1693,7 @@ body {
 .partner-field textarea {
   font-family: inherit;
   font-size: 0.96rem;
+  width: 100%;
   color: var(--ink);
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.14);
@@ -1392,6 +1732,7 @@ body {
   color: #fff;
   background: var(--accent);
   border-color: var(--accent);
+  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.14);
 }
 
 .partner-submit:disabled {
@@ -1415,6 +1756,30 @@ body {
 .partner-done .partner-submit {
   width: 100%;
   margin-top: 22px;
+}
+
+/* On phones the drawer becomes a full-screen sheet that rises from the
+   bottom and fully covers the page, so the only way out is the × button. */
+@media (max-width: 640px) {
+  .partner-drawer {
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    max-width: none;
+    height: 100vh;
+    height: 100dvh;
+    border-left: 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 -24px 80px rgba(0, 0, 0, 0.5);
+    /* Rise from the bottom instead of sliding in from the right. */
+    transform: translateY(100%);
+  }
+
+  .partner-drawer.is-open {
+    transform: translateY(0);
+  }
 }
 
 /* Stack the paired name fields on the narrowest drawers. */
