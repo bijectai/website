@@ -27,7 +27,7 @@ export function TopBar() {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") setMenuOpen(false);
     };
-    const mq = window.matchMedia("(min-width: 721px)");
+    const mq = window.matchMedia("(min-width: 901px)");
     const onChange = () => mq.matches && setMenuOpen(false);
     window.addEventListener("keydown", onKey);
     mq.addEventListener("change", onChange);

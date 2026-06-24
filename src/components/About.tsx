@@ -1,35 +1,55 @@
 import { Footer } from "./Footer";
 import { TopBar } from "./TopBar";
 
-// About page. Just the persistent glass top bar over the dark page, then a
-// block of copy: two left-aligned paragraphs, a hairline spacer, and two
-// right-aligned paragraphs. Placeholder lorem ipsum for now — real copy on
-// our methodologies and end goals lands later.
 export function About() {
   return (
     <>
-      {/* Drops the sticky bar a --bar-gap inset from the top so its pill lines
-          up with the logo + CTA corners that float fixed at that same inset. */}
       <div className="topbar-gap" aria-hidden="true" />
       <TopBar />
 
       <main className="about">
         <div className="about-inner">
-          <p className="about-para about-para-left">
-            We are here to fundamentally raise the standard for regulated operations. Today, the accepted baseline across industries is "acceptable" manual review—a fragmented process plagued by massive delays and the inevitable, costly risks of human error. We are replacing that standard with a new benchmark: perfect accuracy, absolute consistency, and execution speeds that move as fast as your business. Our mission is to become the operational backbone for regulated teams, allowing them to execute complex, evidence-heavy workflows without pausing for continuous manual sign-offs. By embedding our forward-deployed engineers directly alongside our partners, we ensure that our automated, deterministic checks provide a blanket of uncompromising reliability tailored to every specific domain.
-          </p>
-          <p className="about-para about-para-left">
-            To guarantee that level of operational resilience, we built our control layer fundamentally on Rust and Lean. Both are incredibly fast and distinctly modern, but more importantly, they enforce rigorous strictness. When you are building systems that must not fail, you cannot rely on technology that is prone to breaking or losing underlying support. Choosing mathematically rigorous, memory-safe languages means our architecture is structurally shielded against the failures that plague legacy systems. Furthermore, the active, modern ecosystems behind Rust and Lean allow us to continuously push updates, ensuring our clients receive full, unwavering support for their critical deployments.
-          </p>
 
-          <hr className="about-rule" />
+          {/* Opening — label + headline */}
+          <p className="about-label">R&amp;P Lab</p>
+          <h1 className="about-heading">
+            Trust what<br />
+            you can <em>prove.</em>
+          </h1>
 
-          <p className="about-para about-para-right">
-            Our company was founded by a team with deep, specialized backgrounds in mathematics and computational sciences. While watching the recent surge in artificial intelligence, we explicitly recognized the critical execution gaps in LLM proficiency—specifically their probabilistic nature, which simply cannot be trusted alone in regulated, high-stakes environments. Instead of leaning into the hype, we tackled this gap by building a solution that reflects our technical roots: a mathematically verifiable system that delivers uncompromising convenience and speed, without ever sacrificing deterministic truth.
-          </p>
-          <p className="about-para about-para-right">
-            Right now, our timeline is deeply focused on high-touch, individual client deployments where our engineers build custom infrastructure by hand. However, as we look to the future, we are building toward a flexible model that empowers compliance officers to independently customize and govern their own control dashboards. We recognize that flexibility is a core operational principle, as no two regulated teams are exactly alike. As we eventually scale beyond the inherent capacity limits of individual engineering deployments, this transition will allow us to broaden our impact while keeping absolute operational resilience and strict policy enforcement at the core of everything we do.
-          </p>
+          {/* Two-column body */}
+          <div className="about-body">
+            <p className="about-body-text">
+              Biject is founded under a simple primitive: if you can't prove it,
+              you can't trust it. Our goal is to become the operational backbone
+              of the world — starting with formally verified guardrails that
+              return machine-checked proofs, not probabilities.
+            </p>
+            <p className="about-body-text">
+              Every engagement generates hand-written and verified Lean
+              formalizations. This is the foundational dataset the industry
+              lacks — and we're building it one proof at a time, alongside
+              every client we work with.
+            </p>
+          </div>
+
+          {/* Callout — the long-term model */}
+          <div className="about-callout">
+            <div className="about-callout-bar" aria-hidden="true" />
+            <p className="about-callout-text">
+              In the long term, we aim to use client engagements to power our
+              in-house <strong>auto formalization model</strong> — closing the
+              loop between real-world operations and machine-verified reasoning
+              at scale.
+            </p>
+          </div>
+
+          {/* Closing */}
+          <div className="about-close">
+            <p className="about-close-text">Ambiguity ends here.</p>
+            <p className="about-close-sub">Let's formalize the world.</p>
+          </div>
+
         </div>
       </main>
 
