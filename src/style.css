@@ -611,6 +611,19 @@ body {
   }
 }
 
+/* Small monospace eyebrow used above section headings on the homepage
+   (Problem, Solution, Demo) — matches .about-label's type treatment so the
+   homepage and About page read as one visual system. */
+.section-label {
+  display: inline-block;
+  margin: 0 0 clamp(14px, 2vh, 20px);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
 /* ============================================================
    "The Hidden Cost of Manual Review" — first content section
    below the hero. A centered intro (heading + lede) over the dark
@@ -833,6 +846,39 @@ body {
   }
 }
 
+/* Glass callout — sets the one hard guarantee (deterministic PROVED/REFUTED)
+   apart from the surrounding steps, echoing .about-callout's treatment. */
+.solution-callout {
+  margin-top: clamp(48px, 7vh, 80px);
+  padding: clamp(24px, 3vw, 36px) clamp(24px, 3vw, 40px);
+  border-radius: 16px;
+  background: rgba(16, 185, 129, 0.05);
+  border: 1px solid rgba(16, 185, 129, 0.22);
+  display: grid;
+  grid-template-columns: 3px 1fr;
+  gap: clamp(20px, 3vw, 36px);
+  align-items: center;
+}
+
+.solution-callout-bar {
+  align-self: stretch;
+  border-radius: 3px;
+  background: var(--accent);
+  opacity: 0.7;
+}
+
+.solution-callout-text {
+  margin: 0;
+  font-size: clamp(1rem, 1.3vw, 1.12rem);
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.solution-callout-text strong {
+  font-weight: 600;
+  color: var(--ink);
+}
+
 /* ============================================================
    "See it in your domain." — the demo section below the Solution.
    A left-aligned header, then a two-column split: the lede paragraphs on the
@@ -1008,6 +1054,34 @@ body {
   .demo-split {
     grid-template-columns: 1fr;
   }
+}
+
+/* Closing statement — the homepage's final beat, mirroring .about-close so
+   the page doesn't just stop after the last section. */
+.demo-close {
+  margin-top: clamp(64px, 10vh, 120px);
+  padding-top: clamp(36px, 5vh, 56px);
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  text-align: right;
+}
+
+.demo-close-text {
+  margin: 0;
+  font-family: "Space Grotesk", sans-serif;
+  font-weight: 600;
+  font-size: clamp(1.6rem, 3.5vw, 2.8rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.demo-close-sub {
+  margin: clamp(10px, 1.5vh, 16px) 0 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.35);
 }
 
 /* ============================================================

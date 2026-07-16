@@ -43,6 +43,7 @@ export function Demo() {
   return (
     <section className="demo" id="demo">
       <div className="demo-inner">
+        <p className="section-label">In Your Domain</p>
         <h2 className="demo-title">Personalized for your domain.</h2>
 
         <div className="demo-split">
@@ -100,6 +101,13 @@ export function Demo() {
               })}
             </div>
           </div>
+        </div>
+
+        {/* Closing — mirrors the About page's right-aligned sign-off, giving
+            the homepage a deliberate final beat instead of just stopping. */}
+        <div className="demo-close">
+          <p className="demo-close-text">An agent can't argue with a proof.</p>
+          <p className="demo-close-sub">Let's build your kernel.</p>
         </div>
       </div>
     </section>

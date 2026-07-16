@@ -26,10 +26,9 @@ export function About() {
               return machine-checked proofs, not probabilities.
             </p>
             <p className="about-body-text">
-              Every engagement generates hand-written and verified Lean
+              Every deployment generates hand-written and verified Lean
               formalizations. This is the foundational dataset the industry
-              lacks — and we're building it one proof at a time, alongside
-              every client we work with.
+              lacks — and we're building it one proof at a time.
             </p>
           </div>
 
@@ -37,10 +36,10 @@ export function About() {
           <div className="about-callout">
             <div className="about-callout-bar" aria-hidden="true" />
             <p className="about-callout-text">
-              In the long term, we aim to use client engagements to power our
-              in-house <strong>auto formalization model</strong> — closing the
-              loop between real-world operations and machine-verified reasoning
-              at scale.
+              In the long term, these formalizations power our in-house{" "}
+              <strong>auto formalization model</strong> — closing the loop
+              between real-world operations and machine-verified reasoning at
+              scale.
             </p>
           </div>
 

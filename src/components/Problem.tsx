@@ -7,6 +7,7 @@ export function Problem() {
   return (
     <section className="problem" id="problem">
       <div className="problem-inner">
+        <p className="section-label">The Problem</p>
         <h2 className="problem-title">The Hidden Cost of Manual Review</h2>
         <p className="problem-lede">
           Regulated organizations still rely on a fragmented web of systems,
