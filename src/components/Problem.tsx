@@ -21,26 +21,28 @@ export function Problem() {
         <div className="problem-cards">
           <article className="problem-card">
             <p className="problem-card-metric">
-              <CountUp from={0} to={460} prefix="-$" suffix="M" />
+              <CountUp from={0} to={1} />
             </p>
-            <p className="problem-card-context">lost in 45 min</p>
+            <p className="problem-card-context">hard constraint violated</p>
             <hr className="problem-card-rule" />
             <p className="problem-card-body">
-              In 2012, Knight Capital Group suffered a trading malfunction that
-              resulted in billions of dollars in unwanted trades. The incident
-              was caused by a flawed deployment and an old software component
-              reactivating unexpectedly. It remains a clear example of how
-              control failures in mission-critical environments can turn into
-              massive catastrophes.
+              In 2018, internal IBM documents showed Watson for Oncology
+              recommending unsafe treatments, including a case where it
+              suggested a drug carrying a black-box warning against use in
+              patients with severe bleeding. The system had no mechanism to
+              enforce that constraint, only to weigh it statistically. It's a
+              clear example of the exact failure class formally verified
+              guardrails make structurally impossible, not just statistically
+              unlikely.
             </p>
             <p className="problem-card-ref">
               <a
                 className="problem-card-ref-link"
-                href="https://www.sec.gov/newsroom/press-releases/2013-222"
+                href="https://www.statnews.com/2018/07/25/ibm-watson-recommended-unsafe-incorrect-treatments/"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                SEC
+                STAT News
               </a>
             </p>
           </article>
