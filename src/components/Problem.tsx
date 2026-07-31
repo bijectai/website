@@ -21,28 +21,26 @@ export function Problem() {
         <div className="problem-cards">
           <article className="problem-card">
             <p className="problem-card-metric">
-              <CountUp from={0} to={1} />
+              <CountUp from={0} to={80} prefix="60–" suffix="%" />
             </p>
-            <p className="problem-card-context">hard constraint violated</p>
+            <p className="problem-card-context">
+              of FDA drug GMP warning letters cite data integrity
+            </p>
             <hr className="problem-card-rule" />
             <p className="problem-card-body">
-              In 2018, internal IBM documents showed Watson for Oncology
-              recommending unsafe treatments, including a case where it
-              suggested a drug carrying a black-box warning against use in
-              patients with severe bleeding. The system had no mechanism to
-              enforce that constraint, only to weigh it statistically. It's a
-              clear example of the exact failure class formally verified
-              guardrails make structurally impossible, not just statistically
-              unlikely.
+              Data integrity deficiencies — missing audit trails, shared login
+              credentials, backdated records, and audit trails generated but
+              never reviewed — are the single most cited category of FDA GMP
+              violation, a trend that has continued through 2026.
             </p>
             <p className="problem-card-ref">
               <a
                 className="problem-card-ref-link"
-                href="https://www.statnews.com/2018/07/25/ibm-watson-recommended-unsafe-incorrect-treatments/"
+                href="https://www.certivo.io/blog/fda-warning-letters-data-integrity"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                STAT News
+                CERTIVO
               </a>
             </p>
           </article>
