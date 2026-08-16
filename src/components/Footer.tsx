@@ -7,7 +7,7 @@ export function Footer() {
       <div className="footer-wordmark" aria-hidden="true">biject</div>
 
       <div className="footer-bar">
-        <div className="footer-copy">2026 biject</div>
+        <div className="footer-copy">© 2026 Biject. All rights reserved.</div>
 
         <div className="footer-links">
           <a href="mailto:contact@bijectai.com">contact@bijectai.com</a>
