@@ -3,5 +3,10 @@
     "allow": [
       "Bash(node -e ' *)"
     ]
+  },
+  "attribution": {
+    "commit": "",
+    "pr": "",
+    "sessionUrl": false
   }
 }
