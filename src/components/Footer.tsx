@@ -10,7 +10,7 @@ export function Footer() {
         <div className="footer-copy">© 2026 Biject. All rights reserved.</div>
 
         <div className="footer-links">
-          <a href="mailto:contact@bijectai.com">contact@bijectai.com</a>
+          <a href="mailto:team@bijectai.com">team@bijectai.com</a>
           <span className="footer-tag"></span>
         </div>
       </div>
