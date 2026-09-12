@@ -1,12 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 
 // Right-hand "Partner with us" drawer, opened by the top-bar CTA. Offers a
-// direct "Schedule a meeting" link, then an inquiry form that POSTs to the
-// partnerships Apps Script (which appends a row to the partner sheet).
-const PARTNER_URL =
-  "https://script.google.com/macros/s/AKfycbzsFWlutWxvcKMKZgFjraVUW9v9e25oWre4fXKLaUHWNu_nM9mAEP3rgexcV42-_VPp/exec";
+// direct "Schedule a meeting" link, then an inquiry form that POSTs to
+// api/partner.ts, which mails the inquiry to the partnerships inbox.
+const PARTNER_URL = "/api/partner";
 
-const CALENDAR_URL = "https://calendar.app.google/9K6okKLashw17RZw9";
+const CALENDAR_URL = "https://calendar.app.google/hRDKox5taqchcbpw6";
 
 type SubmitState =
   | { status: "idle" }
@@ -62,25 +61,25 @@ export function PartnerDrawer({
         email: String(data.get("email") || ""),
         phone: String(data.get("phone") || ""),
         comment: String(data.get("comment") || ""),
+        website: String(data.get("website") || ""),
       };
 
-      // No Content-Type header: the string body defaults to text/plain, a
-      // "simple" request that skips the CORS preflight Apps Script can't answer.
+      // Same-origin now, so there is no CORS preflight to route around.
       const res = await fetch(PARTNER_URL, {
         method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
 
-      let result: { success?: boolean; error?: string } | null = null;
-      try {
-        result = await res.json();
-      } catch {
-        // Some deployments return no/again non-JSON body; a resolved request
-        // with no explicit error is treated as success below.
-      }
+      const result: { error?: string } | null = await res
+        .json()
+        .catch(() => null);
 
-      if (result && (result.error || result.success === false)) {
-        throw new Error(result.error || "Submission failed");
+      // A non-2xx is a failure even when the body doesn't say so. The previous
+      // endpoint was read as "resolved means sent", which reported success to
+      // the visitor on a server error and lost the inquiry silently.
+      if (!res.ok) {
+        throw new Error(result?.error || `Request failed (${res.status})`);
       }
       setSubmit({ status: "success" });
     } catch (err) {
@@ -150,6 +149,17 @@ export function PartnerDrawer({
           </div>
         ) : (
           <form className="partner-form" ref={formRef} onSubmit={handleSubmit}>
+            {/* Honeypot: parked off-screen, so only a bot fills it in. A
+                non-empty value makes the API drop the submission. */}
+            <input
+              className="partner-honeypot"
+              type="text"
+              name="website"
+              tabIndex={-1}
+              autoComplete="off"
+              aria-hidden="true"
+            />
+
             <div className="partner-row">
               <label className="partner-field">
                 <span>First name</span>
@@ -215,7 +225,12 @@ export function PartnerDrawer({
             </label>
 
             {submit.status === "error" && (
-              <p className="partner-error">Couldn't submit: {submit.message}</p>
+              // Always leave a way through: a lead shouldn't be lost because
+              // the endpoint is down or a key is missing.
+              <p className="partner-error">
+                {submit.message} Please email us at{" "}
+                <a href="mailto:team@bijectai.com">team@bijectai.com</a>.
+              </p>
             )}
 
             <button

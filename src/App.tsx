@@ -9,30 +9,7 @@ import { NotFound } from "./components/NotFound";
 import { Problem } from "./components/Problem";
 import { Solution } from "./components/Solution";
 import { TopBar } from "./components/TopBar";
-
-// Whether the system can draw a real glyph for `char`, rather than the font's
-// .notdef "tofu" box. We render the char and a guaranteed-unassigned codepoint
-// (U+FFFF, which always falls back to .notdef) and compare the pixels: a match
-// means `char` had no glyph either. Used to pick the tab-title separator, where
-// no CSS font fallback is available. Assumes support if canvas is unavailable.
-function glyphRenders(char: string): boolean {
-  const size = 24;
-  const canvas = document.createElement("canvas");
-  canvas.width = size;
-  canvas.height = size;
-  const ctx = canvas.getContext("2d");
-  if (!ctx) return true;
-  ctx.font = `${size}px sans-serif`;
-  ctx.textBaseline = "top";
-
-  const paint = (c: string) => {
-    ctx.clearRect(0, 0, size, size);
-    ctx.fillText(c, 0, 0);
-    return ctx.getImageData(0, 0, size, size).data.join(",");
-  };
-
-  return paint(char) !== paint("￿");
-}
+import { applySeo } from "./seo";
 
 export default function App() {
   // Arriving at e.g. /#demo from another page is a full navigation: the
@@ -49,20 +26,12 @@ export default function App() {
     document.fonts?.ready.then(jump);
   }, []);
 
-  // Tab title reflects the current page: "biject ↦ home / mission / join us".
-  // The ↦ (mapsto) glyph nods to the brand, but a tab title can't be styled
-  // or given a font fallback — so we probe whether the system can actually
-  // render ↦ and degrade to a plain "|" separator when it can't.
+  // Title, description, canonical and social tags for the current route.
+  // Each route is already served static HTML carrying these (see the `seo`
+  // plugin in vite.config.ts); this keeps them right for crawlers that run
+  // JavaScript, and is the only source for the 404 route.
   useEffect(() => {
-    const sep = glyphRenders("↦") ? "↦" : "|";
-    const pages: Record<string, string> = {
-      "/": "home",
-      "/about": "mission",
-      "/careers": "join us",
-    };
-    const key = window.location.pathname.replace(/\/+$/, "") || "/";
-    const page = pages[key];
-    document.title = page ? `biject ${sep} ${page}` : "biject";
+    applySeo(window.location.pathname);
   }, []);
 
   // No router: switch on the pathname. The root renders the site, /about the

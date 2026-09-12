@@ -2036,6 +2036,11 @@ body {
   color: var(--color-red);
 }
 
+.partner-error a {
+  color: inherit;
+  text-decoration: underline;
+}
+
 .partner-done-text {
   margin: 0;
   font-size: 1.02rem;
@@ -2099,6 +2104,33 @@ body {
   color: var(--ink);
   font-size: clamp(20px, 4vw, 32px);
   font-weight: 500;
+}
+
+/* A 404 with no way out is a dead end for readers and crawlers alike. */
+.notfound-home {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.35);
+  transition: color 0.2s;
+}
+
+.notfound-home:hover {
+  color: var(--ink);
+}
+
+/* Honeypot field — off-screen for people, visible to form-filling bots.
+   Kept out of the layout entirely rather than display:none, which some bots
+   check for. */
+.partner-honeypot {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
 }
 
 /* ============================================================

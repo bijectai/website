@@ -4,8 +4,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>biject</title>
+
+  <!-- Title, description, canonical, Open Graph and structured data are
+       generated per route from src/seo.ts by the `seo` plugin in
+       vite.config.ts. Edit the config, not this block. -->
+  <!--seo--><!--/seo-->
+
+  <meta name="theme-color" content="#080808" />
   <link rel="icon" href="/favicon.svg" />
+  <link rel="apple-touch-icon" href="/biject.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
@@ -15,6 +22,24 @@
 
 <body>
   <div id="root"></div>
+
+  <!-- The page is client-rendered, so a crawler or reader without JavaScript
+       would otherwise see an empty document. -->
+  <noscript>
+    <h1>biject</h1>
+    <p>
+      Conquering ambiguity in every workflow. biject hand-formalizes your
+      policies in Lean and compiles them into deterministic decision kernels
+      that are mathematically proven correct — every verdict backed by a
+      machine-checked proof, not a model's probability.
+    </p>
+    <p>
+      <a href="/about">About us</a> · <a href="/careers">Careers</a> ·
+      <a href="mailto:team@bijectai.com">team@bijectai.com</a>
+    </p>
+    <p>This site needs JavaScript enabled to display in full.</p>
+  </noscript>
+
   <script type="module" src="/src/main.tsx"></script>
 </body>
 
