@@ -3,6 +3,8 @@
     { "source": "/index.html", "destination": "/", "permanent": true }
   ],
   "rewrites": [
+    { "source": "/about", "destination": "/about/index.html" },
+    { "source": "/careers", "destination": "/careers/index.html" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }

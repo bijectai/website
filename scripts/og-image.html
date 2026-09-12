@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<!--
+  Source for public/og.png — the 1200x630 card shown when a biject link is
+  shared (Slack, LinkedIn, X, iMessage). Static HTML with no dependencies, so
+  regenerating it only needs a headless browser:
+
+    chromium --headless --screenshot=public/og.png --window-size=1200,630 \
+             --default-background-color=00000000 scripts/og-image.html
+
+  Keep the output at exactly 1200x630 — src/seo.ts declares those dimensions
+  in og:image:width / og:image:height.
+-->
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap"
+    rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 1200px;
+      height: 630px;
+      background: #080808;
+      color: #fff;
+      font-family: "Geist", sans-serif;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Faint green bloom off the bottom-right, echoing the site's accent. */
+    .glow {
+      position: absolute;
+      right: -180px;
+      bottom: -260px;
+      width: 760px;
+      height: 760px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(16, 185, 129, 0.16) 0%, rgba(16, 185, 129, 0) 70%);
+    }
+
+    /* The oversized, barely-there wordmark the site footer uses. */
+    .watermark {
+      position: absolute;
+      left: -40px;
+      bottom: -170px;
+      font-family: "Space Grotesk", sans-serif;
+      font-weight: 700;
+      font-size: 420px;
+      line-height: 0.8;
+      letter-spacing: -0.04em;
+      color: #fff;
+      opacity: 0.035;
+      white-space: nowrap;
+    }
+
+    .inner {
+      position: relative;
+      height: 100%;
+      padding: 76px 84px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .wordmark {
+      font-family: "Space Grotesk", sans-serif;
+      font-weight: 700;
+      font-size: 38px;
+      letter-spacing: -0.03em;
+    }
+
+    .wordmark span {
+      color: #10b981;
+      margin-right: 14px;
+    }
+
+    h1 {
+      font-family: "Space Grotesk", sans-serif;
+      font-weight: 600;
+      font-size: 82px;
+      line-height: 1.06;
+      letter-spacing: -0.025em;
+      max-width: 900px;
+    }
+
+    h1 em {
+      font-style: normal;
+      color: #10b981;
+    }
+
+    .foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 17px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.42);
+    }
+
+    .rule {
+      position: absolute;
+      left: 84px;
+      right: 84px;
+      bottom: 132px;
+      height: 1px;
+      background: rgba(255, 255, 255, 0.12);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="glow"></div>
+  <div class="watermark">biject</div>
+  <div class="rule"></div>
+
+  <div class="inner">
+    <div class="wordmark"><span>&#8614;</span>biject</div>
+
+    <h1>Conquering ambiguity<br />in <em>every workflow.</em></h1>
+
+    <div class="foot">
+      <div>Proofs, not probabilities</div>
+      <div>bijectai.com</div>
+    </div>
+  </div>
+</body>
+
+</html>

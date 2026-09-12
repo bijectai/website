@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 const PARTNER_URL =
   "https://script.google.com/macros/s/AKfycbzsFWlutWxvcKMKZgFjraVUW9v9e25oWre4fXKLaUHWNu_nM9mAEP3rgexcV42-_VPp/exec";
 
-const CALENDAR_URL = "https://calendar.app.google/9K6okKLashw17RZw9";
+const CALENDAR_URL = "https://calendar.app.google/hRDKox5taqchcbpw6";
 
 type SubmitState =
   | { status: "idle" }

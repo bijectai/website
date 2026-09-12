@@ -2101,6 +2101,21 @@ body {
   font-weight: 500;
 }
 
+/* A 404 with no way out is a dead end for readers and crawlers alike. */
+.notfound-home {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.35);
+  transition: color 0.2s;
+}
+
+.notfound-home:hover {
+  color: var(--ink);
+}
+
 /* ============================================================
    Footer — a giant, barely-there "biject" wordmark above a bar
    with the copyright on the left and links + kernel tag on the right.
