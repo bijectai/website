@@ -61,6 +61,20 @@ body {
   cursor: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='20'%20height='20'%3E%3Ccircle%20cx='10'%20cy='10'%20r='7'%20fill='%23000'%20stroke='%23fff'%20stroke-width='2'/%3E%3C/svg%3E") 10 10, auto;
 }
 
+/* The app root fills the viewport and lets the page's <main> absorb any
+   slack, so a short page (Careers with two roles, a tall monitor) ends with
+   the footer on the bottom edge instead of a band of bare background. */
+#root {
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+}
+
+#root > main {
+  flex: 1 0 auto;
+}
+
 /* Brand-green text selection instead of the browser default blue. */
 ::selection {
   background: var(--accent);
@@ -697,12 +711,21 @@ body {
   font-variant-numeric: tabular-nums;
 }
 
-/* Short context line directly under the metric. */
+/* Short context line directly under the metric. Reserves two lines while
+   the cards sit side by side, so one caption wrapping doesn't push its
+   divider below the neighbours'. */
 .problem-card-context {
   margin: 8px 0 0;
   font-size: 0.95rem;
   font-weight: 500;
+  line-height: 1.4;
   color: rgba(255, 255, 255, 0.62);
+}
+
+@media (min-width: 821px) {
+  .problem-card-context {
+    min-height: calc(2 * 1.4em);
+  }
 }
 
 /* Divider between the metric block and the explanation. */
@@ -1108,7 +1131,7 @@ body {
 /* Small monospace tag above the headline */
 .about-label {
   display: inline-block;
-  margin: 0 0 clamp(18px, 2.5vh, 28px);
+  margin: 0 0 clamp(14px, 2vh, 20px);
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: 0.72rem;
   letter-spacing: 0.12em;
@@ -1276,6 +1299,17 @@ body {
   color: rgba(255, 255, 255, 0.35);
 }
 
+/* Between the single-line desktop row and the stacked phone list, the five
+   names wrap 4 + 1, orphaning the last. Lay them on three content-sized
+   columns instead so they read as a deliberate 3 + 2. */
+@media (min-width: 721px) and (max-width: 1099px) {
+  .about-origins-list {
+    display: grid;
+    grid-template-columns: repeat(3, max-content);
+    justify-content: start;
+  }
+}
+
 @media (max-width: 720px) {
   .about-body {
     grid-template-columns: 1fr;
@@ -1319,7 +1353,7 @@ body {
 
 .careers-lede {
   max-width: 760px;
-  margin: clamp(16px, 2.5vh, 24px) 0 0;
+  margin: clamp(20px, 3vh, 32px) 0 0;
   text-align: left;
   font-size: clamp(1rem, 1.4vw, 1.18rem);
   line-height: 1.7;
