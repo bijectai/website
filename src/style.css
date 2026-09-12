@@ -1180,6 +1180,75 @@ body {
   color: var(--ink);
 }
 
+/* Provenance — where the team comes from. A logo strip that degrades to
+   typographic wordmarks until real logo files land in /public/logos. */
+.about-origins {
+  margin-top: clamp(56px, 8vh, 96px);
+  padding-top: clamp(28px, 4vh, 44px);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.about-origins-label {
+  margin: 0 0 clamp(20px, 3vh, 32px);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+/* Split gaps: the full institution names wrap to two lines at --maxw, and a
+   single large gap leaves the wrapped rows looking disconnected. */
+.about-origins-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  row-gap: clamp(14px, 2vh, 20px);
+  column-gap: clamp(20px, 3vw, 40px);
+}
+
+/* Names break between institutions, never mid-name. */
+.about-origins-item {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+/* Collapses any source logo — color or black — to the page's single ink. */
+.about-origins-logo {
+  height: clamp(22px, 2.6vw, 30px);
+  width: auto;
+  filter: grayscale(1) brightness(0) invert(1);
+  opacity: 0.45;
+  transition: opacity 0.2s;
+}
+
+.about-origins-logo[hidden] {
+  display: none;
+}
+
+.about-origins-item:hover .about-origins-logo {
+  opacity: 0.75;
+}
+
+/* Sized to sit at the same optical weight as a logo beside it, so the row
+   reads as one strip even while the two treatments are mixed. */
+.about-origins-name {
+  font-family: "Space Grotesk", sans-serif;
+  font-weight: 500;
+  font-size: clamp(0.82rem, 1.15vw, 0.95rem);
+  letter-spacing: -0.005em;
+  color: rgba(255, 255, 255, 0.45);
+  transition: color 0.2s;
+}
+
+.about-origins-item:hover .about-origins-name {
+  color: rgba(255, 255, 255, 0.8);
+}
+
 /* Closing statement */
 .about-close {
   margin-top: clamp(64px, 10vh, 120px);
@@ -1210,6 +1279,13 @@ body {
 @media (max-width: 720px) {
   .about-body {
     grid-template-columns: 1fr;
+  }
+
+  /* Full names are too long to sit side by side at phone width. */
+  .about-origins-list {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
   }
 }
 
