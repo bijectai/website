@@ -2036,6 +2036,11 @@ body {
   color: var(--color-red);
 }
 
+.partner-error a {
+  color: inherit;
+  text-decoration: underline;
+}
+
 .partner-done-text {
   margin: 0;
   font-size: 1.02rem;
@@ -2114,6 +2119,18 @@ body {
 
 .notfound-home:hover {
   color: var(--ink);
+}
+
+/* Honeypot field — off-screen for people, visible to form-filling bots.
+   Kept out of the layout entirely rather than display:none, which some bots
+   check for. */
+.partner-honeypot {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
 }
 
 /* ============================================================
