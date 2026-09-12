@@ -1299,6 +1299,17 @@ body {
   color: rgba(255, 255, 255, 0.35);
 }
 
+/* Between the single-line desktop row and the stacked phone list, the five
+   names wrap 4 + 1, orphaning the last. Lay them on three content-sized
+   columns instead so they read as a deliberate 3 + 2. */
+@media (min-width: 721px) and (max-width: 1099px) {
+  .about-origins-list {
+    display: grid;
+    grid-template-columns: repeat(3, max-content);
+    justify-content: start;
+  }
+}
+
 @media (max-width: 720px) {
   .about-body {
     grid-template-columns: 1fr;
