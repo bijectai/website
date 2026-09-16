@@ -1,4 +1,5 @@
 import { useState } from "react";
+import type { CSSProperties } from "react";
 
 import { Footer } from "./Footer";
 import { TopBar } from "./TopBar";
@@ -6,15 +7,29 @@ import { TopBar } from "./TopBar";
 // Where the team comes from. Each entry expects an optional logo at
 // /logos/<file>.svg; until that file exists the name renders as a typographic
 // wordmark instead, so the row is never half-empty.
+//
+// `scale` multiplies the row's base logo height. The marks disagree about how
+// much of their box is artwork — a one-line wordmark is nearly all cap height,
+// a stacked wordmark splits it over two lines, and a circular seal spends most
+// of its box on the ring — so a single shared height makes the wide wordmarks
+// shout and the seal vanish. These factors even out the optical weight.
 const ORIGINS = [
-  { name: "Cornell University", file: "cornell" },
-  { name: "Indian Institute of Technology Madras", file: "iit-madras" },
-  { name: "University of Chicago", file: "uchicago" },
-  { name: "New York University", file: "nyu" },
-  { name: "Ohio State University", file: "osu" },
+  { name: "Cornell University", file: "cornell", scale: 0.8 },
+  { name: "Indian Institute of Technology Madras", file: "iit-madras", scale: 0.9 },
+  { name: "University of Chicago", file: "uchicago", scale: 1.25 },
+  { name: "New York University", file: "nyu", scale: 0.85 },
+  { name: "Ohio State University", file: "osu", scale: 0.9 },
 ];
 
-function OriginMark({ name, file }: { name: string; file: string }) {
+function OriginMark({
+  name,
+  file,
+  scale,
+}: {
+  name: string;
+  file: string;
+  scale: number;
+}) {
   // Keyed on load, not error: vercel.json rewrites every unmatched path to
   // index.html, so a missing logo answers 200 with HTML rather than 404.
   const [hasLogo, setHasLogo] = useState(false);
@@ -26,6 +41,7 @@ function OriginMark({ name, file }: { name: string; file: string }) {
     <li className="about-origins-item">
       <img
         className="about-origins-logo"
+        style={{ "--logo-scale": scale } as CSSProperties}
         src={`/logos/${file}.svg`}
         alt={name}
         hidden={!hasLogo}
@@ -83,7 +99,12 @@ export function About() {
             <p className="about-origins-label">Brought to you by minds from</p>
             <ul className="about-origins-list">
               {ORIGINS.map((o) => (
-                <OriginMark key={o.file} name={o.name} file={o.file} />
+                <OriginMark
+                  key={o.file}
+                  name={o.name}
+                  file={o.file}
+                  scale={o.scale}
+                />
               ))}
             </ul>
           </div>

@@ -1221,7 +1221,12 @@ body {
 }
 
 /* Split gaps: the full institution names wrap to two lines at --maxw, and a
-   single large gap leaves the wrapped rows looking disconnected. */
+   single large gap leaves the wrapped rows looking disconnected.
+
+   The marks span the full content width: space-between pins the first and last
+   to the container edges and shares the slack evenly between them, so the row
+   reads as one measured strip rather than a cluster hugging the left margin.
+   column-gap stays on as the floor that spacing can never fall below. */
 .about-origins-list {
   list-style: none;
   margin: 0;
@@ -1229,6 +1234,7 @@ body {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: space-between;
   row-gap: clamp(14px, 2vh, 20px);
   column-gap: clamp(20px, 3vw, 40px);
 }
@@ -1240,9 +1246,12 @@ body {
   white-space: nowrap;
 }
 
-/* Collapses any source logo — color or black — to the page's single ink. */
+/* Collapses any source logo — color or black — to the page's single ink.
+   --logo-scale is set per institution in About.tsx to even out the optical
+   weight of marks whose artwork fills very different shares of its box. */
 .about-origins-logo {
-  height: clamp(22px, 2.6vw, 30px);
+  --logo-scale: 1;
+  height: calc(clamp(26px, 2.6vw, 30px) * var(--logo-scale));
   width: auto;
   filter: grayscale(1) brightness(0) invert(1);
   opacity: 0.45;
@@ -1300,13 +1309,20 @@ body {
 }
 
 /* Between the single-line desktop row and the stacked phone list, the five
-   names wrap 4 + 1, orphaning the last. Lay them on three content-sized
-   columns instead so they read as a deliberate 3 + 2. */
-@media (min-width: 721px) and (max-width: 1099px) {
+   marks wrap 4 + 1, orphaning the last. Lay them on three content-sized
+   columns instead so they read as a deliberate 3 + 2.
+
+   The ceiling is set by how much width the five marks plus their minimum gaps
+   actually need: measured, they stop wrapping at ~1180px, so the single row
+   takes over at 1200px with a little slack. Swapping in a wider logo pushes
+   that threshold up — if the row starts orphaning again, raise this number. */
+@media (min-width: 721px) and (max-width: 1199px) {
   .about-origins-list {
     display: grid;
     grid-template-columns: repeat(3, max-content);
-    justify-content: start;
+    /* Same edge-to-edge spread as the desktop row. The second row holds two of
+       the three columns, so it stops short of the right edge by design. */
+    justify-content: space-between;
   }
 }
 
@@ -1318,8 +1334,35 @@ body {
   /* Full names are too long to sit side by side at phone width. */
   .about-origins-list {
     flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
+    align-items: center;
+    gap: clamp(16px, 3.2vw, 22px);
+  }
+
+  /* Stacked, the marks are read against each other rather than across a row,
+     and matching their heights is no longer enough: the proportions run from
+     7:1 (Cornell) to 3.6:1 (NYU), so one ends up half the width of the next
+     and the column looks ragged.
+
+     Give every mark the same box and let it scale down to fit inside — wide
+     ones come up against the width, upright ones against the height — so the
+     column lines up on both edges. This supersedes --logo-scale here; the
+     box does the evening out that the per-logo factors do on desktop. */
+  .about-origins-logo {
+    /* max-width, not width: a width of min(200px, 100%) leaves the <li> sized
+       to the logo's full intrinsic width while the <img> inside is clipped to
+       200px, so centring the item parks the wide marks off-axis. Capping with
+       max-width keeps item and image the same width, and they line up. */
+    width: auto;
+    max-width: 200px;
+    /* Close to the height the grid uses just above 720px, so the marks do not
+       visibly jump when the layout switches. */
+    height: 36px;
+    object-fit: contain;
+  }
+
+  /* Never let the cap push a mark past the container on a very narrow screen. */
+  .about-origins-item {
+    max-width: 100%;
   }
 }
 
