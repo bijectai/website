@@ -30,11 +30,18 @@ export type NewsItem = {
 
 export const NEWS: NewsItem[] = [
   {
+    slug: "one-line-guardrail",
+    kind: "post",
+    title: "Case study: gating a self-improving coding harness",
+    date: "2026-09-29",
+    summary:
+      "Self-evolving agents can rewrite their own prompts, so we built one whose guardrails it can’t touch, and measured whether it still got better.",
+  },
+  {
     slug: "type-checked-compliance",
     kind: "paper",
     title: "Type-Checked Compliance",
-    // From the arXiv identifier: 2604 is April 2026.
-    date: "2026-04",
+    date: "2026-04-01",
     summary: "Preprint on arXiv, 2604.01483.",
     href: "https://arxiv.org/abs/2604.01483",
   },

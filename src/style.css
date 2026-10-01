@@ -1441,9 +1441,9 @@ body {
   text-wrap: balance;
 }
 
-/* The reading column. Posts are written in plain JSX; this styles it. */
+/* The reading column. Posts are written in plain JSX; this styles it. Text
+   keeps a 68ch measure; figures may run the full article width. */
 .post-body {
-  max-width: 68ch;
   margin-top: clamp(32px, 5vh, 56px);
   font-size: 1.0625rem;
   line-height: 1.75;
@@ -1452,6 +1452,34 @@ body {
 
 .post-body > * {
   margin: 0 0 1.15em;
+}
+
+.post-body > :not(figure) {
+  max-width: 68ch;
+}
+
+.post-body figure {
+  margin: 2.2em 0;
+}
+
+.post-body figure a {
+  display: block;
+  text-decoration: none;
+}
+
+.post-body figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.post-body figcaption {
+  margin-top: 12px;
+  font-size: 0.88rem;
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.5);
 }
 
 .post-body h2 {
