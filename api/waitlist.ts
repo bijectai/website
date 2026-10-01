@@ -20,6 +20,42 @@ const TO = "dev@bijectai.com";
 const DEFAULT_FROM = "biject website <partnerships@bijectai.com>";
 const RESEND_ENDPOINT = "https://api.resend.com/emails";
 
+/**
+ * Per-IP send limit: RATE_LIMIT requests per RATE_WINDOW_MS.
+ *
+ * Kept in this instance's memory, so it stops one client hammering a warm
+ * function, not a distributed flood (that needs a shared store such as
+ * Vercel KV). A real visitor submits once.
+ */
+const RATE_LIMIT = 3;
+const RATE_WINDOW_MS = 10 * 60 * 1000;
+const recent = new Map<string, number[]>();
+
+/** True when `ip` has used its sends for the window; records the attempt otherwise. */
+export function rateLimited(ip: string, now = Date.now()): boolean {
+  const hits = (recent.get(ip) ?? []).filter((t) => now - t < RATE_WINDOW_MS);
+  if (hits.length >= RATE_LIMIT) {
+    recent.set(ip, hits);
+    return true;
+  }
+  hits.push(now);
+  recent.set(ip, hits);
+  // Bound the map: drop clients whose window has passed.
+  if (recent.size > 5000) {
+    for (const [key, times] of recent) {
+      if (times.every((t) => now - t >= RATE_WINDOW_MS)) recent.delete(key);
+    }
+  }
+  return false;
+}
+
+/** The caller's address as Vercel reports it. */
+function clientIp(req: VercelRequest): string {
+  const forwarded = req.headers["x-forwarded-for"];
+  const first = (Array.isArray(forwarded) ? forwarded[0] : forwarded)?.split(",")[0]?.trim();
+  return first || req.socket?.remoteAddress || "unknown";
+}
+
 /** Caps so an abusive payload can't turn into a multi-megabyte email. */
 const MAX = {
   email: 254,
@@ -125,6 +161,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const parsed = parseRequest(body);
   if ("error" in parsed) {
     return res.status(400).json({ error: parsed.error });
+  }
+
+  // Checked after validation, so malformed requests don't spend the quota.
+  if (rateLimited(clientIp(req))) {
+    return res.status(429).json({ error: "Too many requests. Try again in a few minutes." });
   }
   const { request } = parsed;
 

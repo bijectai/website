@@ -39,6 +39,7 @@ const SCALE_FACTOR = 0.2; // attractor radius relative to min(viewport)
 // side. CSS owns the hero layout; this just follows it.
 const STAGE_SELECTOR = ".hero-stage";
 const STAGE_FILL = 1 / 3;
+const MIN_STAGE = 96; // px; below this the stage hides the cloud (see place())
 const VERTICAL_OFFSET = 0.06; // shift the cloud's center down, as a fraction of viewport height
 const FOCAL = 9; // perspective focal length (attractor units)
 const BASE_ALPHA = 0.55; // opacity of the freshest trail segment
@@ -243,8 +244,15 @@ export function AizawaAttractor() {
     // ---- denied-action event state ----
     // shadow: where the strand would be had it stayed on the field.
     // from: its position when the snap began, lerped toward the shadow.
+    // snapped: the snap reached the shadow (a hidden tab can cut it short).
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    let deny: { p: Particle; start: number; shadow: Vec3; from: Vec3 | null } | null = null;
+    let deny: {
+      p: Particle;
+      start: number;
+      shadow: Vec3;
+      from: Vec3 | null;
+      snapped: boolean;
+    } | null = null;
     let nextDeny = performance.now() + randIn(DENY_FIRST_MS);
 
     // ---- attractor cycling / homotopy state ----
@@ -290,10 +298,17 @@ export function AizawaAttractor() {
     }
     // Center and scale. The canvas is anchored to the top of the page, so the
     // stage's page coordinates (viewport rect + scroll) are canvas coordinates.
+    // Whether to draw at all. A stage squeezed below MIN_STAGE (a phone held
+    // sideways, where the copy takes the whole first screen) hides the cloud
+    // rather than letting it fall back onto the copy. The simulation keeps
+    // running, so it reappears as soon as there's room.
+    let visible = true;
+
     function place() {
       const stage = document.querySelector<HTMLElement>(STAGE_SELECTOR);
       const r = stage?.getBoundingClientRect();
-      if (r && r.width > 0 && r.height > 0) {
+      visible = !r || Math.min(r.width, r.height) >= MIN_STAGE;
+      if (r && visible) {
         cx = r.left + r.width / 2;
         cy = r.top + window.scrollY + r.height / 2;
         scale = Math.min(r.width, r.height) * STAGE_FILL;
@@ -377,7 +392,7 @@ export function AizawaAttractor() {
         } else {
           const pool = particles.filter((p) => !p.green && p.count === TRAIL_LENGTH);
           const p = pool[Math.floor(Math.random() * pool.length)];
-          if (p) deny = { p, start: now, shadow: { ...p.cur }, from: null };
+          if (p) deny = { p, start: now, shadow: { ...p.cur }, from: null, snapped: false };
           nextDeny = now + randIn(DENY_EVERY_MS);
         }
       }
@@ -415,6 +430,7 @@ export function AizawaAttractor() {
           p.cur.x = d.from.x + (d.shadow.x - d.from.x) * e;
           p.cur.y = d.from.y + (d.shadow.y - d.from.y) * e;
           p.cur.z = d.from.z + (d.shadow.z - d.from.z) * e;
+          if (k >= 1) d.snapped = true;
         }
         // Respawn anything that goes non-finite or escapes the leash
         // (real orbits stay within ~3; only blend-time runaways exceed it).
@@ -437,15 +453,17 @@ export function AizawaAttractor() {
       ctx.lineCap = "round";
 
       // Draw the base (ink) particles first, greens on top so the 5% pop.
-      drawPass(false);
-      drawPass(true);
+      if (visible) {
+        drawPass(false);
+        drawPass(true);
+      }
 
       // The denied strand: its green overlay ramps in over the drift, holds
       // bright through the flash and snap, then fades out of the trail. If a
-      // hidden tab let the whole event elapse unseen, land it on the shadow.
+      // hidden tab cut the snap short (or skipped it), land it on the shadow.
       if (deny) {
         if (denyAge >= DENY_TOTAL_MS) {
-          if (!deny.from) deny.p.cur = { ...deny.shadow };
+          if (!deny.snapped) deny.p.cur = { ...deny.shadow };
           deny = null;
         } else {
           const flashEnd = DENY_TOTAL_MS - DENY_SETTLE_MS;
@@ -455,7 +473,7 @@ export function AizawaAttractor() {
           else g = 1 - (denyAge - flashEnd) / DENY_SETTLE_MS;
           const boost = denyAge >= DENY_DRIFT_MS && denyAge < flashEnd ? DENY_FLASH_ALPHA : 1;
           ctx.strokeStyle = GREEN;
-          drawTrail(deny.p, g * boost);
+          if (visible) drawTrail(deny.p, g * boost);
         }
       }
 
