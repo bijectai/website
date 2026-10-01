@@ -1,59 +1,41 @@
-import { useEffect, useRef, useState } from "react";
+// The first screen. Back to front: the oversized background lettering
+// (HeroBackdrop), the attractor canvas, then the headline and actions (Hero).
+// App renders them in that order; the backdrop and canvas share z-index 0, so
+// document order is what keeps the lettering underneath the particles.
 
-const BLURB =
-  "The Aizawa attractor never repeats, yet every point obeys the same deterministic equations. Chaos with structure underneath. That's the world biject operates in.";
+export const PAPER_URL = "https://arxiv.org/abs/2604.01483";
+
+// Texture, not content: the headline carries the meaning for assistive tech.
+// Each phrase is its own span so the break between them is chosen per
+// breakpoint in CSS rather than left to wrapping.
+export function HeroBackdrop() {
+  return (
+    <div className="hero-backdrop" aria-hidden="true">
+      <p className="hero-backdrop-text">
+        <span>proof,</span> <span>not</span> <span>probability.</span>
+      </p>
+    </div>
+  );
+}
 
 export function Hero() {
-  const [visible, setVisible] = useState(false);
-  const [pos, setPos] = useState({ x: 0, y: 0 });
-  const containerRef = useRef<HTMLDivElement>(null);
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  useEffect(() => {
-    const onMove = (e: MouseEvent) => {
-      const vw = window.innerWidth;
-      const vh = window.innerHeight;
-
-      // Only active while the hero is still in view
-      if (window.scrollY > vh) return;
-
-      const dx = Math.abs(e.clientX - vw / 2) / (vw / 2);
-      const dy = Math.abs(e.clientY - vh / 2) / (vh / 2);
-      const nearCenter = dx < 0.32 && dy < 0.32;
-
-      setVisible(nearCenter);
-      if (nearCenter) {
-        setPos({ x: e.clientX, y: e.clientY });
-      }
-
-      // Hide if the mouse lingers outside the zone
-      if (timerRef.current) clearTimeout(timerRef.current);
-      if (!nearCenter) {
-        timerRef.current = setTimeout(() => setVisible(false), 120);
-      }
-    };
-
-    window.addEventListener("mousemove", onMove, { passive: true });
-    return () => {
-      window.removeEventListener("mousemove", onMove);
-      if (timerRef.current) clearTimeout(timerRef.current);
-    };
-  }, []);
-
   return (
-    <div className="hero-copy" ref={containerRef}>
+    <div className="hero-copy">
       <h1 className="hero-title">
-        <span className="hero-line">Conquering Ambiguity </span>
-        <span className="hero-line hero-subline">in Every Workflow.</span>
+        <span className="hero-line">An agent can’t argue </span>
+        <span className="hero-line">with a proof.</span>
       </h1>
-
-      {/* Attractor tooltip — appears near cursor when hovering the center zone */}
-      <div
-        className={`attractor-blurb${visible ? " attractor-blurb--visible" : ""}`}
-        style={{ "--bx": `${pos.x}px`, "--by": `${pos.y}px` } as React.CSSProperties}
-        aria-hidden="true"
-      >
-        {BLURB}
+      <p className="hero-sub">
+        Type-checked guardrails for AI agents. Now piloting with a small group
+        of teams.
+      </p>
+      <div className="hero-actions">
+        <a className="nav-cta hero-cta" href="#early-access">
+          Request early access
+        </a>
+        <a className="hero-link" href={PAPER_URL} target="_blank" rel="noopener noreferrer">
+          Read the paper
+        </a>
       </div>
     </div>
   );

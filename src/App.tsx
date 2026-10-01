@@ -2,17 +2,20 @@ import { useEffect } from "react";
 import { About } from "./components/About";
 import { AizawaAttractor } from "./components/AizawaAttractor";
 import { Careers } from "./components/Careers";
-import { Demo } from "./components/Demo";
+import { Closing, EarlyAccess } from "./components/EarlyAccess";
 import { Footer } from "./components/Footer";
-import { Hero } from "./components/Hero";
+import { Hero, HeroBackdrop } from "./components/Hero";
+import { HowItWorks } from "./components/HowItWorks";
 import { NotFound } from "./components/NotFound";
-import { Problem } from "./components/Problem";
-import { Solution } from "./components/Solution";
+import { Research } from "./components/Research";
+import { SdkPreview } from "./components/SdkPreview";
 import { TopBar } from "./components/TopBar";
+import { UseCases } from "./components/UseCases";
+import { WhyNotJudge } from "./components/WhyNotJudge";
 import { applySeo } from "./seo";
 
 export default function App() {
-  // Arriving at e.g. /#demo from another page is a full navigation: the
+  // Arriving at e.g. /#research from another page is a full navigation: the
   // browser's native anchor jump fires before React has rendered the target
   // section, so it finds nothing and never scrolls. Scroll there ourselves
   // once mounted — and again after web fonts load, since they shift layout
@@ -49,6 +52,8 @@ export default function App() {
 
   return (
     <>
+      {/* Back to front: lettering, attractor, headline. */}
+      <HeroBackdrop />
       <AizawaAttractor />
       <Hero />
       {/* Pushes the bar down to the bottom of the first screen; from there
@@ -56,9 +61,13 @@ export default function App() {
       <div className="hero-spacer" aria-hidden="true" />
       <TopBar />
       <main id="app">
-        <Problem />
-        <Solution />
-        <Demo />
+        <SdkPreview />
+        <HowItWorks />
+        <WhyNotJudge />
+        <UseCases />
+        <Research />
+        <EarlyAccess />
+        <Closing />
       </main>
       <Footer />
     </>
