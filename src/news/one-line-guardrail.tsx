@@ -36,7 +36,7 @@ export default function OneLineGuardrail() {
         <Out href="https://github.com/arkanemystic/lean-agent-protocol">
           Lean-Agent Protocol
         </Out>{" "}
-        (a distilled version of the Biject API), checked against a formal spec
+        (the open-source predecessor of the Biject API), checked against a formal spec
         written in Lean, which is outside of the harness’s grasp. Once approved
         by Biject, the change has to beat the old harness on tasks it’s never
         seen, by a rule fixed in advance. This two step architecture ensured
