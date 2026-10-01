@@ -1,4 +1,5 @@
 import type { ComponentType } from "react";
+import OneLineGuardrail from "./one-line-guardrail";
 
 // Post bodies, keyed by the slug of their entry in src/news.ts. A post with
 // an entry there but no body here renders the 404 page.
@@ -8,4 +9,6 @@ import type { ComponentType } from "react";
 //
 //   import WhyKernels from "./why-kernels";
 //   export const POSTS = { "why-kernels": WhyKernels };
-export const POSTS: Record<string, ComponentType> = {};
+export const POSTS: Record<string, ComponentType> = {
+  "one-line-guardrail": OneLineGuardrail,
+};
