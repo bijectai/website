@@ -112,26 +112,30 @@ body {
 
 /* ============================================================
    Hero
-   Three zones that never overlap: the copy (left), the stage the
-   attractor frames itself to (right), and one line of background
-   lettering in a band along the bottom, just above the nav bar's
-   resting slot. Below 900px the copy and stage stack.
+   One centered column: the copy in the upper middle, then the stage
+   the attractor frames itself to, running down to the nav bar's
+   resting slot. Behind them, rows of small repeated type cover the
+   top of the screen and fade out before the attractor.
 
    Paint order, back to front: lettering, attractor canvas, copy.
    The lettering and the canvas share z-index 0; the lettering comes
    first in the document, so it paints underneath the particles.
    ============================================================ */
-.hero,
-.hero-backdrop {
-  /* One line of "proof, not probability." spans the content box. --fit is
-     that line's width in em at this weight and tracking (9.39), plus a hair. */
-  --fit: 9.45;
-  --letter-size: calc((min(80vw, var(--maxw)) - 2 * clamp(20px, 3vw, 32px)) / var(--fit));
-  --letter-lines: 1;
-  --letter-lh: 0.9;
-  --letter-band: calc(var(--letter-size) * var(--letter-lh) * var(--letter-lines));
+.hero {
   /* The nav bar rests a --bar-gap above the bottom of the first screen. */
   --hero-floor: calc(var(--nav-h) + var(--bar-gap) * 2);
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100vh;
+  height: 100svh;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  padding-top: calc(var(--bar-gap) + var(--nav-h) + clamp(24px, 12vh, 150px));
+  padding-bottom: var(--hero-floor);
+  pointer-events: none;
 }
 
 .hero-backdrop {
@@ -142,58 +146,40 @@ body {
   height: 100vh;
   height: 100svh;
   z-index: 0;
-  /* Clip, never scroll: the lettering is sized to fit, and this is the
-     guarantee that a slow font swap or rounding can't widen the page. */
+  /* Clip, never scroll: the rows run wider than any screen on purpose. */
   overflow: clip;
-  display: flex;
-  align-items: flex-end;
-  padding-bottom: var(--hero-floor);
+  padding-top: 6px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: clamp(11px, 0.9vw, 14px);
+  line-height: 2.05;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  /* A few steps above the page: texture first, words second. */
+  color: var(--ink);
+  opacity: 0.06;
+  /* Full strength across the top, gone by a little past the middle. */
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 16%, transparent 56%);
+  mask-image: linear-gradient(to bottom, #000 0%, #000 16%, transparent 56%);
   pointer-events: none;
   user-select: none;
   -webkit-user-select: none;
 }
 
-.hero-backdrop-text {
+.hero-backdrop-row {
   margin-block: 0;
-  font-family: "Space Grotesk", sans-serif;
-  font-weight: 600;
-  font-size: var(--letter-size);
-  line-height: var(--letter-lh);
-  letter-spacing: -0.055em;
-  white-space: nowrap;
-  /* A few steps above the page: texture first, words second. */
-  color: var(--ink);
-  opacity: 0.05;
 }
 
-.hero {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 100vh;
-  height: 100svh;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  padding-top: calc(var(--bar-gap) + var(--nav-h) + clamp(16px, 4vh, 48px));
-  /* Stop above the lettering's band, with a gap. */
-  padding-bottom: calc(var(--hero-floor) + var(--letter-band) + clamp(16px, 3vh, 40px));
-  pointer-events: none;
+/* Every third row a shade lighter, so the field reads as uneven texture
+   rather than ruled lines. */
+.hero-backdrop-row:nth-child(3n + 2) {
+  opacity: 0.55;
 }
 
-.hero-grid {
-  flex: 1;
-  min-height: 0;
-  display: grid;
-  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
-  column-gap: clamp(24px, 4vw, 64px);
-  align-items: center;
-}
-
-/* Sized to its column (cqi) so each set line stays whole. */
+/* Sized to the content box (cqi) so the set lines stay whole: the whole
+   headline on one line where it fits, two lines on phones. */
 .hero-copy {
   container-type: inline-size;
+  text-align: center;
 }
 
 .hero-title {
@@ -201,22 +187,19 @@ body {
   color: var(--ink);
   font-family: "Space Grotesk", sans-serif;
   font-weight: 600;
-  font-size: min(5rem, calc(100cqi / 10.6));
-  line-height: 1.02;
+  font-size: min(4.5rem, calc(100cqi / 17.4));
+  line-height: 1.04;
   letter-spacing: -0.035em;
-}
-
-.hero-line {
-  display: block;
   white-space: nowrap;
 }
 
 .hero-sub {
-  margin: clamp(16px, 2.4vh, 24px) 0 0;
-  max-width: 36ch;
+  margin: clamp(14px, 2.2vh, 22px) auto 0;
+  max-width: 60ch;
   font-size: clamp(1rem, 1.25vw, 1.15rem);
   line-height: 1.6;
   color: rgba(255, 255, 255, 0.7);
+  text-wrap: balance;
 }
 
 .hero-actions {
@@ -224,6 +207,7 @@ body {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: center;
   gap: 14px 28px;
   pointer-events: auto;
 }
@@ -247,57 +231,28 @@ body {
   text-decoration-color: currentColor;
 }
 
-/* The attractor's frame. Empty; AizawaAttractor reads its box. */
+/* The attractor's frame: everything left between the copy and the nav
+   bar. Empty; AizawaAttractor reads its box. */
 .hero-stage {
-  align-self: stretch;
+  flex: 1;
   min-height: 0;
+  margin-top: clamp(12px, 3vh, 36px);
 }
 
-/* Tablet and phone: the copy on top, the stage filling what's left above
-   the lettering. The content box widens to 90% here, as it does for the
-   nav and the sections. */
 @media (max-width: 900px) {
-  .hero,
-  .hero-backdrop {
-    --letter-size: calc(90vw / var(--fit));
-  }
-
   .hero {
-    padding-top: calc(var(--bar-gap) + var(--nav-h) + 16px);
-  }
-
-  .hero-grid {
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: auto minmax(0, 1fr);
-    row-gap: clamp(12px, 3vh, 32px);
-    align-items: stretch;
+    padding-top: calc(var(--bar-gap) + var(--nav-h) + clamp(16px, 5vh, 48px));
   }
 }
 
-/* Phones: one line would be too small to read as a shape, so break after
-   "proof," and size to the longer line (6.66em). */
+/* Phones: one line would be too small, so break after "argue". */
 @media (max-width: 600px) {
-  .hero,
-  .hero-backdrop {
-    --fit: 6.9;
-    --letter-lines: 2;
+  .hero-title {
+    font-size: calc(100cqi / 10.6);
   }
 
-  .hero-backdrop-text span:first-child {
+  .hero-line {
     display: block;
-  }
-}
-
-/* Very short phones: the band would squeeze the attractor to a dot. The
-   lettering is texture, so it goes and the stage takes the room. */
-@media (max-width: 600px) and (max-height: 600px) {
-  .hero,
-  .hero-backdrop {
-    --letter-lines: 0;
-  }
-
-  .hero-backdrop {
-    display: none;
   }
 }
 
