@@ -103,7 +103,7 @@ export function EarlyAccess() {
               <input
                 name="agent"
                 type="text"
-                placeholder="A coding agent that opens PRs on our monorepo"
+                placeholder="What it does, and which systems it can act on"
               />
             </label>
 
@@ -121,7 +121,7 @@ export function EarlyAccess() {
               <textarea
                 name="block"
                 rows={3}
-                placeholder="Writes to tests/, shell commands outside the repo"
+                placeholder="Actions over a limit, records it shouldn’t change"
               />
             </label>
 

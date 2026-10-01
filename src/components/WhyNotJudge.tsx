@@ -60,8 +60,8 @@ export function WhyNotJudge() {
 
         <p className="body judge-note">
           Proof checks don’t replace your other layers. They cover the rules
-          you can state precisely, like which paths an agent may write or which
-          tools it may call. Keep heuristic filters and model-based review for
+          you can state precisely, like a spending limit, who may change a
+          record, or which tools an agent may call. Keep heuristic filters and model-based review for
           the judgment calls. Put the kernel where a rule has to hold every
           time.
         </p>

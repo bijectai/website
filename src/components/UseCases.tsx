@@ -1,22 +1,27 @@
-// What the gate is built for. Not customer stories. Coding agents lead, wide,
-// because they are the case the SDK preview already shows; MCP and CI stack
-// beside it. Each carries the kind of rule it would enforce.
+// What the gate is used for. There's no catalog: every policy is formalized
+// for the domain it governs. The lead says so, wide; beside it, three shapes
+// a rule can take in any domain, each with the kind of verdict it produces.
+// Not customer stories.
 const LEAD = {
-  title: "Coding agents",
-  body: "An agent under pressure to pass will sometimes edit the test instead of the code. The policy makes tests, graders, and CI config read-only for the agent. The gate denies the write and the verdict says which rule fired.",
-  rule: "DENY  rule: tests/ is read-only for this agent",
+  title: "Formalized with you",
+  body: "There’s no catalog of prebuilt policies. We formalize the rules your agents operate under, whatever your domain, and review them with the people who own them. The gate enforces exactly those rules. If a rule can be stated precisely, it can be checked.",
 };
 
-const OTHERS = [
+const SHAPES = [
   {
-    title: "MCP tool gating",
-    body: "Put the gate between the agent and its MCP servers. Each tool call is checked before the server receives it: which tool, which arguments, which resource.",
-    rule: "DENY  rule: fs.write outside ./workspace",
+    title: "Limits",
+    body: "A ceiling the agent can’t cross, per action or across a period. Amounts, quantities, rates.",
+    rule: "DENY  rule: amount exceeds per-transaction limit",
   },
   {
-    title: "Pre-merge checks in CI",
-    body: "Run the same policies as a CI step over the diff an agent proposes. A DENY fails the check, and the signed verdict goes into the build log.",
-    rule: "DENY  rule: .github/workflows/ is not agent-writable",
+    title: "Permissions",
+    body: "Which records, systems, and tools the agent may touch, and what it may do there.",
+    rule: "DENY  rule: agent may read records/, not write them",
+  },
+  {
+    title: "Order of operations",
+    body: "Steps that can’t run until the steps they depend on have happened and been approved.",
+    rule: "DENY  rule: release requires a recorded sign-off",
   },
 ];
 
@@ -25,22 +30,21 @@ export function UseCases() {
     <section className="uses" id="use-cases" aria-labelledby="uses-title">
       <div className="wrap">
         <h2 className="h2" id="uses-title">
-          Built for agents with write access.
+          Built for your domain.
         </h2>
 
         <div className="uses-grid">
           <article className="use use-lead">
             <h3 className="use-title">{LEAD.title}</h3>
             <p className="body">{LEAD.body}</p>
-            <p className="use-rule">{LEAD.rule}</p>
           </article>
 
           <div className="uses-side">
-            {OTHERS.map((use) => (
-              <article className="use" key={use.title}>
-                <h3 className="use-title">{use.title}</h3>
-                <p className="body">{use.body}</p>
-                <p className="use-rule">{use.rule}</p>
+            {SHAPES.map((shape) => (
+              <article className="use" key={shape.title}>
+                <h3 className="use-title">{shape.title}</h3>
+                <p className="body">{shape.body}</p>
+                <p className="use-rule">{shape.rule}</p>
               </article>
             ))}
           </div>

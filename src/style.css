@@ -365,25 +365,6 @@ body {
   width: auto;
 }
 
-/* Logo + "Private beta" tag, pinned together in the left corner. */
-.brand-group {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.brand-tag {
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 0.66rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  white-space: nowrap;
-  color: rgba(255, 255, 255, 0.55);
-  padding: 4px 8px;
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  border-radius: 6px;
-}
-
 /* links */
 .nav-links {
   flex: 0 0 auto;
@@ -653,21 +634,10 @@ body {
     position: relative;
   }
 
-  .topbar-corners-inner .brand-group {
+  .topbar-corners-inner .brand {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-  }
-
-  /* No room beside the centered logo: hang the tag under the wordmark,
-     in the logo image's empty lower band. */
-  .brand-tag {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, 14px);
-    padding: 2px 6px;
-    font-size: 0.56rem;
   }
 
   .nav-toggle {

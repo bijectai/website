@@ -97,12 +97,9 @@ export function TopBar() {
     <>
       <div className="topbar-corners">
         <div className="topbar-corners-inner">
-          <div className="brand-group">
-            <a className="brand" href="/" aria-label="biject home">
-              <img className="brand-logo" src="/logo.png" alt="biject" />
-            </a>
-            <span className="brand-tag">Private beta</span>
-          </div>
+          <a className="brand" href="/" aria-label="biject home">
+            <img className="brand-logo" src="/logo.png" alt="biject" />
+          </a>
           <a className="nav-cta" href="/#early-access" ref={ctaRef}>
             Request early access
           </a>
