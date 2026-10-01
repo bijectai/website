@@ -19,8 +19,8 @@ export function Hero() {
           <span className="hero-line">with a proof.</span>
         </h1>
         <p className="hero-sub">
-          Type-checked guardrails for AI agents. Now piloting with a small group
-          of teams.
+          Type-checked guardrails for AI agents. Now piloting with select teams,
+          apply below.
         </p>
         <div className="hero-actions">
           <a className="nav-cta hero-cta" href="#early-access">
