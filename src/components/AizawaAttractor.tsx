@@ -34,6 +34,11 @@ const TRAIL_LENGTH = 46; // trail points kept per particle
 const STEPS_PER_FRAME = 2; // integration steps advanced per frame
 const GREEN_RATIO = 0.05; // 5% of particles are green
 const SCALE_FACTOR = 0.2; // attractor radius relative to min(viewport)
+// When the page lays out a .hero-stage box, the cloud is framed to it instead:
+// centered on the box, scaled so the shape's ~3-unit span fills its shorter
+// side. CSS owns the hero layout; this just follows it.
+const STAGE_SELECTOR = ".hero-stage";
+const STAGE_FILL = 1 / 3;
 const VERTICAL_OFFSET = 0.06; // shift the cloud's center down, as a fraction of viewport height
 const FOCAL = 9; // perspective focal length (attractor units)
 const BASE_ALPHA = 0.55; // opacity of the freshest trail segment
@@ -276,17 +281,37 @@ export function AizawaAttractor() {
       // horizontal scrollbar.
       width = document.documentElement.clientWidth;
       height = window.innerHeight;
-      cx = width / 2;
-      cy = height / 2 + height * VERTICAL_OFFSET;
-      scale = Math.min(width, height) * SCALE_FACTOR;
+      place();
       canvas.width = Math.round(width * dpr);
       canvas.height = Math.round(height * dpr);
       canvas.style.width = width + "px";
       canvas.style.height = height + "px";
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     }
+    // Center and scale. The canvas is anchored to the top of the page, so the
+    // stage's page coordinates (viewport rect + scroll) are canvas coordinates.
+    function place() {
+      const stage = document.querySelector<HTMLElement>(STAGE_SELECTOR);
+      const r = stage?.getBoundingClientRect();
+      if (r && r.width > 0 && r.height > 0) {
+        cx = r.left + r.width / 2;
+        cy = r.top + window.scrollY + r.height / 2;
+        scale = Math.min(r.width, r.height) * STAGE_FILL;
+      } else {
+        cx = width / 2;
+        cy = height / 2 + height * VERTICAL_OFFSET;
+        scale = Math.min(width, height) * SCALE_FACTOR;
+      }
+    }
+
     resize();
     window.addEventListener("resize", resize);
+    // The stage moves when the copy above it reflows (web fonts landing, a
+    // breakpoint): follow it without resizing the canvas.
+    const stageEl = document.querySelector(STAGE_SELECTOR);
+    const stageObserver = stageEl ? new ResizeObserver(place) : null;
+    if (stageEl) stageObserver!.observe(stageEl);
+    document.fonts?.ready.then(place);
 
     // ---- rotation: per-attractor base angle + subtle mouse sway ----
     // The resting orientation comes from the active attractor (interpolated
@@ -483,6 +508,7 @@ export function AizawaAttractor() {
     return () => {
       cancelAnimationFrame(raf);
       window.removeEventListener("resize", resize);
+      stageObserver?.disconnect();
       window.clearInterval(cycleTimer);
     };
   }, []);
