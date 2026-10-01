@@ -66,7 +66,7 @@ export default function App() {
   return (
     <>
       {/* Back to front: background type, attractor, headline. */}
-      <ProofField />
+      <ProofField hero />
       <AizawaAttractor />
       <Hero />
       {/* Pushes the bar down to the bottom of the first screen; from there
