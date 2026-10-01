@@ -1,5 +1,6 @@
 import { KIND_LABEL, formatNewsDate, sortedNews } from "../news";
 import { Footer } from "./Footer";
+import { ProofField } from "./ProofField";
 import { TopBar } from "./TopBar";
 
 // /news: research and posts in one dated list, newest first. Rows split by
@@ -10,6 +11,7 @@ export function News() {
 
   return (
     <>
+      <ProofField />
       <div className="topbar-gap" aria-hidden="true" />
       <TopBar />
 

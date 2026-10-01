@@ -114,12 +114,12 @@ body {
    Hero
    One centered column: the copy in the upper middle, then the stage
    the attractor frames itself to, running down to the nav bar's
-   resting slot. Behind them, rows of small repeated type cover the
-   top of the screen and fade out before the attractor.
+   resting slot. Behind them, the proof field (below) covers the top
+   of the screen and fades out before the attractor.
 
-   Paint order, back to front: lettering, attractor canvas, copy.
-   The lettering and the canvas share z-index 0; the lettering comes
-   first in the document, so it paints underneath the particles.
+   Paint order, back to front: proof field, attractor canvas, copy.
+   The field and the canvas share z-index 0; the field comes first in
+   the document, so it paints underneath the particles.
    ============================================================ */
 .hero {
   /* The nav bar rests a --bar-gap above the bottom of the first screen. */
@@ -138,7 +138,10 @@ body {
   pointer-events: none;
 }
 
-.hero-backdrop {
+/* The background type (ProofField): rows of small Lean 4 with "proof, not
+   probability." set into them. Shared by every page, so it's anchored to the
+   top of the document rather than the hero. */
+.proof-field {
   position: absolute;
   top: 0;
   left: 0;
@@ -152,11 +155,9 @@ body {
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: clamp(11px, 0.9vw, 14px);
   line-height: 2.05;
-  letter-spacing: 0.02em;
   white-space: nowrap;
-  /* A few steps above the page: texture first, words second. */
-  color: var(--ink);
-  opacity: 0.06;
+  /* The Lean: a few steps above the page, texture first. */
+  color: rgba(255, 255, 255, 0.05);
   /* Full strength across the top, gone by a little past the middle. */
   -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 16%, transparent 56%);
   mask-image: linear-gradient(to bottom, #000 0%, #000 16%, transparent 56%);
@@ -165,14 +166,22 @@ body {
   -webkit-user-select: none;
 }
 
-.hero-backdrop-row {
+.proof-row {
   margin-block: 0;
 }
 
-/* Every third row a shade lighter, so the field reads as uneven texture
-   rather than ruled lines. */
-.hero-backdrop-row:nth-child(3n + 2) {
-  opacity: 0.55;
+.proof-row > span {
+  margin-right: 4ch;
+}
+
+/* The one thing in the field meant to be read: the heading face, semibold,
+   about twice as bright as the Lean around it. */
+.proof-phrase {
+  font-family: "Space Grotesk", sans-serif;
+  font-weight: 600;
+  font-size: 1.08em;
+  letter-spacing: -0.005em;
+  color: rgba(255, 255, 255, 0.11);
 }
 
 /* Sized to the content box (cqi) so the set lines stay whole: the whole

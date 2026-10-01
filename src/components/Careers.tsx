@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { ApplyForm } from "./ApplyForm";
 import { Footer } from "./Footer";
+import { ProofField } from "./ProofField";
 import { TopBar } from "./TopBar";
 
 // Careers page. Pulls open roles live from the Google Sheet via the deployed
@@ -131,6 +132,7 @@ export function Careers() {
     <>
       {/* Drops the sticky bar a --bar-gap inset from the top so its pill lines
           up with the logo + CTA corners that float fixed at that same inset. */}
+      <ProofField />
       <div className="topbar-gap" aria-hidden="true" />
       <TopBar />
 

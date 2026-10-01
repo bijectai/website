@@ -2,6 +2,7 @@ import { KIND_LABEL, formatNewsDate, type NewsItem } from "../news";
 import { POSTS } from "../news/posts";
 import { Footer } from "./Footer";
 import { NotFound } from "./NotFound";
+import { ProofField } from "./ProofField";
 import { TopBar } from "./TopBar";
 
 // /news/<slug>: one post. A narrow reading column (.post-body sets the
@@ -12,6 +13,7 @@ export function NewsPost({ item }: { item: NewsItem }) {
 
   return (
     <>
+      <ProofField />
       <div className="topbar-gap" aria-hidden="true" />
       <TopBar />
 

@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { CSSProperties } from "react";
 
 import { Footer } from "./Footer";
+import { ProofField } from "./ProofField";
 import { TopBar } from "./TopBar";
 
 // Where the team comes from. Each entry expects an optional logo at
@@ -55,6 +56,7 @@ function OriginMark({
 export function About() {
   return (
     <>
+      <ProofField />
       <div className="topbar-gap" aria-hidden="true" />
       <TopBar />
 

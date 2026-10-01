@@ -4,11 +4,12 @@ import { AizawaAttractor } from "./components/AizawaAttractor";
 import { Careers } from "./components/Careers";
 import { Closing, EarlyAccess } from "./components/EarlyAccess";
 import { Footer } from "./components/Footer";
-import { Hero, HeroBackdrop } from "./components/Hero";
+import { Hero } from "./components/Hero";
 import { HowItWorks } from "./components/HowItWorks";
 import { News } from "./components/News";
 import { NewsPost } from "./components/NewsPost";
 import { NotFound } from "./components/NotFound";
+import { ProofField } from "./components/ProofField";
 import { Research } from "./components/Research";
 import { SdkPreview } from "./components/SdkPreview";
 import { TopBar } from "./components/TopBar";
@@ -64,8 +65,8 @@ export default function App() {
 
   return (
     <>
-      {/* Back to front: lettering, attractor, headline. */}
-      <HeroBackdrop />
+      {/* Back to front: background type, attractor, headline. */}
+      <ProofField />
       <AizawaAttractor />
       <Hero />
       {/* Pushes the bar down to the bottom of the first screen; from there
