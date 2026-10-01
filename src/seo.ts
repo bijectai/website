@@ -11,6 +11,8 @@
  * point at the Vercel project; this is the one search engines should treat as
  * the real address, and every absolute URL on the site derives from it.
  */
+import { NEWS } from "./news";
+
 export const SITE_URL = "https://www.bijectai.com";
 
 export const SITE_NAME = "biject";
@@ -25,20 +27,35 @@ export type PageSeo = {
   name: string;
   /** ~155 characters: longer and search engines truncate it mid-sentence. */
   description: string;
+  /** Overrides the default "biject | <name>" document title. */
+  title?: string;
 };
 
 /** Every route the app serves, keyed by normalized pathname. Drives the sitemap. */
 export const PAGES: Record<string, PageSeo> = {
   "/": {
     name: "home",
+    title: "biject | Type-checked guardrails for AI agents",
     description:
-      "Formally verified guardrails for AI agents. biject hand-formalizes your policies in Lean and compiles them into decision kernels proven correct.",
+      "Type-checked guardrails for AI agents. Policies in Lean 4, every tool call checked by a proof kernel, every verdict signed. In private beta.",
   },
   "/about": {
-    name: "About us",
+    name: "About",
     description:
       "biject is an R&P lab built on one primitive: if you can't prove it, you can't trust it. We build guardrails that return machine-checked proofs.",
   },
+  "/news": {
+    name: "News",
+    description:
+      "Research and writing from biject on type-checked guardrails for AI agents: policies in Lean 4, checked by a proof kernel, with signed verdicts.",
+  },
+  // One page per post, named and described by its entry in src/news.ts.
+  ...Object.fromEntries(
+    NEWS.filter((item) => item.kind === "post").map((item) => [
+      `/news/${item.slug}`,
+      { name: item.title, description: item.summary },
+    ]),
+  ),
   "/careers": {
     name: "Careers",
     description:
@@ -69,7 +86,7 @@ export function seoFor(pathname: string): PageMeta {
   // Not every pathname is a route — anything unrecognized renders the 404 page.
   const page: PageSeo | undefined = PAGES[key];
   return {
-    title: `${SITE_NAME} | ${(page ?? NOT_FOUND).name}`,
+    title: page?.title ?? `${SITE_NAME} | ${(page ?? NOT_FOUND).name}`,
     description: (page ?? NOT_FOUND).description,
     url: SITE_URL + key,
     indexable: page !== undefined,

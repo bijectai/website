@@ -1,9 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import { PartnerDrawer } from "./PartnerDrawer";
 
 // The persistent glass top bar that sits above all page content.
 //
-// The logo and the "Request a demo" CTA live in their own layer
+// The logo and the "Request early access" CTA live in their own layer
 // (.topbar-corners) pinned to the top of the screen. During the hero they
 // float on their own in the top corners; the glass pill (.topbar) starts
 // lower with the links centered (flexible spacers on both sides). As the
@@ -11,10 +10,18 @@ import { PartnerDrawer } from "./PartnerDrawer";
 // sliding in behind the corner items so the bar "catches" the logo + CTA —
 // and at that moment the links slide from centered to a right-aligned group
 // hugging the CTA, and persist there.
+// Shared by the inline links and the mobile menu. Absolute "/#…" paths so
+// the section links still land when clicked from /about or /careers.
+const LINKS = [
+  { href: "/#use-cases", label: "Use cases" },
+  { href: "/news", label: "News" },
+  { href: "/about", label: "About" },
+  { href: "/careers", label: "Careers" },
+];
+
 export function TopBar() {
   const barRef = useRef<HTMLElement>(null);
-  const ctaRef = useRef<HTMLButtonElement>(null);
-  const [partnerOpen, setPartnerOpen] = useState(false);
+  const ctaRef = useRef<HTMLAnchorElement>(null);
   // The mobile nav: the centered links collapse into a corner button below a
   // breakpoint (see .nav-toggle / .nav-menu in style.css) and open this panel.
   const [menuOpen, setMenuOpen] = useState(false);
@@ -90,17 +97,12 @@ export function TopBar() {
     <>
       <div className="topbar-corners">
         <div className="topbar-corners-inner">
-          <a className="brand" href="/" aria-label="biject — home">
+          <a className="brand" href="/" aria-label="biject home">
             <img className="brand-logo" src="/logo.png" alt="biject" />
           </a>
-          <button
-            type="button"
-            className="nav-cta"
-            ref={ctaRef}
-            onClick={() => setPartnerOpen(true)}
-          >
-            Partner with Us
-          </button>
+          <a className="nav-cta" href="/#early-access" ref={ctaRef}>
+            Request early access
+          </a>
           {/* Corner menu button — only shown below the mobile breakpoint, where
               the inline links + CTA are hidden. */}
           <button
@@ -124,10 +126,11 @@ export function TopBar() {
         <nav className="topbar-inner" aria-label="Primary">
           <span className="nav-spacer nav-spacer-left" aria-hidden="true" />
           <div className="nav-links">
-            <a href="https://arxiv.org/abs/2604.01483" className="nl-hide">Research</a>
-            <a href="/#demo" className="nl-hide">Solutions</a>
-            <a href="/about" className="nl-hide">About us</a>
-            <a href="/careers" className="nl-hide">Careers</a>
+            {LINKS.map((link) => (
+              <a key={link.href} href={link.href}>
+                {link.label}
+              </a>
+            ))}
           </div>
           <span className="nav-spacer nav-spacer-right" aria-hidden="true" />
         </nav>
@@ -145,28 +148,21 @@ export function TopBar() {
         />
         <div className="nav-menu-inner">
           <nav className="nav-menu-panel" aria-label="Primary">
-            <a href="https://arxiv.org/abs/2604.01483" onClick={() => setMenuOpen(false)}>Research</a>
-            <a href="/#demo" onClick={() => setMenuOpen(false)}>Solutions</a>
-            <a href="/about" onClick={() => setMenuOpen(false)}>About us</a>
-            <a href="/careers" onClick={() => setMenuOpen(false)}>Careers</a>
-            <button
-              type="button"
+            {LINKS.map((link) => (
+              <a key={link.href} href={link.href} onClick={() => setMenuOpen(false)}>
+                {link.label}
+              </a>
+            ))}
+            <a
               className="nav-menu-cta"
-              onClick={() => {
-                setMenuOpen(false);
-                setPartnerOpen(true);
-              }}
+              href="/#early-access"
+              onClick={() => setMenuOpen(false)}
             >
-              Partner with Us
-            </button>
+              Request early access
+            </a>
           </nav>
         </div>
       </div>
-
-      <PartnerDrawer
-        open={partnerOpen}
-        onClose={() => setPartnerOpen(false)}
-      />
     </>
   );
 }

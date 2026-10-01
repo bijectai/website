@@ -5,6 +5,8 @@
   "rewrites": [
     { "source": "/about", "destination": "/about/index.html" },
     { "source": "/careers", "destination": "/careers/index.html" },
+    { "source": "/news", "destination": "/news/index.html" },
+    { "source": "/news/:slug", "destination": "/news/:slug/index.html" },
     { "source": "/((?!api/).*)", "destination": "/index.html" }
   ]
 }

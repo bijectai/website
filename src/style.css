@@ -111,103 +111,157 @@ body {
 }
 
 /* ============================================================
-   Hero copy
-   Two-line headline overlaying the attractor, centered horizontally
-   and anchored high in the first viewport (not vertically centered).
-   Sits above the canvas (z 0) but below the glass top bar (z 100).
+   Hero
+   One centered column: the copy in the upper middle, then the stage
+   the attractor frames itself to, running down to the nav bar's
+   resting slot. Behind them, the proof field (below) covers the top
+   of the screen and fades out before the attractor.
+
+   Paint order, back to front: proof field, attractor canvas, copy.
+   The field and the canvas share z-index 0; the field comes first in
+   the document, so it paints underneath the particles.
    ============================================================ */
-.hero-copy {
+.hero {
+  /* The nav bar rests a --bar-gap above the bottom of the first screen. */
+  --hero-floor: calc(var(--nav-h) + var(--bar-gap) * 2);
   position: absolute;
-  top: 14vh;
-  top: 14svh;
+  top: 0;
   left: 0;
   right: 0;
+  height: 100vh;
+  height: 100svh;
   z-index: 1;
   display: flex;
-  justify-content: center;
-  padding-inline: var(--gutter);
+  flex-direction: column;
+  padding-top: calc(var(--bar-gap) + var(--nav-h) + clamp(24px, 12vh, 150px));
+  padding-bottom: var(--hero-floor);
   pointer-events: none;
+}
+
+/* The background type (ProofField): rows of small Lean 4 with "proof, not
+   probability." set into them. Shared by every page, so it's anchored to the
+   top of the document rather than the hero. */
+.proof-field {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100vh;
+  height: 100svh;
+  z-index: 0;
+  /* Clip, never scroll: the rows run wider than any screen on purpose. */
+  overflow: clip;
+  padding-top: 6px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: clamp(11px, 0.9vw, 14px);
+  line-height: 2.05;
+  white-space: nowrap;
+  /* The Lean: a few steps above the page, texture first. */
+  color: rgba(255, 255, 255, 0.05);
+  /* Full strength across the top, gone by a little past the middle. */
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 16%, transparent 56%);
+  mask-image: linear-gradient(to bottom, #000 0%, #000 16%, transparent 56%);
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.proof-row {
+  margin-block: 0;
+}
+
+.proof-row > span {
+  margin-right: 4ch;
+}
+
+/* The one thing in the field meant to be read: the heading face, semibold,
+   about twice as bright as the Lean around it. */
+.proof-phrase {
+  font-family: "Space Grotesk", sans-serif;
+  font-weight: 600;
+  font-size: 1.08em;
+  letter-spacing: -0.005em;
+  color: rgba(255, 255, 255, 0.11);
+}
+
+/* Sized to the content box (cqi) so the set lines stay whole: the whole
+   headline on one line where it fits, two lines on phones. */
+.hero-copy {
+  container-type: inline-size;
+  text-align: center;
 }
 
 .hero-title {
   margin: 0;
-  text-align: center;
   color: var(--ink);
   font-family: "Space Grotesk", sans-serif;
   font-weight: 600;
-  line-height: 1.08;
-  letter-spacing: -0.02em;
-  /* keep the rising lines from being clipped mid-animation */
-  overflow: visible;
+  font-size: min(4.5rem, calc(100cqi / 17.4));
+  line-height: 1.04;
+  letter-spacing: -0.035em;
+  white-space: nowrap;
 }
 
-/* Each line rises and fades in on load, staggered, so the headline
-   settles in deliberately instead of just popping onto the page. */
-.hero-line {
-  display: block;
-  animation: hero-rise 0.75s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+.hero-sub {
+  margin: clamp(14px, 2.2vh, 22px) auto 0;
+  max-width: 60ch;
+  font-size: clamp(1rem, 1.25vw, 1.15rem);
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.7);
+  text-wrap: balance;
 }
 
-.hero-title .hero-line:first-child {
-  font-size: clamp(2rem, 7vw, 4.5rem);
-  animation-delay: 0.05s;
+.hero-actions {
+  margin-top: clamp(20px, 3.2vh, 32px);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 14px 28px;
+  pointer-events: auto;
 }
 
-/* The rotating phrase completes the sentence — keep it white like the
-   first line, with a touch more weight, so the headline reads as one
-   continuous unit rather than two. */
-.hero-subline {
-  margin-top: 0.12em;
-  font-size: clamp(1.6rem, 5.8vw, 3.7rem);
-  font-weight: 600;
+.hero-cta {
+  padding: 13px 22px;
+}
+
+.hero-link {
+  font-size: 15px;
+  font-weight: 500;
   color: var(--ink);
-  animation-delay: 0.2s;
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 255, 255, 0.3);
+  text-underline-offset: 5px;
+  transition: color 0.18s ease, text-decoration-color 0.18s ease;
 }
 
-/* Attractor tooltip — floats near the cursor in the hero center zone */
-.attractor-blurb {
-  position: fixed;
-  left: var(--bx, 50vw);
-  top: var(--by, 50vh);
-  translate: 22px 16px;
-  z-index: 2;
-  max-width: 280px;
-  padding: 14px 18px;
-  border-radius: 12px;
-  background: rgba(24, 26, 30, 0.78);
-  -webkit-backdrop-filter: blur(14px) saturate(160%);
-  backdrop-filter: blur(14px) saturate(160%);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 0.72rem;
-  line-height: 1.65;
-  letter-spacing: 0.02em;
-  color: rgba(255, 255, 255, 0.62);
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.22s ease;
+.hero-link:hover {
+  color: var(--accent);
+  text-decoration-color: currentColor;
 }
 
-.attractor-blurb--visible {
-  opacity: 1;
+/* The attractor's frame: everything left between the copy and the nav
+   bar. Empty; AizawaAttractor reads its box. */
+.hero-stage {
+  flex: 1;
+  min-height: 0;
+  margin-top: clamp(12px, 3vh, 36px);
 }
 
-@keyframes hero-rise {
-  from {
-    opacity: 0;
-    transform: translateY(16px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
+@media (max-width: 900px) {
+  .hero {
+    padding-top: calc(var(--bar-gap) + var(--nav-h) + clamp(16px, 5vh, 48px));
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
+/* Phones: one line would be too small, so break after "argue". */
+@media (max-width: 600px) {
+  .hero-title {
+    font-size: calc(100cqi / 10.6);
+  }
+
   .hero-line {
-    animation: none;
+    display: block;
   }
 }
 
@@ -533,8 +587,9 @@ body {
 }
 
 /* CTA at the foot of the menu — mirrors the desktop .nav-cta look. */
-.nav-menu-cta {
+.nav-menu-panel .nav-menu-cta {
   margin-top: 6px;
+  text-align: center;
   font-family: inherit;
   font-size: 16px;
   font-weight: 600;
@@ -548,7 +603,7 @@ body {
   transition: color 0.18s ease, background 0.18s ease, border-color 0.18s ease;
 }
 
-.nav-menu-cta:hover {
+.nav-menu-panel .nav-menu-cta:hover {
   color: #fff;
   background: var(--accent);
   border-color: var(--accent);
@@ -602,22 +657,6 @@ body {
     height: clamp(58px, 14vw, 84px);
   }
 
-  .hero-copy {
-    top: calc(var(--bar-gap) + var(--nav-h) + 20px);
-    top: calc(var(--bar-gap) + var(--nav-h) + 20px);
-  }
-
-  .hero-title .hero-line:first-child {
-    font-size: clamp(1.6rem, 7vw, 3.2rem);
-  }
-
-  .hero-subline {
-    font-size: clamp(1.3rem, 5.8vw, 2.6rem);
-  }
-
-  .problem-inner,
-  .solution-inner,
-  .demo-inner,
   .about-inner,
   .careers-inner {
     width: 90%;
@@ -625,486 +664,852 @@ body {
   }
 }
 
-/* Small monospace eyebrow used above section headings on the homepage
-   (Problem, Solution, Demo) — matches .about-label's type treatment so the
-   homepage and About page read as one visual system. */
-.section-label {
-  display: inline-block;
-  margin: 0 0 clamp(14px, 2vh, 20px);
+/* ============================================================
+   Homepage sections
+   One shared box (.wrap) lined up with the top bar, one type scale
+   (.h2 / .body), then a layout per section. Vertical spacing varies
+   on purpose: tight where the content is reference (the table, the
+   citation), roomier where it makes an argument.
+   ============================================================ */
+.wrap {
+  width: 80%;
+  max-width: var(--maxw);
+  margin-inline: auto;
+  padding-inline: clamp(20px, 3vw, 32px);
+}
+
+/* Same breakpoint as the nav: the bar widens to 90%, and so does the copy. */
+@media (max-width: 900px) {
+  .wrap {
+    width: 90%;
+    padding-inline: 0;
+  }
+}
+
+/* Land anchored sections below the stuck bar, not under it. */
+#app section[id] {
+  scroll-margin-top: calc(var(--bar-gap) + var(--nav-h) + 24px);
+}
+
+.h2 {
+  margin: 0;
+  max-width: 18ch;
+  font-family: "Space Grotesk", sans-serif;
+  font-weight: 600;
+  font-size: clamp(2rem, 4.4vw, 3.5rem);
+  line-height: 1.04;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  text-wrap: balance;
+}
+
+/* Headlines whose line breaks are set by hand, one .h2-line per line. */
+.h2-set {
+  max-width: none;
+}
+
+.h2-line {
+  display: block;
+}
+
+.body {
+  margin: 0;
+  max-width: 62ch;
+  font-size: clamp(1rem, 1.15vw, 1.0625rem);
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.body + .body {
+  margin-top: 1em;
+}
+
+/* Monospace label, same treatment as .about-label. Used twice on the
+   homepage: the SDK preview's header and the Research row. */
+.mono-label {
+  margin: 0;
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: 0.72rem;
+  font-weight: 400;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--accent);
 }
 
-/* ============================================================
-   "The Hidden Cost of Manual Review" — first content section
-   below the hero. A centered intro (heading + lede) over the dark
-   page, followed by a three-up row of placeholder cards.
-   ============================================================ */
-.problem {
-  position: relative;
-  z-index: 1;
-  padding-block: clamp(80px, 12vh, 160px);
+/* Inline text links inside body copy. */
+.access-call a,
+.access-done a,
+.form-error a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 255, 255, 0.3);
+  text-underline-offset: 4px;
+  transition: color 0.18s ease, text-decoration-color 0.18s ease;
 }
 
-/* Mirror .topbar-inner's box (80% width, same max-width and inner padding)
-   so the left-aligned heading + lede line up with the top bar's logo. */
-.problem-inner {
-  width: 80%;
-  max-width: var(--maxw);
-  margin-inline: auto;
-  padding-inline: clamp(20px, 3vw, 32px);
-}
-
-.problem-title {
-  margin: 0;
-  text-align: left;
-  font-family: "Space Grotesk", sans-serif;
-  font-weight: 600;
-  font-size: clamp(1.9rem, 4.5vw, 3rem);
-  line-height: 1.1;
-  letter-spacing: -0.02em;
+.access-call a,
+.access-done a {
   color: var(--ink);
 }
 
-.problem-lede {
-  max-width: 760px;
-  margin: clamp(20px, 3vh, 32px) 0 0;
-  text-align: left;
-  font-size: clamp(1rem, 1.4vw, 1.18rem);
-  line-height: 1.7;
-  color: rgba(255, 255, 255, 0.72);
+.access-call a:hover,
+.access-done a:hover {
+  color: var(--accent);
+  text-decoration-color: currentColor;
 }
 
-/* Three placeholder cards — empty for now; real case-specific content
-   is filled in later. Subtle glass to echo the top bar. */
-.problem-cards {
-  margin-top: clamp(48px, 7vh, 80px);
+/* ---- Code ------------------------------------------------------
+   Greys for syntax; the brand green is kept for the verdict line. */
+.code {
+  margin: 0;
+  padding: clamp(18px, 2vw, 24px);
+  overflow-x: auto;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: clamp(0.78rem, 0.95vw, 0.9rem);
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.code code {
+  font: inherit;
+}
+
+/* Scrollbars are hidden site-wide, so a sideways-scrolling snippet would
+   just look cut off. On phones, wrap long lines instead. */
+@media (max-width: 600px) {
+  .code {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+}
+
+.tok-kw {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.tok-str {
+  color: rgba(255, 255, 255, 0.64);
+}
+
+.tok-com {
+  color: rgba(255, 255, 255, 0.36);
+}
+
+.tok-verdict {
+  color: var(--accent);
+}
+
+/* ---- SDK preview: copy left, snippet right --------------------- */
+.sdk {
+  padding-block: clamp(72px, 10vh, 120px) clamp(96px, 14vh, 180px);
+}
+
+.sdk-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: clamp(20px, 2.5vw, 32px);
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: clamp(32px, 5vw, 80px);
+  align-items: start;
 }
 
-.problem-card {
-  min-height: 260px;
+@media (max-width: 820px) {
+  .sdk-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* The headline's three set lines never re-wrap: sized to the copy column
+   (cqi), so the longest, "Signed verdict out." (~9.6em), always fits. */
+.sdk-copy {
+  container-type: inline-size;
+}
+
+.sdk-copy .h2 {
+  margin-bottom: clamp(20px, 3vh, 28px);
+  font-size: min(3.5rem, 10cqi);
+}
+
+.sdk-copy .h2-line {
+  white-space: nowrap;
+}
+
+.sdk-figure {
+  margin: 0;
+}
+
+/* The page's one card: same surface, border and radius as the cards
+   elsewhere on the site. */
+.code-card {
   border-radius: 16px;
   background: rgba(54, 56, 60, 0.35);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  padding: clamp(22px, 2vw, 30px);
+  overflow: hidden;
+}
+
+.code-head {
   display: flex;
-  flex-direction: column;
-  text-align: left;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px clamp(18px, 2vw, 24px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-/* Headline metric — the number that anchors the card. */
-.problem-card-metric {
-  margin: 0;
-  font-family: "Space Grotesk", sans-serif;
-  font-weight: 600;
-  font-size: clamp(2.1rem, 3vw, 2.8rem);
-  line-height: 1;
-  letter-spacing: -0.02em;
-  color: var(--color-white);
-  /* Fixed-width digits so the number doesn't shift around as it counts up. */
-  font-variant-numeric: tabular-nums;
+.code-head .mono-label {
+  color: rgba(255, 255, 255, 0.55);
 }
 
-/* Short context line directly under the metric. Reserves two lines while
-   the cards sit side by side, so one caption wrapping doesn't push its
-   divider below the neighbours'. */
-.problem-card-context {
-  margin: 8px 0 0;
-  font-size: 0.95rem;
-  font-weight: 500;
-  line-height: 1.4;
-  color: rgba(255, 255, 255, 0.62);
-}
-
-@media (min-width: 821px) {
-  .problem-card-context {
-    min-height: calc(2 * 1.4em);
-  }
-}
-
-/* Divider between the metric block and the explanation. */
-.problem-card-rule {
-  width: 100%;
-  height: 1px;
-  margin: clamp(18px, 2vw, 24px) 0;
-  border: 0;
-  background: rgba(255, 255, 255, 0.12);
-}
-
-.problem-card-body {
-  margin: 0;
-  font-size: 0.95rem;
-  line-height: 1.6;
-  color: rgba(255, 255, 255, 0.74);
-}
-
-/* Tiny source attribution, pushed to the bottom edge of the card so all
-   three line up on the same baseline regardless of paragraph length. */
-.problem-card-ref {
-  margin: auto 0 0;
-  padding-top: clamp(16px, 2vw, 22px);
+.code-lang {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: 0.72rem;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.32);
 }
 
-.problem-card-ref-link {
-  color: inherit;
-  text-decoration: none;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-  transition: color .18s ease, border-color .18s ease;
+.caption {
+  margin: 12px 0 0;
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.42);
 }
 
-/* Stack the cards once three columns get cramped. */
-@media (max-width: 820px) {
-  .problem-cards {
-    grid-template-columns: 1fr;
-  }
+/* ---- How it works: numbered rows split by hairlines ------------- */
+.how {
+  padding-block: 0 clamp(112px, 16vh, 200px);
 }
 
-/* ============================================================
-   "We embed and build your kernel by hand." — the solution section
-   directly below the Problem. Reuses the Problem section's box and
-   type scale (left-aligned heading + lede), then lists the five build
-   stages as number / title / description rows split by hairline rules.
-   ============================================================ */
-.solution {
-  position: relative;
-  z-index: 1;
-  padding-block: clamp(80px, 12vh, 160px);
-}
-
-/* Same box as .problem-inner so the heading lines up with the top bar. */
-.solution-inner {
-  width: 80%;
-  max-width: var(--maxw);
-  margin-inline: auto;
-  padding-inline: clamp(20px, 3vw, 32px);
-}
-
-.solution-title {
-  margin: 0;
-  text-align: left;
-  font-family: "Space Grotesk", sans-serif;
-  font-weight: 600;
-  font-size: clamp(1.9rem, 4.5vw, 3rem);
-  line-height: 1.1;
-  letter-spacing: -0.02em;
-  color: var(--ink);
-}
-
-.solution-lede {
-  max-width: 760px;
-  margin: clamp(20px, 3vh, 32px) 0 0;
-  text-align: left;
-  font-size: clamp(1rem, 1.4vw, 1.18rem);
-  line-height: 1.7;
-  color: rgba(255, 255, 255, 0.72);
-}
-
-/* The five stages. Reset the <ol>'s default list styling — the numbers
-   are rendered by hand so they can be styled and placed in their own
-   column. */
-.solution-steps {
-  margin: clamp(48px, 7vh, 80px) 0 0;
+.steps {
+  margin: clamp(40px, 6vh, 72px) 0 0;
   padding: 0;
   list-style: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
 }
 
-/* Each stage: number | title | description, separated from the one above
-   by the same hairline used elsewhere on the page. */
-.solution-step {
+.step {
   display: grid;
   grid-template-columns: 2.5rem minmax(0, 0.9fr) minmax(0, 1.1fr);
   gap: clamp(16px, 4vw, 56px);
   align-items: start;
-  padding-block: clamp(26px, 4vh, 42px);
+  padding-block: clamp(28px, 4.5vh, 48px);
   border-top: 1px solid rgba(255, 255, 255, 0.12);
 }
 
-/* Small faded index, monospace to echo the attractor read-out. */
-.solution-step-num {
+/* Small faded index, monospace to echo the code. */
+.step-num {
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: 0.72rem;
   letter-spacing: 0.04em;
-  line-height: 1.9;
+  line-height: 2.1;
   color: rgba(255, 255, 255, 0.4);
 }
 
-.solution-step-title {
+.step-title {
   margin: 0;
   font-family: "Space Grotesk", sans-serif;
   font-weight: 600;
-  font-size: clamp(1.4rem, 2.4vw, 1.9rem);
-  line-height: 1.1;
-  letter-spacing: -0.01em;
+  font-size: clamp(1.35rem, 2.2vw, 1.8rem);
+  line-height: 1.12;
+  letter-spacing: -0.015em;
   color: var(--ink);
 }
 
-.solution-step-body {
+.step-body p {
   margin: 0;
-  font-size: 0.95rem;
-  line-height: 1.6;
-  color: rgba(255, 255, 255, 0.74);
-}
-
-/* On narrow screens drop to a single column: the number sits inline above
-   the title, with the description stacked beneath. */
-@media (max-width: 820px) {
-  .solution-step {
-    grid-template-columns: 2.5rem 1fr;
-    gap: 10px clamp(16px, 4vw, 32px);
-  }
-
-  .solution-step-body {
-    grid-column: 1 / -1;
-    margin-top: 6px;
-  }
-}
-
-/* Glass callout — sets the one hard guarantee (deterministic PROVED/REFUTED)
-   apart from the surrounding steps, echoing .about-callout's treatment. */
-.solution-callout {
-  margin-top: clamp(48px, 7vh, 80px);
-  padding: clamp(24px, 3vw, 36px) clamp(24px, 3vw, 40px);
-  border-radius: 16px;
-  background: rgba(16, 185, 129, 0.05);
-  border: 1px solid rgba(16, 185, 129, 0.22);
-  display: grid;
-  grid-template-columns: 3px 1fr;
-  gap: clamp(20px, 3vw, 36px);
-  align-items: center;
-}
-
-.solution-callout-bar {
-  align-self: stretch;
-  border-radius: 3px;
-  background: var(--accent);
-  opacity: 0.7;
-}
-
-.solution-callout-text {
-  margin: 0;
-  font-size: clamp(1rem, 1.3vw, 1.12rem);
-  line-height: 1.7;
-  color: rgba(255, 255, 255, 0.82);
-}
-
-.solution-callout-text strong {
-  font-weight: 600;
-  color: var(--ink);
-}
-
-/* ============================================================
-   "See it in your domain." — the demo section below the Solution.
-   A left-aligned header, then a two-column split: the lede paragraphs on the
-   left and a vertical stack of industry selectors (one expanded + green-
-   outlined, the rest collapsed) with a countdown bar on the right.
-   ============================================================ */
-.demo {
-  position: relative;
-  z-index: 1;
-  padding-block: clamp(80px, 12vh, 160px);
-  /* Anchored from the "Solutions" nav link — leave room so the section's top
-     clears the sticky bar rather than hiding behind it. */
-  scroll-margin-top: var(--bar-gap);
-}
-
-/* Same box as the other sections so the heading lines up with the top bar. */
-.demo-inner {
-  width: 80%;
-  max-width: var(--maxw);
-  margin-inline: auto;
-  padding-inline: clamp(20px, 3vw, 32px);
-}
-
-.demo-title {
-  margin: 0;
-  text-align: left;
-  font-family: "Space Grotesk", sans-serif;
-  font-weight: 600;
-  font-size: clamp(1.9rem, 4.5vw, 3rem);
-  line-height: 1.1;
-  letter-spacing: -0.02em;
-  color: var(--ink);
-}
-
-/* The split: the two lede paragraphs on the left, the industry selectors on
-   the right. */
-.demo-split {
-  margin-top: clamp(48px, 7vh, 80px);
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: clamp(24px, 4vw, 64px);
-  align-items: start;
-}
-
-/* Left column — the two lede paragraphs, stacked one on top of the other. */
-.demo-lede {
-  display: flex;
-  flex-direction: column;
-  gap: clamp(16px, 2.4vh, 28px);
-}
-
-.demo-lede-col {
-  margin: 0;
-  text-align: left;
-  font-size: clamp(1rem, 1.4vw, 1.18rem);
-  line-height: 1.7;
+  max-width: 56ch;
+  font-size: 0.98rem;
+  line-height: 1.65;
   color: rgba(255, 255, 255, 0.72);
 }
 
-/* Right column — the countdown bar sitting outside the selector stack, then
-   the selectors themselves. */
-.demo-panel {
-  display: flex;
-  gap: clamp(12px, 1.5vw, 18px);
-  align-items: stretch;
-}
-
-/* The timer: a thin bar alongside the four selectors whose fill grows
-   top-to-bottom over the same window the auto-rotation waits before advancing,
-   so it reads as one countdown for the whole stack. */
-.demo-timer {
-  flex: 0 0 4px;
-  align-self: stretch;
-  position: relative;
-  overflow: hidden;
-  border-radius: 2px;
-  background: rgba(255, 255, 255, 0.14);
-}
-
-.demo-timer::after {
-  content: "";
-  position: absolute;
-  inset: 0 0 auto 0;
-  height: 0;
-  border-radius: 2px;
-  background: var(--accent);
-  animation: demo-timer-fill var(--timer-duration, 5000ms) linear forwards;
-}
-
-@keyframes demo-timer-fill {
-  to {
-    height: 100%;
-  }
-}
-
-/* Vertically stacked industry selectors, filling the rest of the panel. */
-.demo-tabs {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: clamp(12px, 1.5vw, 18px);
-}
-
-/* Each selector is a button so the whole row is clickable. Subtle glass to
-   echo the cards elsewhere; collapsed by default (just the name). */
-.demo-tab {
-  position: relative;
-  overflow: hidden;
-  width: 100%;
-  text-align: left;
-  cursor: inherit;
-  border-radius: 14px;
+.step-body .code {
+  margin-top: 20px;
+  padding: 14px 18px;
+  border-radius: 10px;
   background: rgba(54, 56, 60, 0.35);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  padding: clamp(16px, 1.6vw, 22px);
-  color: var(--ink);
-  font-family: inherit;
-  transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
+  font-size: 0.8rem;
 }
 
-.demo-tab:hover {
-  border-color: rgba(255, 255, 255, 0.2);
-}
-
-/* Active selector — expanded copy and a green outline + glow. */
-.demo-tab.is-active {
-  background: rgba(16, 185, 129, 0.06);
-  border-color: var(--accent);
-  box-shadow: 0 0 0 1px var(--accent), 0 0 0 5px rgba(16, 185, 129, 0.14);
-}
-
-.demo-tab-name {
-  display: block;
-  font-family: "Space Grotesk", sans-serif;
-  font-weight: 600;
-  font-size: clamp(1.1rem, 1.8vw, 1.35rem);
-  line-height: 1.2;
-  letter-spacing: -0.01em;
-}
-
-/* Wrapper that slides the body open: animating grid-template-rows from 0fr to
-   1fr expands the row to the content's natural height without a hard-coded
-   max-height. The body itself must clip and be allowed to collapse. */
-.demo-tab-bodywrap {
-  display: grid;
-  grid-template-rows: 0fr;
-  transition: grid-template-rows 0.35s ease;
-}
-
-.demo-tab.is-active .demo-tab-bodywrap {
-  grid-template-rows: 1fr;
-}
-
-.demo-tab-body {
-  overflow: hidden;
-  min-height: 0;
-  margin: 0;
-  padding-top: 12px;
-  font-size: 0.92rem;
-  line-height: 1.6;
-  color: rgba(255, 255, 255, 0.74);
-  opacity: 0;
-  transition: opacity 0.35s ease;
-}
-
-.demo-tab.is-active .demo-tab-body {
-  opacity: 1;
-}
-
-/* Stack the split on narrow screens: lede paragraphs above the selectors. */
 @media (max-width: 820px) {
-  .demo-split {
-    grid-template-columns: 1fr;
+  .step {
+    grid-template-columns: 2.5rem minmax(0, 1fr);
+    gap: 10px clamp(16px, 4vw, 32px);
+  }
+
+  .step-body {
+    grid-column: 1 / -1;
+    margin-top: 6px;
+    min-width: 0;
   }
 }
 
-/* Closing statement — the homepage's final beat, mirroring .about-close so
-   the page doesn't just stop after the last section. */
-.demo-close {
-  margin-top: clamp(64px, 10vh, 120px);
+/* ---- Why not an LLM judge: a plain table, then an offset note ---- */
+.judge {
+  padding-block: 0 clamp(72px, 10vh, 120px);
+}
+
+.judge-lede {
+  margin-top: clamp(20px, 3vh, 28px);
+}
+
+.compare {
+  width: 100%;
+  margin-top: clamp(36px, 5vh, 56px);
+  border-collapse: collapse;
+  font-size: 0.98rem;
+  line-height: 1.5;
+}
+
+.compare th,
+.compare td {
+  padding: 16px 24px 16px 0;
+  text-align: left;
+  vertical-align: top;
+  font-weight: 400;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.compare thead th,
+.compare thead td {
+  padding-top: 0;
+  border-top: 0;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.compare tbody th {
+  width: 26%;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.compare tbody td:nth-child(2) {
+  color: rgba(255, 255, 255, 0.58);
+}
+
+.compare tbody td:nth-child(3) {
+  color: var(--ink);
+}
+
+.compare tbody tr:last-child > * {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.judge-note {
+  margin: clamp(32px, 5vh, 48px) 0 0 auto;
+  max-width: 52ch;
+}
+
+/* Phones: each row becomes its own block, with the column names carried
+   inline from data-label. */
+@media (max-width: 720px) {
+  .compare thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+
+  .compare tr {
+    display: block;
+    padding-block: 16px;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+  }
+
+  .compare tbody tr:last-child {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  }
+
+  .compare th,
+  .compare td,
+  .compare tbody th,
+  .compare tbody tr:last-child > * {
+    display: block;
+    width: auto;
+    padding: 0;
+    border: 0;
+  }
+
+  .compare tbody th {
+    margin-bottom: 8px;
+  }
+
+  .compare td::before {
+    content: attr(data-label) ": ";
+    color: rgba(255, 255, 255, 0.45);
+  }
+
+  .compare td + td {
+    margin-top: 4px;
+  }
+
+  .judge-note {
+    margin-left: 0;
+  }
+}
+
+/* ---- Use cases: one wide lead, two stacked beside it ------------ */
+.uses {
+  padding-block: 0 clamp(96px, 14vh, 180px);
+}
+
+.uses-grid {
+  margin-top: clamp(40px, 6vh, 72px);
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: clamp(36px, 5vw, 72px);
+  align-items: start;
+}
+
+.uses-side {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(36px, 5vh, 56px);
+}
+
+.use {
+  padding-top: clamp(20px, 3vh, 28px);
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.use-title {
+  margin: 0 0 12px;
+  font-family: "Space Grotesk", sans-serif;
+  font-weight: 600;
+  font-size: clamp(1.3rem, 1.9vw, 1.6rem);
+  line-height: 1.12;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+}
+
+.use-lead .use-title {
+  margin-bottom: 20px;
+  font-size: clamp(2rem, 3.8vw, 3.1rem);
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+}
+
+.use-lead .body {
+  font-size: clamp(1.05rem, 1.35vw, 1.2rem);
+}
+
+.use-rule {
+  margin: 18px 0 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.78rem;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  color: rgba(255, 255, 255, 0.42);
+}
+
+@media (max-width: 820px) {
+  .uses-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ---- Research: one citation, set large -------------------------- */
+.research {
+  padding-block: 0 clamp(56px, 8vh, 96px);
+}
+
+.research-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 9fr);
+  gap: 16px clamp(20px, 4vw, 56px);
+  padding-top: clamp(28px, 4vh, 40px);
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.research-grid .mono-label {
+  padding-top: 0.9em;
+}
+
+.research-title {
+  font-family: "Space Grotesk", sans-serif;
+  font-weight: 600;
+  font-size: clamp(2rem, 5.2vw, 4.25rem);
+  line-height: 1;
+  letter-spacing: -0.035em;
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: rgba(255, 255, 255, 0.22);
+  text-underline-offset: 0.14em;
+  transition: color 0.18s ease, text-decoration-color 0.18s ease;
+}
+
+.research-title:hover {
+  color: var(--accent);
+  text-decoration-color: currentColor;
+}
+
+.research-more {
+  display: inline-block;
+  margin-top: 20px;
+  font-size: 0.98rem;
+  font-weight: 500;
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 255, 255, 0.3);
+  text-underline-offset: 5px;
+  transition: color 0.18s ease, text-decoration-color 0.18s ease;
+}
+
+.research-more:hover {
+  color: var(--accent);
+  text-decoration-color: currentColor;
+}
+
+.research-meta {
+  margin: 16px 0 20px;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+@media (max-width: 720px) {
+  .research-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .research-grid .mono-label {
+    padding-top: 0;
+  }
+}
+
+/* ---- Early access: copy and the call link left, form right ------ */
+.access {
+  padding-block: clamp(96px, 14vh, 180px) clamp(72px, 10vh, 120px);
+}
+
+.access-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  gap: clamp(40px, 6vw, 96px);
+  align-items: start;
+}
+
+.access-copy .h2 {
+  margin-bottom: clamp(20px, 3vh, 28px);
+}
+
+.access-call {
+  margin: 28px 0 0;
+  padding-top: 20px;
+  max-width: 62ch;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  font-size: 0.98rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.access-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.field > span {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.66);
+}
+
+.field input,
+.field textarea {
+  width: 100%;
+  font-family: inherit;
+  font-size: 0.96rem;
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 10px;
+  padding: 11px 13px;
+  outline: none;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.field textarea {
+  min-height: 88px;
+  resize: vertical;
+}
+
+.field input::placeholder,
+.field textarea::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.field input:focus,
+.field textarea:focus {
+  border-color: var(--accent);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.form-submit {
+  align-self: flex-start;
+  margin-top: 6px;
+  padding: 13px 22px;
+}
+
+.form-submit:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.form-error {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--color-red);
+}
+
+.access-done {
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.access-done-title {
+  margin: 0 0 12px;
+  font-family: "Space Grotesk", sans-serif;
+  font-weight: 600;
+  font-size: clamp(1.4rem, 2.2vw, 1.8rem);
+  letter-spacing: -0.015em;
+  color: var(--ink);
+}
+
+@media (max-width: 820px) {
+  .access-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ---- Closing: the last line, right-aligned like the About page's ---- */
+.closing {
+  padding-block: 0 clamp(72px, 11vh, 140px);
+}
+
+.closing-inner {
   padding-top: clamp(36px, 5vh, 56px);
   border-top: 1px solid rgba(255, 255, 255, 0.12);
   text-align: right;
 }
 
-.demo-close-text {
-  margin: 0;
+.closing-text {
+  margin: 0 0 0 auto;
+  max-width: 20ch;
   font-family: "Space Grotesk", sans-serif;
   font-weight: 600;
   font-size: clamp(1.6rem, 3.5vw, 2.8rem);
   line-height: 1.1;
   letter-spacing: -0.02em;
   color: var(--ink);
+  text-wrap: balance;
 }
 
-.demo-close-sub {
-  margin: clamp(10px, 1.5vh, 16px) 0 0;
+.closing-link {
+  display: inline-block;
+  margin-top: 18px;
+  font-size: 1rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.72);
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 255, 255, 0.3);
+  text-underline-offset: 5px;
+  transition: color 0.18s ease, text-decoration-color 0.18s ease;
+}
+
+.closing-link:hover {
+  color: var(--accent);
+  text-decoration-color: currentColor;
+}
+
+/* ============================================================
+   News — /news lists research and posts; /news/<slug> is a post.
+   ============================================================ */
+/* Page headline for the inner pages, the same size as About's. */
+.page-title {
+  margin: 0;
+  font-family: "Space Grotesk", sans-serif;
+  font-weight: 600;
+  font-size: clamp(2.2rem, 5vw, 4rem);
+  line-height: 1.06;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+}
+
+.news,
+.post {
+  position: relative;
+  z-index: 1;
+  padding-block: clamp(56px, 9vh, 120px) clamp(80px, 12vh, 160px);
+}
+
+.news-lede {
+  margin-top: clamp(14px, 2vh, 20px);
+}
+
+/* date | kind | title + summary, split by hairlines. */
+.news-list {
+  margin: clamp(40px, 6vh, 64px) 0 0;
+  padding: 0;
+  list-style: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.news-item {
+  display: grid;
+  grid-template-columns: 8.5rem 5rem minmax(0, 1fr);
+  gap: 8px clamp(16px, 3vw, 40px);
+  align-items: baseline;
+  padding-block: clamp(22px, 3.5vh, 34px);
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.news-date,
+.news-kind {
+  font-size: 0.88rem;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.news-title {
+  font-family: "Space Grotesk", sans-serif;
+  font-weight: 600;
+  font-size: clamp(1.4rem, 2.4vw, 2rem);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  text-decoration: none;
+  transition: color 0.18s ease;
+}
+
+.news-title:hover {
+  color: var(--accent);
+}
+
+.news-out {
+  font-size: 0.7em;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.news-summary {
+  margin: 10px 0 0;
+  max-width: 62ch;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.66);
+}
+
+/* Phones: date and kind share a line above the title. */
+@media (max-width: 640px) {
+  .news-item {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .news-main {
+    grid-column: 1 / -1;
+  }
+}
+
+/* ---- A post ---------------------------------------------------- */
+.post-back {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.55);
+  text-decoration: none;
+  transition: color 0.18s ease;
+}
+
+.post-back::before {
+  content: "← ";
+}
+
+.post-back:hover {
+  color: var(--ink);
+}
+
+.post-meta {
+  margin: clamp(28px, 4vh, 40px) 0 12px;
+  font-size: 0.88rem;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.post-title {
+  max-width: 22ch;
+  text-wrap: balance;
+}
+
+/* The reading column. Posts are written in plain JSX; this styles it. */
+.post-body {
+  max-width: 68ch;
+  margin-top: clamp(32px, 5vh, 56px);
+  font-size: 1.0625rem;
+  line-height: 1.75;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.post-body > * {
+  margin: 0 0 1.15em;
+}
+
+.post-body h2 {
+  margin: 2.2em 0 0.6em;
+  font-family: "Space Grotesk", sans-serif;
+  font-weight: 600;
+  font-size: clamp(1.4rem, 2.2vw, 1.75rem);
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+}
+
+.post-body h3 {
+  margin: 1.8em 0 0.5em;
+  font-family: "Space Grotesk", sans-serif;
+  font-weight: 600;
+  font-size: 1.2rem;
+  color: var(--ink);
+}
+
+.post-body a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 255, 255, 0.3);
+  text-underline-offset: 4px;
+  transition: color 0.18s ease, text-decoration-color 0.18s ease;
+}
+
+.post-body a:hover {
+  color: var(--accent);
+  text-decoration-color: currentColor;
+}
+
+.post-body ul,
+.post-body ol {
+  padding-left: 1.3em;
+}
+
+.post-body li + li {
+  margin-top: 0.4em;
+}
+
+.post-body blockquote {
+  padding-left: 1.2em;
+  border-left: 1px solid rgba(255, 255, 255, 0.25);
+  color: rgba(255, 255, 255, 0.66);
+}
+
+.post-body :not(pre) > code {
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 0.72rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.35);
+  font-size: 0.88em;
+  color: var(--ink);
+}
+
+.post-body .code {
+  border-radius: 10px;
+  background: rgba(54, 56, 60, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 /* ============================================================
@@ -1520,7 +1925,7 @@ body {
 }
 
 /* "Details" toggle in the card header — white pill that lights up green when
-   hovered or while the details are expanded, matching the "Partner with Us"
+   hovered or while the details are expanded, matching the nav CTA
    CTA. Sits in the slot the "Opened" date used to occupy. */
 .job-details-btn {
   flex: none;
@@ -1622,7 +2027,7 @@ body {
 }
 
 /* "Apply" — white pill by default, lights up green on hover/press, matching
-   the "Partner with Us" CTA. */
+   the nav CTA. */
 .job-apply {
   appearance: none;
   border-radius: 999px;
@@ -1803,7 +2208,7 @@ body {
   transition: opacity 0.15s ease, background 0.15s ease;
 }
 
-/* White by default, lights up green on hover/press like the "Partner with Us"
+/* White by default, lights up green on hover/press like the nav CTA
    CTA. */
 .apply-submit {
   background: var(--ink);
@@ -1904,265 +2309,6 @@ body {
 }
 
 /* ============================================================
-   Partner drawer — slides in from the right when the top-bar
-   "Partner with Us" CTA is pressed.
-   ============================================================ */
-.partner-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 200;
-  background: rgba(0, 0, 0, 0.55);
-  backdrop-filter: blur(3px);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s ease;
-}
-
-.partner-overlay.is-open {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.partner-drawer {
-  position: fixed;
-  top: 0;
-  right: 0;
-  z-index: 201;
-  width: min(440px, 92vw);
-  height: 100vh;
-  height: 100dvh;
-  overflow-y: auto;
-  background: #121418;
-  border-left: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: -24px 0 80px rgba(0, 0, 0, 0.5);
-  padding: clamp(28px, 4vw, 44px);
-  transform: translateX(100%);
-  transition: transform 0.34s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.partner-drawer.is-open {
-  transform: translateX(0);
-}
-
-.partner-close {
-  position: absolute;
-  top: 16px;
-  right: 18px;
-  width: 36px;
-  height: 36px;
-  display: grid;
-  place-items: center;
-  border: 0;
-  border-radius: 999px;
-  background: transparent;
-  color: rgba(255, 255, 255, 0.6);
-  font-size: 26px;
-  line-height: 1;
-  cursor: pointer;
-}
-
-.partner-close:hover {
-  color: var(--ink);
-  background: rgba(255, 255, 255, 0.08);
-}
-
-.partner-title {
-  margin: 8px 0 0;
-  font-family: "Space Grotesk", sans-serif;
-  font-weight: 600;
-  font-size: clamp(1.5rem, 3vw, 1.9rem);
-  letter-spacing: -0.01em;
-  color: var(--ink);
-}
-
-.partner-sub {
-  margin: 10px 0 0;
-  font-size: 0.98rem;
-  line-height: 1.55;
-  color: rgba(255, 255, 255, 0.66);
-}
-
-/* Primary "Schedule a meeting" link — white by default, lights up green on
-   hover/press to match the "Partner with Us" CTA. */
-.partner-schedule {
-  display: block;
-  margin-top: 26px;
-  text-align: center;
-  text-decoration: none;
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--page);
-  background: var(--ink);
-  border: 1px solid var(--ink);
-  border-radius: 10px;
-  padding: 14px 20px;
-  transition: color 0.18s ease, background 0.18s ease, border-color 0.18s ease,
-    box-shadow 0.18s ease;
-}
-
-.partner-schedule:hover {
-  color: #fff;
-  background: var(--accent);
-  border-color: var(--accent);
-  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.14);
-}
-
-/* "or" separator between the two paths. */
-.partner-divider {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  margin: 24px 0;
-  color: rgba(255, 255, 255, 0.4);
-  font-size: 0.82rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-
-.partner-divider::before,
-.partner-divider::after {
-  content: "";
-  flex: 1;
-  height: 1px;
-  background: rgba(255, 255, 255, 0.12);
-}
-
-.partner-form {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.partner-row {
-  display: flex;
-  gap: 14px;
-}
-
-.partner-field {
-  display: flex;
-  flex: 1;
-  /* Let paired fields shrink instead of forcing the drawer to scroll
-     horizontally — flex items default to min-width:auto (their content
-     width), which an <input>'s intrinsic size would otherwise overflow. */
-  min-width: 0;
-  flex-direction: column;
-  gap: 7px;
-}
-
-.partner-field > span {
-  font-size: 0.8rem;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  color: rgba(255, 255, 255, 0.66);
-}
-
-.partner-field input,
-.partner-field textarea {
-  font-family: inherit;
-  font-size: 0.96rem;
-  width: 100%;
-  color: var(--ink);
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 10px;
-  padding: 11px 13px;
-  outline: none;
-  transition: border-color 0.15s ease, background 0.15s ease;
-}
-
-.partner-field textarea {
-  resize: vertical;
-  min-height: 88px;
-}
-
-.partner-field input:focus,
-.partner-field textarea:focus {
-  border-color: var(--accent);
-  background: rgba(255, 255, 255, 0.06);
-}
-
-.partner-submit {
-  margin-top: 6px;
-  font-family: inherit;
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--page);
-  background: var(--ink);
-  border: 1px solid var(--ink);
-  border-radius: 10px;
-  padding: 13px 20px;
-  cursor: pointer;
-  transition: color 0.18s ease, background 0.18s ease, border-color 0.18s ease, opacity 0.15s ease;
-}
-
-.partner-submit:hover {
-  color: #fff;
-  background: var(--accent);
-  border-color: var(--accent);
-  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.14);
-}
-
-.partner-submit:disabled {
-  opacity: 0.55;
-  cursor: default;
-}
-
-.partner-error {
-  margin: 0;
-  font-size: 0.9rem;
-  color: var(--color-red);
-}
-
-.partner-error a {
-  color: inherit;
-  text-decoration: underline;
-}
-
-.partner-done-text {
-  margin: 0;
-  font-size: 1.02rem;
-  line-height: 1.6;
-  color: rgba(255, 255, 255, 0.78);
-}
-
-.partner-done .partner-submit {
-  width: 100%;
-  margin-top: 22px;
-}
-
-/* On phones the drawer becomes a full-screen sheet that rises from the
-   bottom and fully covers the page, so the only way out is the × button. */
-@media (max-width: 640px) {
-  .partner-drawer {
-    top: auto;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    width: 100%;
-    max-width: none;
-    height: 100vh;
-    height: 100dvh;
-    border-left: 0;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 -24px 80px rgba(0, 0, 0, 0.5);
-    /* Rise from the bottom instead of sliding in from the right. */
-    transform: translateY(100%);
-  }
-
-  .partner-drawer.is-open {
-    transform: translateY(0);
-  }
-}
-
-/* Stack the paired name fields on the narrowest drawers. */
-@media (max-width: 380px) {
-  .partner-row {
-    flex-direction: column;
-    gap: 16px;
-  }
-}
-
-/* ============================================================
    Default 404 page — centered white text on the black page.
    ============================================================ */
 .notfound {
@@ -2201,7 +2347,7 @@ body {
 /* Honeypot field — off-screen for people, visible to form-filling bots.
    Kept out of the layout entirely rather than display:none, which some bots
    check for. */
-.partner-honeypot {
+.honeypot {
   position: absolute;
   left: -9999px;
   width: 1px;
@@ -2211,29 +2357,14 @@ body {
 }
 
 /* ============================================================
-   Footer — a giant, barely-there "biject" wordmark above a bar
-   with the copyright on the left and links + kernel tag on the right.
+   Footer — a single bar with the copyright on the left and
+   links + kernel tag on the right.
    ============================================================ */
 .footer {
   position: relative;
   z-index: 1;
   overflow: hidden;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-/* The oversized watermark — fills the width, sits just under the page. */
-.footer-wordmark {
-  font-family: "Space Grotesk", sans-serif;
-  font-weight: 700;
-  font-size: clamp(110px, 25vw, 460px);
-  line-height: 0.8;
-  letter-spacing: -0.04em;
-  color: var(--ink);
-  opacity: 0.045;
-  white-space: nowrap;
-  text-align: center;
-  user-select: none;
-  padding-top: 40px;
 }
 
 .footer-bar {

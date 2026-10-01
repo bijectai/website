@@ -20,6 +20,10 @@ import { useEffect, useRef } from "react";
    the native center, divide by a native length). That keeps the
    homotopy well-behaved and every attractor framed the same size.
 
+   Every 20 to 30 seconds one ink strand plays a denied action: it
+   drifts off the manifold, flashes the brand green, and snaps back
+   onto the attractor. Skipped under prefers-reduced-motion.
+
    Colors follow the theme (--ink / --color-green).
    Sits at z-index 0, i.e. behind the glass top bar (z-index 100).
    ============================================================ */
@@ -30,6 +34,12 @@ const TRAIL_LENGTH = 46; // trail points kept per particle
 const STEPS_PER_FRAME = 2; // integration steps advanced per frame
 const GREEN_RATIO = 0.05; // 5% of particles are green
 const SCALE_FACTOR = 0.2; // attractor radius relative to min(viewport)
+// When the page lays out a .hero-stage box, the cloud is framed to it instead:
+// centered on the box, scaled so the shape's ~3-unit span fills its shorter
+// side. CSS owns the hero layout; this just follows it.
+const STAGE_SELECTOR = ".hero-stage";
+const STAGE_FILL = 1 / 3;
+const MIN_STAGE = 96; // px; below this the stage hides the cloud (see place())
 const VERTICAL_OFFSET = 0.06; // shift the cloud's center down, as a fraction of viewport height
 const FOCAL = 9; // perspective focal length (attractor units)
 const BASE_ALPHA = 0.55; // opacity of the freshest trail segment
@@ -37,6 +47,22 @@ const LINE_WIDTH = 0.825; // strand thickness (0.75× the original 1.1)
 const TRANSITION_MS = 1000; // how long a homotopy morph takes
 const CYCLE_MS = 15000; // time between the start of one morph and the next
 const MAX_RADIUS = 5.5; // leash: particles past this (vs ~3 for real orbits) respawn
+
+// ---- "Denied action" event ----
+// One strand drifts outward, flashes green, then snaps back to where it would
+// have been had it never left (a shadow copy keeps integrating the real field
+// alongside it). Phases run back to back; durations in ms.
+const DENY_FIRST_MS: [number, number] = [9000, 15000]; // first event, after mount
+const DENY_EVERY_MS: [number, number] = [20000, 30000]; // gap between events
+const DENY_DRIFT_MS = 2200; // easing outward, tint creeping in
+const DENY_HOLD_MS = 500; // full green at its furthest point
+const DENY_SNAP_MS = 160; // back onto the manifold
+const DENY_SETTLE_MS = 900; // green fades from the strand's trail
+const DENY_TOTAL_MS = DENY_DRIFT_MS + DENY_HOLD_MS + DENY_SNAP_MS + DENY_SETTLE_MS;
+const DENY_PUSH = 0.0065; // peak outward nudge per integration step
+const DENY_FLASH_ALPHA = 1.5; // trail alpha boost while flashing
+
+const randIn = ([lo, hi]: [number, number]) => lo + Math.random() * (hi - lo);
 
 // Base viewing orientation (radians). Default for any attractor that
 // doesn't override it via its own rotX/rotY.
@@ -215,6 +241,20 @@ export function AizawaAttractor() {
       particles.push(spawn(ATTRACTORS[0], Math.random() < GREEN_RATIO));
     }
 
+    // ---- denied-action event state ----
+    // shadow: where the strand would be had it stayed on the field.
+    // from: its position when the snap began, lerped toward the shadow.
+    // snapped: the snap reached the shadow (a hidden tab can cut it short).
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let deny: {
+      p: Particle;
+      start: number;
+      shadow: Vec3;
+      from: Vec3 | null;
+      snapped: boolean;
+    } | null = null;
+    let nextDeny = performance.now() + randIn(DENY_FIRST_MS);
+
     // ---- attractor cycling / homotopy state ----
     let current = 0; // resting attractor index
     let fromIdx = 0;
@@ -232,6 +272,7 @@ export function AizawaAttractor() {
     // Kick off a morph on a fixed cadence (CYCLE_MS > TRANSITION_MS, so the
     // previous morph has always finished by the time the next one starts).
     const cycleTimer = window.setInterval(advance, CYCLE_MS);
+    const cycleOrigin = performance.now();
 
     // ---- viewport / hi-dpi sizing ----
     let width = 0;
@@ -248,17 +289,44 @@ export function AizawaAttractor() {
       // horizontal scrollbar.
       width = document.documentElement.clientWidth;
       height = window.innerHeight;
-      cx = width / 2;
-      cy = height / 2 + height * VERTICAL_OFFSET;
-      scale = Math.min(width, height) * SCALE_FACTOR;
+      place();
       canvas.width = Math.round(width * dpr);
       canvas.height = Math.round(height * dpr);
       canvas.style.width = width + "px";
       canvas.style.height = height + "px";
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     }
+    // Center and scale. The canvas is anchored to the top of the page, so the
+    // stage's page coordinates (viewport rect + scroll) are canvas coordinates.
+    // Whether to draw at all. A stage squeezed below MIN_STAGE (a phone held
+    // sideways, where the copy takes the whole first screen) hides the cloud
+    // rather than letting it fall back onto the copy. The simulation keeps
+    // running, so it reappears as soon as there's room.
+    let visible = true;
+
+    function place() {
+      const stage = document.querySelector<HTMLElement>(STAGE_SELECTOR);
+      const r = stage?.getBoundingClientRect();
+      visible = !r || Math.min(r.width, r.height) >= MIN_STAGE;
+      if (r && visible) {
+        cx = r.left + r.width / 2;
+        cy = r.top + window.scrollY + r.height / 2;
+        scale = Math.min(r.width, r.height) * STAGE_FILL;
+      } else {
+        cx = width / 2;
+        cy = height / 2 + height * VERTICAL_OFFSET;
+        scale = Math.min(width, height) * SCALE_FACTOR;
+      }
+    }
+
     resize();
     window.addEventListener("resize", resize);
+    // The stage moves when the copy above it reflows (web fonts landing, a
+    // breakpoint): follow it without resizing the canvas.
+    const stageEl = document.querySelector(STAGE_SELECTOR);
+    const stageObserver = stageEl ? new ResizeObserver(place) : null;
+    if (stageEl) stageObserver!.observe(stageEl);
+    document.fonts?.ready.then(place);
 
     // ---- rotation: per-attractor base angle + subtle mouse sway ----
     // The resting orientation comes from the active attractor (interpolated
@@ -314,17 +382,61 @@ export function AizawaAttractor() {
       const cosY = Math.cos(rotY);
       const sinY = Math.sin(rotY);
 
+      // ---- denied-action event: start one, or advance the running one ----
+      const now = performance.now();
+      if (!deny && now >= nextDeny) {
+        // Never overlap a morph: the shadow would follow a field mid-change.
+        const untilMorph = CYCLE_MS - ((now - cycleOrigin) % CYCLE_MS);
+        if (reduceMotion.matches || transitioning || untilMorph < DENY_TOTAL_MS + 500) {
+          nextDeny = now + 4000;
+        } else {
+          const pool = particles.filter((p) => !p.green && p.count === TRAIL_LENGTH);
+          const p = pool[Math.floor(Math.random() * pool.length)];
+          if (p) deny = { p, start: now, shadow: { ...p.cur }, from: null, snapped: false };
+          nextDeny = now + randIn(DENY_EVERY_MS);
+        }
+      }
+      const denyAge = deny ? now - deny.start : 0;
+      const pushing = deny !== null && denyAge < DENY_DRIFT_MS + DENY_HOLD_MS;
+      const snapping = deny !== null && !pushing && denyAge < DENY_TOTAL_MS - DENY_SETTLE_MS;
+      // Outward nudge per step: eases in across the drift, full during the hold.
+      const push = pushing ? DENY_PUSH * Math.min(denyAge / DENY_DRIFT_MS, 1) ** 2 : 0;
+
       // advance the simulation
       for (let i = 0; i < particles.length; i++) {
         const p = particles[i];
+        const denied = deny !== null && deny.p === p && (pushing || snapping);
         for (let s = 0; s < STEPS_PER_FRAME; s++) {
           if (transitioning) stepBlend(p.cur, from, to, t);
           else stepField(p.cur, active);
+          if (denied) {
+            const sh = deny!.shadow;
+            if (transitioning) stepBlend(sh, from, to, t);
+            else stepField(sh, active);
+            if (push > 0) {
+              const r = Math.hypot(p.cur.x, p.cur.y, p.cur.z) || 1;
+              p.cur.x += (p.cur.x / r) * push;
+              p.cur.y += (p.cur.y / r) * push;
+              p.cur.z += (p.cur.z / r) * push;
+            }
+          }
+        }
+        if (denied && snapping) {
+          // Ease from where the snap began onto the shadow's live position.
+          const d = deny!;
+          if (!d.from) d.from = { ...p.cur };
+          const k = Math.min((denyAge - DENY_DRIFT_MS - DENY_HOLD_MS) / DENY_SNAP_MS, 1);
+          const e = 1 - (1 - k) ** 3;
+          p.cur.x = d.from.x + (d.shadow.x - d.from.x) * e;
+          p.cur.y = d.from.y + (d.shadow.y - d.from.y) * e;
+          p.cur.z = d.from.z + (d.shadow.z - d.from.z) * e;
+          if (k >= 1) d.snapped = true;
         }
         // Respawn anything that goes non-finite or escapes the leash
         // (real orbits stay within ~3; only blend-time runaways exceed it).
         const r2 = p.cur.x * p.cur.x + p.cur.y * p.cur.y + p.cur.z * p.cur.z;
         if (!Number.isFinite(r2) || r2 > MAX_RADIUS * MAX_RADIUS) {
+          if (deny && deny.p === p) deny = null;
           particles[i] = spawn(active, p.green);
           continue;
         }
@@ -341,40 +453,66 @@ export function AizawaAttractor() {
       ctx.lineCap = "round";
 
       // Draw the base (ink) particles first, greens on top so the 5% pop.
-      drawPass(false);
-      drawPass(true);
+      if (visible) {
+        drawPass(false);
+        drawPass(true);
+      }
+
+      // The denied strand: its green overlay ramps in over the drift, holds
+      // bright through the flash and snap, then fades out of the trail. If a
+      // hidden tab cut the snap short (or skipped it), land it on the shadow.
+      if (deny) {
+        if (denyAge >= DENY_TOTAL_MS) {
+          if (!deny.snapped) deny.p.cur = { ...deny.shadow };
+          deny = null;
+        } else {
+          const flashEnd = DENY_TOTAL_MS - DENY_SETTLE_MS;
+          let g: number;
+          if (denyAge < DENY_DRIFT_MS) g = 0.4 * (denyAge / DENY_DRIFT_MS) ** 2;
+          else if (denyAge < flashEnd) g = 1;
+          else g = 1 - (denyAge - flashEnd) / DENY_SETTLE_MS;
+          const boost = denyAge >= DENY_DRIFT_MS && denyAge < flashEnd ? DENY_FLASH_ALPHA : 1;
+          ctx.strokeStyle = GREEN;
+          if (visible) drawTrail(deny.p, g * boost);
+        }
+      }
 
       function drawPass(greenPass: boolean) {
         ctx.strokeStyle = greenPass ? GREEN : INK;
         for (let i = 0; i < particles.length; i++) {
           const p = particles[i];
-          if (p.green !== greenPass || p.count < 2) continue;
+          if (p.green !== greenPass) continue;
+          drawTrail(p, 1);
+        }
+      }
 
-          // project the trail oldest -> newest
-          const oldest = (p.head - (p.count - 1) + TRAIL_LENGTH) % TRAIL_LENGTH;
-          for (let k = 0; k < p.count; k++) {
-            const idx = ((oldest + k) % TRAIL_LENGTH) * 3;
-            const x = p.trail[idx];
-            const y = p.trail[idx + 1];
-            const z = p.trail[idx + 2];
+      // Stroke one particle's trail in the current strokeStyle, alpha scaled.
+      function drawTrail(p: Particle, alphaScale: number) {
+        if (p.count < 2) return;
+        // project the trail oldest -> newest
+        const oldest = (p.head - (p.count - 1) + TRAIL_LENGTH) % TRAIL_LENGTH;
+        for (let k = 0; k < p.count; k++) {
+          const idx = ((oldest + k) % TRAIL_LENGTH) * 3;
+          const x = p.trail[idx];
+          const y = p.trail[idx + 1];
+          const z = p.trail[idx + 2];
 
-            const y1 = y * cosX - z * sinX;
-            const z1 = y * sinX + z * cosX;
-            const x2 = x * cosY + z1 * sinY;
-            const z2 = -x * sinY + z1 * cosY;
-            const persp = FOCAL / (FOCAL - z2);
-            projX[k] = cx + x2 * effScale * persp;
-            projY[k] = cy + y1 * effScale * persp;
-          }
+          const y1 = y * cosX - z * sinX;
+          const z1 = y * sinX + z * cosX;
+          const x2 = x * cosY + z1 * sinY;
+          const z2 = -x * sinY + z1 * cosY;
+          const persp = FOCAL / (FOCAL - z2);
+          projX[k] = cx + x2 * effScale * persp;
+          projY[k] = cy + y1 * effScale * persp;
+        }
 
-          // stroke segments with alpha ramping up toward the head
-          for (let k = 1; k < p.count; k++) {
-            ctx.globalAlpha = BASE_ALPHA * (k / (p.count - 1));
-            ctx.beginPath();
-            ctx.moveTo(projX[k - 1], projY[k - 1]);
-            ctx.lineTo(projX[k], projY[k]);
-            ctx.stroke();
-          }
+        // stroke segments with alpha ramping up toward the head
+        for (let k = 1; k < p.count; k++) {
+          ctx.globalAlpha = Math.min(BASE_ALPHA * alphaScale * (k / (p.count - 1)), 1);
+          ctx.beginPath();
+          ctx.moveTo(projX[k - 1], projY[k - 1]);
+          ctx.lineTo(projX[k], projY[k]);
+          ctx.stroke();
         }
       }
 
@@ -388,6 +526,7 @@ export function AizawaAttractor() {
     return () => {
       cancelAnimationFrame(raf);
       window.removeEventListener("resize", resize);
+      stageObserver?.disconnect();
       window.clearInterval(cycleTimer);
     };
   }, []);
