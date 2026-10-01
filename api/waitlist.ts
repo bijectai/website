@@ -17,7 +17,7 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 
 const TO = "dev@bijectai.com";
-const DEFAULT_FROM = "biject website <partnerships@bijectai.com>";
+const DEFAULT_FROM = "biject website <dev@bijectai.com>";
 const RESEND_ENDPOINT = "https://api.resend.com/emails";
 
 /**

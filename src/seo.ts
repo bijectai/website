@@ -20,7 +20,7 @@ export const SITE_NAME = "biject";
 /** 1200x630 social card. Regenerate from scripts/og-image.html — see its header. */
 export const OG_IMAGE = `${SITE_URL}/og.png`;
 
-export const CONTACT_EMAIL = "team@bijectai.com";
+export const CONTACT_EMAIL = "dev@bijectai.com";
 
 export type PageSeo = {
   /** The page's name exactly as the site's own navigation writes it. */
