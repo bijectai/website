@@ -130,7 +130,7 @@ export function EarlyAccess() {
               // because the endpoint is down.
               <p className="form-error" role="alert">
                 {submit.message} Email us at{" "}
-                <a href="mailto:team@bijectai.com">team@bijectai.com</a>{" "}
+                <a href="mailto:dev@bijectai.com">dev@bijectai.com</a>{" "}
                 instead.
               </p>
             )}
