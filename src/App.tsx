@@ -6,13 +6,16 @@ import { Closing, EarlyAccess } from "./components/EarlyAccess";
 import { Footer } from "./components/Footer";
 import { Hero, HeroBackdrop } from "./components/Hero";
 import { HowItWorks } from "./components/HowItWorks";
+import { News } from "./components/News";
+import { NewsPost } from "./components/NewsPost";
 import { NotFound } from "./components/NotFound";
 import { Research } from "./components/Research";
 import { SdkPreview } from "./components/SdkPreview";
 import { TopBar } from "./components/TopBar";
 import { UseCases } from "./components/UseCases";
 import { WhyNotJudge } from "./components/WhyNotJudge";
-import { applySeo } from "./seo";
+import { findPost } from "./news";
+import { applySeo, routeKey } from "./seo";
 
 export default function App() {
   // Arriving at e.g. /#research from another page is a full navigation: the
@@ -38,8 +41,17 @@ export default function App() {
   }, []);
 
   // No router: switch on the pathname. The root renders the site, /about the
-  // About page, and anything else falls back to the default 404 page.
+  // About page, /news the news list and /news/<slug> a post; anything else
+  // falls back to the default 404 page.
   const path = window.location.pathname;
+  const key = routeKey(path);
+  if (key === "/news") {
+    return <News />;
+  }
+  if (key.startsWith("/news/")) {
+    const post = findPost(key.slice("/news/".length));
+    return post ? <NewsPost item={post} /> : <NotFound />;
+  }
   if (path === "/about" || path === "/about/") {
     return <About />;
   }

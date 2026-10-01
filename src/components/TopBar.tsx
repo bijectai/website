@@ -13,8 +13,8 @@ import { useEffect, useRef, useState } from "react";
 // Shared by the inline links and the mobile menu. Absolute "/#…" paths so
 // the section links still land when clicked from /about or /careers.
 const LINKS = [
-  { href: "/#research", label: "Research" },
   { href: "/#use-cases", label: "Use cases" },
+  { href: "/news", label: "News" },
   { href: "/about", label: "About" },
   { href: "/careers", label: "Careers" },
 ];

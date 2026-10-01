@@ -25,6 +25,9 @@ export function Research() {
               The research the gate grew out of. The SDK in private beta is the
               product, and its API will not match the paper line for line.
             </p>
+            <a className="research-more" href="/news">
+              All research and writing
+            </a>
           </div>
         </div>
       </div>

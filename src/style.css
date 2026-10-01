@@ -1134,6 +1134,23 @@ body {
   text-decoration-color: currentColor;
 }
 
+.research-more {
+  display: inline-block;
+  margin-top: 20px;
+  font-size: 0.98rem;
+  font-weight: 500;
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 255, 255, 0.3);
+  text-underline-offset: 5px;
+  transition: color 0.18s ease, text-decoration-color 0.18s ease;
+}
+
+.research-more:hover {
+  color: var(--accent);
+  text-decoration-color: currentColor;
+}
+
 .research-meta {
   margin: 16px 0 20px;
   font-size: 0.9rem;
@@ -1299,6 +1316,191 @@ body {
 .closing-link:hover {
   color: var(--accent);
   text-decoration-color: currentColor;
+}
+
+/* ============================================================
+   News — /news lists research and posts; /news/<slug> is a post.
+   ============================================================ */
+/* Page headline for the inner pages, the same size as About's. */
+.page-title {
+  margin: 0;
+  font-family: "Space Grotesk", sans-serif;
+  font-weight: 600;
+  font-size: clamp(2.2rem, 5vw, 4rem);
+  line-height: 1.06;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+}
+
+.news,
+.post {
+  position: relative;
+  z-index: 1;
+  padding-block: clamp(56px, 9vh, 120px) clamp(80px, 12vh, 160px);
+}
+
+.news-lede {
+  margin-top: clamp(14px, 2vh, 20px);
+}
+
+/* date | kind | title + summary, split by hairlines. */
+.news-list {
+  margin: clamp(40px, 6vh, 64px) 0 0;
+  padding: 0;
+  list-style: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.news-item {
+  display: grid;
+  grid-template-columns: 8.5rem 5rem minmax(0, 1fr);
+  gap: 8px clamp(16px, 3vw, 40px);
+  align-items: baseline;
+  padding-block: clamp(22px, 3.5vh, 34px);
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.news-date,
+.news-kind {
+  font-size: 0.88rem;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.news-title {
+  font-family: "Space Grotesk", sans-serif;
+  font-weight: 600;
+  font-size: clamp(1.4rem, 2.4vw, 2rem);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  text-decoration: none;
+  transition: color 0.18s ease;
+}
+
+.news-title:hover {
+  color: var(--accent);
+}
+
+.news-out {
+  font-size: 0.7em;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.news-summary {
+  margin: 10px 0 0;
+  max-width: 62ch;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.66);
+}
+
+/* Phones: date and kind share a line above the title. */
+@media (max-width: 640px) {
+  .news-item {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .news-main {
+    grid-column: 1 / -1;
+  }
+}
+
+/* ---- A post ---------------------------------------------------- */
+.post-back {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.55);
+  text-decoration: none;
+  transition: color 0.18s ease;
+}
+
+.post-back::before {
+  content: "← ";
+}
+
+.post-back:hover {
+  color: var(--ink);
+}
+
+.post-meta {
+  margin: clamp(28px, 4vh, 40px) 0 12px;
+  font-size: 0.88rem;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.post-title {
+  max-width: 22ch;
+  text-wrap: balance;
+}
+
+/* The reading column. Posts are written in plain JSX; this styles it. */
+.post-body {
+  max-width: 68ch;
+  margin-top: clamp(32px, 5vh, 56px);
+  font-size: 1.0625rem;
+  line-height: 1.75;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.post-body > * {
+  margin: 0 0 1.15em;
+}
+
+.post-body h2 {
+  margin: 2.2em 0 0.6em;
+  font-family: "Space Grotesk", sans-serif;
+  font-weight: 600;
+  font-size: clamp(1.4rem, 2.2vw, 1.75rem);
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+}
+
+.post-body h3 {
+  margin: 1.8em 0 0.5em;
+  font-family: "Space Grotesk", sans-serif;
+  font-weight: 600;
+  font-size: 1.2rem;
+  color: var(--ink);
+}
+
+.post-body a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 255, 255, 0.3);
+  text-underline-offset: 4px;
+  transition: color 0.18s ease, text-decoration-color 0.18s ease;
+}
+
+.post-body a:hover {
+  color: var(--accent);
+  text-decoration-color: currentColor;
+}
+
+.post-body ul,
+.post-body ol {
+  padding-left: 1.3em;
+}
+
+.post-body li + li {
+  margin-top: 0.4em;
+}
+
+.post-body blockquote {
+  padding-left: 1.2em;
+  border-left: 1px solid rgba(255, 255, 255, 0.25);
+  color: rgba(255, 255, 255, 0.66);
+}
+
+.post-body :not(pre) > code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.88em;
+  color: var(--ink);
+}
+
+.post-body .code {
+  border-radius: 10px;
+  background: rgba(54, 56, 60, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 /* ============================================================

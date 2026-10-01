@@ -11,6 +11,8 @@
  * point at the Vercel project; this is the one search engines should treat as
  * the real address, and every absolute URL on the site derives from it.
  */
+import { NEWS } from "./news";
+
 export const SITE_URL = "https://www.bijectai.com";
 
 export const SITE_NAME = "biject";
@@ -42,6 +44,18 @@ export const PAGES: Record<string, PageSeo> = {
     description:
       "biject is an R&P lab built on one primitive: if you can't prove it, you can't trust it. We build guardrails that return machine-checked proofs.",
   },
+  "/news": {
+    name: "News",
+    description:
+      "Research and writing from biject on type-checked guardrails for AI agents: policies in Lean 4, checked by a proof kernel, with signed verdicts.",
+  },
+  // One page per post, named and described by its entry in src/news.ts.
+  ...Object.fromEntries(
+    NEWS.filter((item) => item.kind === "post").map((item) => [
+      `/news/${item.slug}`,
+      { name: item.title, description: item.summary },
+    ]),
+  ),
   "/careers": {
     name: "Careers",
     description:
