@@ -1,8 +1,11 @@
 import { Code, type CodeLine } from "./Code";
 
 // The first thing under the hero: what calling the gate looks like. Copy on
-// the left, the snippet on the right. The snippet is illustrative and the
-// caption says so; the SDK is in private beta and its API is still moving.
+// the left, the snippet on the right.
+//
+// The card is headed by a filename rather than a language tag or a "preview"
+// label: a reader who writes Python already knows what they're looking at, and
+// agent.py says where this goes — their own agent — without claiming it.
 const SNIPPET: CodeLine[] = [
   [["kw", "from"], ["plain", " biject "], ["kw", "import"], ["plain", " Gate"]],
   [],
@@ -17,10 +20,15 @@ export function SdkPreview() {
     <section className="sdk" id="sdk" aria-labelledby="sdk-title">
       <div className="wrap sdk-grid">
         <div className="sdk-copy">
-          <h2 className="h2 h2-set" id="sdk-title">
-            <span className="h2-line">Policy in.</span>{" "}
-            <span className="h2-line">Action in.</span>{" "}
-            <span className="h2-line">Signed verdict out.</span>
+          {/* The gate as its signature. aria-label spells the formula out, so
+              the section isn't announced as "times, right arrow". */}
+          <h2
+            className="h2 h2-set"
+            id="sdk-title"
+            aria-label="Policy and action map to a signed verdict."
+          >
+            <span className="h2-line">Policy × Action</span>{" "}
+            <span className="h2-line">→ Signed verdict.</span>
           </h2>
           <p className="body">
             Load a policy written in Lean 4. Pass the action your agent is
@@ -36,14 +44,10 @@ export function SdkPreview() {
         <figure className="sdk-figure">
           <div className="code-card">
             <div className="code-head">
-              <span className="mono-label">SDK preview</span>
-              <span className="code-lang">python</span>
+              <span className="code-file">agent.py</span>
             </div>
-            <Code lines={SNIPPET} label="SDK preview, Python" />
+            <Code lines={SNIPPET} label="agent.py" />
           </div>
-          <figcaption className="caption">
-            Illustrative. API subject to change during beta.
-          </figcaption>
         </figure>
       </div>
     </section>

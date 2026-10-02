@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 
 // The persistent glass top bar that sits above all page content.
 //
-// The logo and the "Request early access" CTA live in their own layer
+// The logo and the "Get started" CTA live in their own layer
 // (.topbar-corners) pinned to the top of the screen. During the hero they
 // float on their own in the top corners; the glass pill (.topbar) starts
 // lower with the links centered (flexible spacers on both sides). As the
@@ -13,7 +13,8 @@ import { useEffect, useRef, useState } from "react";
 // Shared by the inline links and the mobile menu. Absolute "/#…" paths so
 // the section links still land when clicked from /about or /careers.
 const LINKS = [
-  { href: "/#use-cases", label: "Use cases" },
+  // The anchor keeps its original id so existing /#use-cases links still land.
+  { href: "/#use-cases", label: "Domains" },
   { href: "/news", label: "News" },
   { href: "/about", label: "About" },
   { href: "/careers", label: "Careers" },
@@ -101,7 +102,7 @@ export function TopBar() {
             <img className="brand-logo" src="/logo.png" alt="biject" />
           </a>
           <a className="nav-cta" href="/#early-access" ref={ctaRef}>
-            Request early access
+            Get started
           </a>
           {/* Corner menu button — only shown below the mobile breakpoint, where
               the inline links + CTA are hidden. */}
@@ -158,7 +159,7 @@ export function TopBar() {
               href="/#early-access"
               onClick={() => setMenuOpen(false)}
             >
-              Request early access
+              Get started
             </a>
           </nav>
         </div>

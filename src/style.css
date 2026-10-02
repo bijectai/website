@@ -156,8 +156,10 @@ body {
   font-size: clamp(11px, 0.9vw, 14px);
   line-height: 2.05;
   white-space: nowrap;
-  /* The Lean: a few steps above the page, texture first. */
-  color: rgba(255, 255, 255, 0.05);
+  /* The Lean: bright enough to read as code you could follow if you leant in,
+     so it reads as a deliberate backdrop rather than noise, and still well
+     under the sub-headline (0.7) so it never competes with the copy. */
+  color: rgba(255, 255, 255, 0.09);
   /* Full strength across the top, gone by a little past the middle. */
   -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 16%, transparent 56%);
   mask-image: linear-gradient(to bottom, #000 0%, #000 16%, transparent 56%);
@@ -181,7 +183,7 @@ body {
   font-weight: 600;
   font-size: 1.08em;
   letter-spacing: -0.005em;
-  color: rgba(255, 255, 255, 0.11);
+  color: rgba(255, 255, 255, 0.18);
 }
 
 /* Sized to the content box (cqi) so the set lines stay whole: the whole
@@ -196,48 +198,14 @@ body {
   color: var(--ink);
   font-family: "Space Grotesk", sans-serif;
   font-weight: 600;
-  font-size: min(4.5rem, calc(100cqi / 17.4));
+  /* Sized so the whole line fits the copy column with the margin it has
+     always carried: the set text is ~19.1em wide at this face and tracking,
+     and the divisor keeps ~10% clear on either side. Retune it if the
+     headline's wording changes. */
+  font-size: min(4.5rem, calc(100cqi / 21.1));
   line-height: 1.04;
   letter-spacing: -0.035em;
   white-space: nowrap;
-}
-
-.hero-sub {
-  margin: clamp(14px, 2.2vh, 22px) auto 0;
-  max-width: 60ch;
-  font-size: clamp(1rem, 1.25vw, 1.15rem);
-  line-height: 1.6;
-  color: rgba(255, 255, 255, 0.7);
-  text-wrap: balance;
-}
-
-.hero-actions {
-  margin-top: clamp(20px, 3.2vh, 32px);
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 14px 28px;
-  pointer-events: auto;
-}
-
-.hero-cta {
-  padding: 13px 22px;
-}
-
-.hero-link {
-  font-size: 15px;
-  font-weight: 500;
-  color: var(--ink);
-  text-decoration: underline;
-  text-decoration-color: rgba(255, 255, 255, 0.3);
-  text-underline-offset: 5px;
-  transition: color 0.18s ease, text-decoration-color 0.18s ease;
-}
-
-.hero-link:hover {
-  color: var(--accent);
-  text-decoration-color: currentColor;
 }
 
 /* The attractor's frame: everything left between the copy and the nav
@@ -254,10 +222,11 @@ body {
   }
 }
 
-/* Phones: one line would be too small, so break after "argue". */
+/* Phones: one line would be too small, so break after "Ambiguity" — sized to
+   the longer of the two lines (~10.4em). */
 @media (max-width: 600px) {
   .hero-title {
-    font-size: calc(100cqi / 10.6);
+    font-size: calc(100cqi / 11.35);
   }
 
   .hero-line {
@@ -724,18 +693,6 @@ body {
   margin-top: 1em;
 }
 
-/* Monospace label, same treatment as .about-label. Used twice on the
-   homepage: the SDK preview's header and the Research row. */
-.mono-label {
-  margin: 0;
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 0.72rem;
-  font-weight: 400;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--accent);
-}
-
 /* Inline text links inside body copy. */
 .access-call a,
 .access-done a,
@@ -817,8 +774,8 @@ body {
   }
 }
 
-/* The headline's three set lines never re-wrap: sized to the copy column
-   (cqi), so the longest, "Signed verdict out." (~9.6em), always fits. */
+/* The headline's set lines never re-wrap: sized to the copy column (cqi), so
+   the longest, "→ Signed verdict." (~8.6em), always fits. */
 .sdk-copy {
   container-type: inline-size;
 }
@@ -853,14 +810,12 @@ body {
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.code-head .mono-label {
-  color: rgba(255, 255, 255, 0.55);
-}
-
-.code-lang {
+/* The card's only header: the filename, set like an editor tab. Brighter than
+   the language tag it replaced, since it is now the one thing up there. */
+.code-file {
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 0.72rem;
-  color: rgba(255, 255, 255, 0.32);
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.5);
 }
 
 .caption {
@@ -883,20 +838,11 @@ body {
 
 .step {
   display: grid;
-  grid-template-columns: 2.5rem minmax(0, 0.9fr) minmax(0, 1.1fr);
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
   gap: clamp(16px, 4vw, 56px);
   align-items: start;
   padding-block: clamp(28px, 4.5vh, 48px);
   border-top: 1px solid rgba(255, 255, 255, 0.12);
-}
-
-/* Small faded index, monospace to echo the code. */
-.step-num {
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 0.72rem;
-  letter-spacing: 0.04em;
-  line-height: 2.1;
-  color: rgba(255, 255, 255, 0.4);
 }
 
 .step-title {
@@ -928,12 +874,11 @@ body {
 
 @media (max-width: 820px) {
   .step {
-    grid-template-columns: 2.5rem minmax(0, 1fr);
-    gap: 10px clamp(16px, 4vw, 32px);
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
   }
 
   .step-body {
-    grid-column: 1 / -1;
     margin-top: 6px;
     min-width: 0;
   }
@@ -1107,75 +1052,6 @@ body {
   }
 }
 
-/* ---- Research: one citation, set large -------------------------- */
-.research {
-  padding-block: 0 clamp(56px, 8vh, 96px);
-}
-
-.research-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 3fr) minmax(0, 9fr);
-  gap: 16px clamp(20px, 4vw, 56px);
-  padding-top: clamp(28px, 4vh, 40px);
-  border-top: 1px solid rgba(255, 255, 255, 0.12);
-}
-
-.research-grid .mono-label {
-  padding-top: 0.9em;
-}
-
-.research-title {
-  font-family: "Space Grotesk", sans-serif;
-  font-weight: 600;
-  font-size: clamp(2rem, 5.2vw, 4.25rem);
-  line-height: 1;
-  letter-spacing: -0.035em;
-  color: var(--ink);
-  text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-decoration-color: rgba(255, 255, 255, 0.22);
-  text-underline-offset: 0.14em;
-  transition: color 0.18s ease, text-decoration-color 0.18s ease;
-}
-
-.research-title:hover {
-  color: var(--accent);
-  text-decoration-color: currentColor;
-}
-
-.research-more {
-  display: inline-block;
-  margin-top: 20px;
-  font-size: 0.98rem;
-  font-weight: 500;
-  color: var(--ink);
-  text-decoration: underline;
-  text-decoration-color: rgba(255, 255, 255, 0.3);
-  text-underline-offset: 5px;
-  transition: color 0.18s ease, text-decoration-color 0.18s ease;
-}
-
-.research-more:hover {
-  color: var(--accent);
-  text-decoration-color: currentColor;
-}
-
-.research-meta {
-  margin: 16px 0 20px;
-  font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.45);
-}
-
-@media (max-width: 720px) {
-  .research-grid {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .research-grid .mono-label {
-    padding-top: 0;
-  }
-}
-
 /* ---- Early access: copy and the call link left, form right ------ */
 .access {
   padding-block: clamp(96px, 14vh, 180px) clamp(72px, 10vh, 120px);
@@ -1285,46 +1161,6 @@ body {
   .access-grid {
     grid-template-columns: minmax(0, 1fr);
   }
-}
-
-/* ---- Closing: the last line, right-aligned like the About page's ---- */
-.closing {
-  padding-block: 0 clamp(72px, 11vh, 140px);
-}
-
-.closing-inner {
-  padding-top: clamp(36px, 5vh, 56px);
-  border-top: 1px solid rgba(255, 255, 255, 0.12);
-  text-align: right;
-}
-
-.closing-text {
-  margin: 0 0 0 auto;
-  max-width: 20ch;
-  font-family: "Space Grotesk", sans-serif;
-  font-weight: 600;
-  font-size: clamp(1.6rem, 3.5vw, 2.8rem);
-  line-height: 1.1;
-  letter-spacing: -0.02em;
-  color: var(--ink);
-  text-wrap: balance;
-}
-
-.closing-link {
-  display: inline-block;
-  margin-top: 18px;
-  font-size: 1rem;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.72);
-  text-decoration: underline;
-  text-decoration-color: rgba(255, 255, 255, 0.3);
-  text-underline-offset: 5px;
-  transition: color 0.18s ease, text-decoration-color 0.18s ease;
-}
-
-.closing-link:hover {
-  color: var(--accent);
-  text-decoration-color: currentColor;
 }
 
 /* ============================================================

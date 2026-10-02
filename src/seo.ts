@@ -35,7 +35,9 @@ export type PageSeo = {
 export const PAGES: Record<string, PageSeo> = {
   "/": {
     name: "home",
-    title: "biject | Type-checked guardrails for AI agents",
+    // The tab reads as the name alone; the description below still carries
+    // what the site is for, for search results and link previews.
+    title: "biject",
     description:
       "Type-checked guardrails for AI agents. Policies in Lean 4, every tool call checked by a proof kernel, every verdict signed. In private beta.",
   },

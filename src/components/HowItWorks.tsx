@@ -1,9 +1,10 @@
 import { Code, type CodeLine } from "./Code";
 
-// Three steps as a numbered sequence split by hairlines (number | title |
-// body), the same row treatment the old five-stage list used. Step one shows
-// the Lean behind the SDK preview's DENY so the policy is something you can
-// read, not a box on a diagram.
+// Three steps split by hairlines (title | body). Still an <ol>, since the
+// order is the point, but the steps carry no printed numbers: the hairlines
+// and the reading order already say "in sequence". Step one shows the Lean
+// behind the SDK preview's DENY so the policy is something you can read, not
+// a box on a diagram.
 const POLICY: CodeLine[] = [
   [["com", "-- policies/no_test_tampering.lean"]],
   [["kw", "def"], ["plain", " noTestTampering (a : Action) : Prop :="]],
@@ -31,13 +32,12 @@ export function HowItWorks() {
     <section className="how" id="how-it-works" aria-labelledby="how-title">
       <div className="wrap">
         <h2 className="h2" id="how-title">
-          Three steps between your agent and its tools.
+          Safeguard every tool call.
         </h2>
 
         <ol className="steps">
-          {STEPS.map((step, i) => (
+          {STEPS.map((step) => (
             <li className="step" key={step.title}>
-              <span className="step-num">{String(i + 1).padStart(2, "0")}</span>
               <h3 className="step-title">{step.title}</h3>
               <div className="step-body">
                 <p>{step.body}</p>

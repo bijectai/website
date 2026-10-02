@@ -1,7 +1,7 @@
-// Early-access waitlist endpoint.
+// Inquiry endpoint.
 //
-// The homepage's early-access form POSTs here; this mails the request to the
-// team through Resend, with the requester set as reply-to so it can be
+// The homepage's "Partner with us" form POSTs here; this mails the inquiry to
+// the team through Resend, with the sender set as reply-to so it can be
 // answered straight from the notification. Same provider and key as
 // api/partner.ts.
 //
@@ -58,16 +58,17 @@ function clientIp(req: VercelRequest): string {
 
 /** Caps so an abusive payload can't turn into a multi-megabyte email. */
 const MAX = {
+  name: 120,
   email: 254,
-  answer: 500,
-  block: 3000,
+  company: 160,
+  project: 3000,
 } as const;
 
 export type WaitlistRequest = {
+  name: string;
   email: string;
-  agent: string;
-  runtime: string;
-  block: string;
+  company: string;
+  project: string;
 };
 
 const field = (value: unknown, max: number): string =>
@@ -95,28 +96,40 @@ export function parseRequest(
 
   return {
     request: {
+      name: field(body.name, MAX.name),
       email,
-      agent: field(body.agent, MAX.answer),
-      runtime: field(body.runtime, MAX.answer),
-      block: field(body.block, MAX.block),
+      company: field(body.company, MAX.company),
+      project: field(body.project, MAX.project),
     },
   };
 }
 
-const QUESTIONS: [keyof WaitlistRequest, string][] = [
-  ["agent", "What agent are you building?"],
-  ["runtime", "What framework or runtime does it use?"],
-  ["block", "What would you want to block?"],
+/** The short identity fields, listed as one block at the top of the email. */
+const DETAILS: [keyof WaitlistRequest, string][] = [
+  ["name", "Name"],
+  ["email", "Email"],
+  ["company", "Company"],
 ];
 
+/** The one long-form answer, set below the details under its own heading. */
+const PROJECT_LABEL = "Tell us about your project";
+
+const BLANK_TEXT = "(blank)";
+const BLANK_HTML = "<em style='color:#666;'>(blank)</em>";
+
 export function subjectFor(request: WaitlistRequest): string {
-  return `Early access request: ${request.email}`;
+  // Name first when it's there, since it's what the reply will open with;
+  // the email always identifies the sender if both the others are blank.
+  const who = request.name || request.email;
+  return request.company ? `New inquiry: ${who}, ${request.company}` : `New inquiry: ${who}`;
 }
 
 export function textBody(request: WaitlistRequest): string {
   return [
-    `Email: ${request.email}`,
-    ...QUESTIONS.flatMap(([key, question]) => ["", question, request[key] || "(blank)"]),
+    ...DETAILS.map(([key, label]) => `${label}: ${request[key] || BLANK_TEXT}`),
+    "",
+    PROJECT_LABEL,
+    request.project || BLANK_TEXT,
   ].join("\n");
 }
 
@@ -124,14 +137,11 @@ export function htmlBody(request: WaitlistRequest): string {
   const email = escapeHtml(request.email);
   return [
     `<div style="font-family:system-ui,sans-serif;font-size:14px;line-height:1.5;color:#111;">`,
+    `<p>Name: ${escapeHtml(request.name) || BLANK_HTML}</p>`,
     `<p>Email: <a href="mailto:${email}">${email}</a></p>`,
-    ...QUESTIONS.map(
-      ([key, question]) =>
-        `<p style="margin:16px 0 4px;color:#666;">${question}</p>` +
-        `<div style="white-space:pre-wrap;">${
-          escapeHtml(request[key]) || "<em style='color:#666;'>(blank)</em>"
-        }</div>`,
-    ),
+    `<p>Company: ${escapeHtml(request.company) || BLANK_HTML}</p>`,
+    `<p style="margin:16px 0 4px;color:#666;">${PROJECT_LABEL}</p>`,
+    `<div style="white-space:pre-wrap;">${escapeHtml(request.project) || BLANK_HTML}</div>`,
     `</div>`,
   ].join("");
 }

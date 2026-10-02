@@ -1,7 +1,9 @@
 import { useState } from "react";
 
-// The waitlist. POSTs to api/waitlist.ts, which emails the request to the
-// team. Copy and the book-a-call link on the left, the form on the right.
+// The page's last section: the inquiry form. POSTs to api/waitlist.ts, which
+// emails it to the team. Copy and the book-a-call link on the left, the form
+// on the right. The section id stays "early-access" so existing links to it
+// still land, though the heading no longer says that.
 const WAITLIST_URL = "/api/waitlist";
 
 const CALL_URL = "https://calendar.app.google/rTHDeEVQ63XULVzD8";
@@ -21,10 +23,10 @@ export function EarlyAccess() {
 
     const data = new FormData(e.currentTarget);
     const payload = {
+      name: String(data.get("name") || ""),
       email: String(data.get("email") || ""),
-      agent: String(data.get("agent") || ""),
-      runtime: String(data.get("runtime") || ""),
-      block: String(data.get("block") || ""),
+      company: String(data.get("company") || ""),
+      project: String(data.get("project") || ""),
       website: String(data.get("website") || ""),
     };
     setSubmit({ status: "submitting" });
@@ -54,12 +56,12 @@ export function EarlyAccess() {
       <div className="wrap access-grid">
         <div className="access-copy">
           <h2 className="h2" id="access-title">
-            Request early access.
+            Partner with us.
           </h2>
           <p className="body">
-            The SDK is in private beta. We’re piloting with a small group of
-            teams and adding a few at a time. Tell us what your agent does and
-            what it should never do.
+            We formalize your rules in Lean 4 and put the kernel in front of
+            every tool call. The more you tell us about your project, the
+            sooner we can put the right engineers on it.
           </p>
           <p className="access-call">
             Rather talk it through first?{" "}
@@ -94,34 +96,26 @@ export function EarlyAccess() {
             />
 
             <label className="field">
+              <span>Name</span>
+              <input name="name" type="text" autoComplete="name" />
+            </label>
+
+            <label className="field">
               <span>Work email</span>
               <input name="email" type="email" autoComplete="email" required />
             </label>
 
             <label className="field">
-              <span>What agent are you building?</span>
-              <input
-                name="agent"
-                type="text"
-                placeholder="What it does, and which systems it can act on"
-              />
+              <span>Company</span>
+              <input name="company" type="text" autoComplete="organization" />
             </label>
 
             <label className="field">
-              <span>What framework or runtime does it use?</span>
-              <input
-                name="runtime"
-                type="text"
-                placeholder="LangGraph, OpenAI Agents SDK, our own loop"
-              />
-            </label>
-
-            <label className="field">
-              <span>What would you want to block?</span>
+              <span>Tell us about your project</span>
               <textarea
-                name="block"
-                rows={3}
-                placeholder="Actions over a limit, records it shouldn’t change"
+                name="project"
+                rows={4}
+                placeholder="What you’re building, what it can act on, and what it should never do"
               />
             </label>
 
@@ -140,26 +134,10 @@ export function EarlyAccess() {
               className="nav-cta form-submit"
               disabled={submit.status === "submitting"}
             >
-              {submit.status === "submitting" ? "Sending…" : "Request early access"}
+              {submit.status === "submitting" ? "Sending…" : "Start the conversation"}
             </button>
           </form>
         )}
-      </div>
-    </section>
-  );
-}
-
-// The page's last line before the footer. Points back to the form.
-export function Closing() {
-  return (
-    <section className="closing" aria-label="Closing">
-      <div className="wrap">
-        <div className="closing-inner">
-          <p className="closing-text">Put a proof between your agent and its tools.</p>
-          <a className="closing-link" href="#early-access">
-            Request early access
-          </a>
-        </div>
       </div>
     </section>
   );

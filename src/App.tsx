@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { About } from "./components/About";
 import { AizawaAttractor } from "./components/AizawaAttractor";
 import { Careers } from "./components/Careers";
-import { Closing, EarlyAccess } from "./components/EarlyAccess";
+import { EarlyAccess } from "./components/EarlyAccess";
 import { Footer } from "./components/Footer";
 import { Hero } from "./components/Hero";
 import { HowItWorks } from "./components/HowItWorks";
@@ -10,7 +10,6 @@ import { News } from "./components/News";
 import { NewsPost } from "./components/NewsPost";
 import { NotFound } from "./components/NotFound";
 import { ProofField } from "./components/ProofField";
-import { Research } from "./components/Research";
 import { SdkPreview } from "./components/SdkPreview";
 import { TopBar } from "./components/TopBar";
 import { UseCases } from "./components/UseCases";
@@ -78,9 +77,7 @@ export default function App() {
         <HowItWorks />
         <WhyNotJudge />
         <UseCases />
-        <Research />
         <EarlyAccess />
-        <Closing />
       </main>
       <Footer />
     </>
