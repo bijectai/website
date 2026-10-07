@@ -8,10 +8,9 @@
      stuck — one value so the two always match. */
   --bar-gap: 24px;
 
-  /* Faces: a stylized geometric sans for the page, an editorial serif for
-     the top bar alone, and an IDE mono for code and small labels. */
+  /* Faces: a stylized geometric sans for everything, top bar included, and
+     an IDE mono for code and small labels. */
   --sans: "Sora", "Helvetica Neue", Arial, system-ui, sans-serif;
-  --serif: "Newsreader", Georgia, "Times New Roman", serif;
   --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
   /* Custom pointers, hotspot at the center: the resting dot (black, ringed
@@ -258,15 +257,6 @@ button:disabled {
    right slots. It sits a notch above the bar so they render on top of
    the glass once caught.
    ============================================================ */
-/* The whole top bar — corners, link pill and mobile menu — keeps the serif
-   for its links. The "Get started" buttons (.nav-cta, .nav-menu-cta) set
-   the page face instead, matching the page's own buttons. */
-.topbar-corners,
-.topbar,
-.nav-menu {
-  font-family: var(--serif);
-}
-
 .topbar-corners {
   position: fixed;
   top: var(--bar-gap);
@@ -400,7 +390,7 @@ button:disabled {
    Lives in .topbar-corners (outside .nav-links), so it carries its own
    anchor resets rather than inheriting them. */
 .nav-cta {
-  font-family: var(--sans);
+  font-family: inherit;
   font-size: 15px;
   font-weight: 600;
   line-height: 1;
@@ -568,7 +558,7 @@ button:disabled {
 .nav-menu-panel .nav-menu-cta {
   margin-top: 6px;
   text-align: center;
-  font-family: var(--sans);
+  font-family: inherit;
   font-size: 16px;
   font-weight: 600;
   line-height: 1;
