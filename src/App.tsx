@@ -5,7 +5,6 @@ import { Careers } from "./components/Careers";
 import { EarlyAccess } from "./components/EarlyAccess";
 import { Footer } from "./components/Footer";
 import { Hero } from "./components/Hero";
-import { HowItWorks } from "./components/HowItWorks";
 import { News } from "./components/News";
 import { NewsPost } from "./components/NewsPost";
 import { NotFound } from "./components/NotFound";
@@ -13,7 +12,6 @@ import { ProofField } from "./components/ProofField";
 import { SdkPreview } from "./components/SdkPreview";
 import { TopBar } from "./components/TopBar";
 import { UseCases } from "./components/UseCases";
-import { WhyNotJudge } from "./components/WhyNotJudge";
 import { findPost } from "./news";
 import { applySeo, routeKey } from "./seo";
 
@@ -24,8 +22,14 @@ export default function App() {
   // once mounted — and again after web fonts load, since they shift layout
   // enough to throw the landing position off. No-op when there's no hash.
   useEffect(() => {
-    const id = window.location.hash.slice(1);
+    let id = window.location.hash.slice(1);
     if (!id) return;
+    // The inquiry form's anchor used to be #early-access; old links still
+    // land on it, and the address bar shows the current name.
+    if (id === "early-access") {
+      id = "access";
+      history.replaceState(null, "", `${window.location.pathname}${window.location.search}#access`);
+    }
     const jump = () =>
       document.getElementById(id)?.scrollIntoView({ behavior: "instant" });
     jump();
@@ -74,8 +78,6 @@ export default function App() {
       <TopBar />
       <main id="app">
         <SdkPreview />
-        <HowItWorks />
-        <WhyNotJudge />
         <UseCases />
         <EarlyAccess />
       </main>

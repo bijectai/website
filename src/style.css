@@ -8,7 +8,17 @@
      stuck — one value so the two always match. */
   --bar-gap: 24px;
 
-  --sans: "Geist", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  /* Faces: a stylized geometric sans for the page, an editorial serif for
+     the top bar alone, and an IDE mono for code and small labels. */
+  --sans: "Sora", "Helvetica Neue", Arial, system-ui, sans-serif;
+  --serif: "Newsreader", Georgia, "Times New Roman", serif;
+  --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* Custom pointers, hotspot at the center: the resting dot (black, ringed
+     in white) and the "press" dot (white, ringed in green) that replaces the
+     hand over anything clickable. */
+  --cursor-dot: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='10'%20height='10'%3E%3Ccircle%20cx='5'%20cy='5'%20r='3.5'%20fill='%23000'%20stroke='%23fff'%20stroke-width='1'/%3E%3C/svg%3E") 5 5, auto;
+  --cursor-press: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='10'%20height='10'%3E%3Ccircle%20cx='5'%20cy='5'%20r='3.5'%20fill='%23fff'%20stroke='%2310b981'%20stroke-width='1'/%3E%3C/svg%3E") 5 5, pointer;
 
   --ink: var(--color-white);
   /* white text on the dark page */
@@ -56,9 +66,17 @@ body {
   color: var(--ink);
   background: var(--page);
   -webkit-font-smoothing: antialiased;
-  /* Custom pointer: a small black dot ringed in white, hotspot at its
-     center. Links/buttons still get the pointer from the UA stylesheet. */
-  cursor: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='20'%20height='20'%3E%3Ccircle%20cx='10'%20cy='10'%20r='7'%20fill='%23000'%20stroke='%23fff'%20stroke-width='2'/%3E%3C/svg%3E") 10 10, auto;
+  cursor: var(--cursor-dot);
+}
+
+/* Links and buttons swap the UA's hand for the press dot. */
+a:any-link,
+button {
+  cursor: var(--cursor-press);
+}
+
+button:disabled {
+  cursor: var(--cursor-dot);
 }
 
 /* The app root fills the viewport and lets the page's <main> absorb any
@@ -139,8 +157,10 @@ body {
 }
 
 /* The background type (ProofField): rows of small Lean 4 with "proof, not
-   probability." set into them. Shared by every page, so it's anchored to the
-   top of the document rather than the hero. */
+   probability." set into them, drawn and animated on a canvas. Shared by
+   every page, so it's anchored to the top of the document rather than the
+   hero. The canvas takes its type from here (face, size, row height, top
+   inset); its colors and motion live in ProofField.tsx. */
 .proof-field {
   position: absolute;
   top: 0;
@@ -152,38 +172,19 @@ body {
   /* Clip, never scroll: the rows run wider than any screen on purpose. */
   overflow: clip;
   padding-top: 6px;
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-family: var(--mono);
   font-size: clamp(11px, 0.9vw, 14px);
   line-height: 2.05;
-  white-space: nowrap;
-  /* The Lean: bright enough to read as code you could follow if you leant in,
-     so it reads as a deliberate backdrop rather than noise, and still well
-     under the sub-headline (0.7) so it never competes with the copy. */
-  color: rgba(255, 255, 255, 0.09);
-  /* Full strength across the top, gone by a little past the middle. */
-  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 16%, transparent 56%);
-  mask-image: linear-gradient(to bottom, #000 0%, #000 16%, transparent 56%);
+  /* No CSS mask: the fade down the screen is drawn into the canvas
+     (ProofField.tsx), so the compositor never re-masks it per frame. */
   pointer-events: none;
   user-select: none;
   -webkit-user-select: none;
 }
 
-.proof-row {
-  margin-block: 0;
-}
-
-.proof-row > span {
-  margin-right: 4ch;
-}
-
-/* The one thing in the field meant to be read: the heading face, semibold,
-   about twice as bright as the Lean around it. */
-.proof-phrase {
-  font-family: "Space Grotesk", sans-serif;
-  font-weight: 600;
-  font-size: 1.08em;
-  letter-spacing: -0.005em;
-  color: rgba(255, 255, 255, 0.18);
+.proof-canvas {
+  display: block;
+  width: 100%;
 }
 
 /* Sized to the content box (cqi) so the set lines stay whole: the whole
@@ -196,15 +197,15 @@ body {
 .hero-title {
   margin: 0;
   color: var(--ink);
-  font-family: "Space Grotesk", sans-serif;
+  font-family: var(--sans);
   font-weight: 600;
   /* Sized so the whole line fits the copy column with the margin it has
-     always carried: the set text is ~19.1em wide at this face and tracking,
-     and the divisor keeps ~10% clear on either side. Retune it if the
-     headline's wording changes. */
-  font-size: min(4.5rem, calc(100cqi / 21.1));
+     always carried: the set text is ~20.6em wide at this face and tracking,
+     and the divisor keeps ~7% clear on either side. Retune it if the
+     headline's wording or face changes. */
+  font-size: min(4.5rem, calc(100cqi / 23.5));
   line-height: 1.04;
-  letter-spacing: -0.035em;
+  letter-spacing: -0.02em;
   white-space: nowrap;
 }
 
@@ -223,10 +224,10 @@ body {
 }
 
 /* Phones: one line would be too small, so break after "Ambiguity" — sized to
-   the longer of the two lines (~10.4em). */
+   the longer of the two lines (~11.4em). */
 @media (max-width: 600px) {
   .hero-title {
-    font-size: calc(100cqi / 11.35);
+    font-size: calc(100cqi / 12.8);
   }
 
   .hero-line {
@@ -257,6 +258,15 @@ body {
    right slots. It sits a notch above the bar so they render on top of
    the glass once caught.
    ============================================================ */
+/* The whole top bar — corners, link pill and mobile menu — keeps the serif
+   for its links. The "Get started" buttons (.nav-cta, .nav-menu-cta) set
+   the page face instead, matching the page's own buttons. */
+.topbar-corners,
+.topbar,
+.nav-menu {
+  font-family: var(--serif);
+}
+
 .topbar-corners {
   position: fixed;
   top: var(--bar-gap);
@@ -322,8 +332,7 @@ body {
      runs 0 → 1 as the bar rises from the hero to its locked position, so the
      glass eases in as you scroll instead of snapping on at the lock point.
      Only the glass fades — the links stay fully opaque throughout. */
-  background: rgba(54, 56, 60, calc(0.6 * var(--stuck-progress, 0)));
-  -webkit-backdrop-filter: blur(calc(14px * var(--stuck-progress, 0))) saturate(160%);
+  background: rgba(54, 56, 60, calc(0.6 * var(--stuck-progress, 0)));  -webkit-backdrop-filter: blur(calc(14px * var(--stuck-progress, 0))) saturate(160%);
   backdrop-filter: blur(calc(14px * var(--stuck-progress, 0))) saturate(160%);
   border: 1px solid rgba(255, 255, 255, calc(0.1 * var(--stuck-progress, 0)));
   box-shadow: 0 10px 34px rgba(0, 0, 0, calc(0.4 * var(--stuck-progress, 0)));
@@ -391,7 +400,7 @@ body {
    Lives in .topbar-corners (outside .nav-links), so it carries its own
    anchor resets rather than inheriting them. */
 .nav-cta {
-  font-family: inherit;
+  font-family: var(--sans);
   font-size: 15px;
   font-weight: 600;
   line-height: 1;
@@ -402,7 +411,7 @@ body {
   border: 1px solid var(--ink);
   padding: 9px 18px;
   border-radius: 8px;
-  cursor: pointer;
+  cursor: var(--cursor-press);
   transition: color .18s ease, background .18s ease, border-color .18s ease, box-shadow .18s ease;
 }
 
@@ -428,7 +437,7 @@ body {
   padding: 0;
   border: 0;
   background: transparent;
-  cursor: pointer;
+  cursor: var(--cursor-press);
   align-items: center;
   justify-content: center;
 }
@@ -488,7 +497,7 @@ body {
   border: 0;
   padding: 0;
   background: transparent;
-  cursor: default;
+  cursor: var(--cursor-dot);
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.2s ease;
@@ -559,7 +568,7 @@ body {
 .nav-menu-panel .nav-menu-cta {
   margin-top: 6px;
   text-align: center;
-  font-family: inherit;
+  font-family: var(--sans);
   font-size: 16px;
   font-weight: 600;
   line-height: 1;
@@ -568,7 +577,7 @@ body {
   border: 1px solid var(--ink);
   padding: 13px 14px;
   border-radius: 10px;
-  cursor: pointer;
+  cursor: var(--cursor-press);
   transition: color 0.18s ease, background 0.18s ease, border-color 0.18s ease;
 }
 
@@ -663,7 +672,7 @@ body {
 .h2 {
   margin: 0;
   max-width: 18ch;
-  font-family: "Space Grotesk", sans-serif;
+  font-family: var(--sans);
   font-weight: 600;
   font-size: clamp(2rem, 4.4vw, 3.5rem);
   line-height: 1.04;
@@ -721,7 +730,7 @@ body {
   margin: 0;
   padding: clamp(18px, 2vw, 24px);
   overflow-x: auto;
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-family: var(--mono);
   font-size: clamp(0.78rem, 0.95vw, 0.9rem);
   line-height: 1.8;
   color: rgba(255, 255, 255, 0.86);
@@ -796,7 +805,6 @@ body {
 /* The page's one card: same surface, border and radius as the cards
    elsewhere on the site. */
 .code-card {
-  border-radius: 16px;
   background: rgba(54, 56, 60, 0.35);
   border: 1px solid rgba(255, 255, 255, 0.08);
   overflow: hidden;
@@ -813,7 +821,7 @@ body {
 /* The card's only header: the filename, set like an editor tab. Brighter than
    the language tag it replaced, since it is now the one thing up there. */
 .code-file {
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-family: var(--mono);
   font-size: 0.78rem;
   color: rgba(255, 255, 255, 0.5);
 }
@@ -847,7 +855,7 @@ body {
 
 .step-title {
   margin: 0;
-  font-family: "Space Grotesk", sans-serif;
+  font-family: var(--sans);
   font-weight: 600;
   font-size: clamp(1.35rem, 2.2vw, 1.8rem);
   line-height: 1.12;
@@ -866,7 +874,6 @@ body {
 .step-body .code {
   margin-top: 20px;
   padding: 14px 18px;
-  border-radius: 10px;
   background: rgba(54, 56, 60, 0.35);
   border: 1px solid rgba(255, 255, 255, 0.08);
   font-size: 0.8rem;
@@ -887,6 +894,14 @@ body {
 /* ---- Why not an LLM judge: a plain table, then an offset note ---- */
 .judge {
   padding-block: 0 clamp(72px, 10vh, 120px);
+}
+
+/* On the About page the judge and how-it-works sections follow the callout
+   in turn, so each needs its own room above; below, the origins row brings
+   its own margin. */
+.about .judge,
+.about .how {
+  padding-block: clamp(80px, 12vh, 136px) 0;
 }
 
 .judge-lede {
@@ -1017,7 +1032,7 @@ body {
 
 .use-title {
   margin: 0 0 12px;
-  font-family: "Space Grotesk", sans-serif;
+  font-family: var(--sans);
   font-weight: 600;
   font-size: clamp(1.3rem, 1.9vw, 1.6rem);
   line-height: 1.12;
@@ -1038,7 +1053,7 @@ body {
 
 .use-rule {
   margin: 18px 0 0;
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-family: var(--mono);
   font-size: 0.78rem;
   line-height: 1.6;
   white-space: pre-wrap;
@@ -1052,7 +1067,7 @@ body {
   }
 }
 
-/* ---- Early access: copy and the call link left, form right ------ */
+/* ---- Access: copy and the call link left, form right ------------ */
 .access {
   padding-block: clamp(96px, 14vh, 180px) clamp(72px, 10vh, 120px);
 }
@@ -1104,7 +1119,6 @@ body {
   color: var(--ink);
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 10px;
   padding: 11px 13px;
   outline: none;
   transition: border-color 0.15s ease, background 0.15s ease;
@@ -1134,7 +1148,7 @@ body {
 
 .form-submit:disabled {
   opacity: 0.55;
-  cursor: default;
+  cursor: var(--cursor-dot);
 }
 
 .form-error {
@@ -1150,7 +1164,7 @@ body {
 
 .access-done-title {
   margin: 0 0 12px;
-  font-family: "Space Grotesk", sans-serif;
+  font-family: var(--sans);
   font-weight: 600;
   font-size: clamp(1.4rem, 2.2vw, 1.8rem);
   letter-spacing: -0.015em;
@@ -1169,7 +1183,7 @@ body {
 /* Page headline for the inner pages, the same size as About's. */
 .page-title {
   margin: 0;
-  font-family: "Space Grotesk", sans-serif;
+  font-family: var(--sans);
   font-weight: 600;
   font-size: clamp(2.2rem, 5vw, 4rem);
   line-height: 1.06;
@@ -1212,7 +1226,7 @@ body {
 }
 
 .news-title {
-  font-family: "Space Grotesk", sans-serif;
+  font-family: var(--sans);
   font-weight: 600;
   font-size: clamp(1.4rem, 2.4vw, 2rem);
   line-height: 1.15;
@@ -1307,7 +1321,6 @@ body {
   display: block;
   width: 100%;
   height: auto;
-  border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
@@ -1320,7 +1333,7 @@ body {
 
 .post-body h2 {
   margin: 2.2em 0 0.6em;
-  font-family: "Space Grotesk", sans-serif;
+  font-family: var(--sans);
   font-weight: 600;
   font-size: clamp(1.4rem, 2.2vw, 1.75rem);
   line-height: 1.2;
@@ -1330,7 +1343,7 @@ body {
 
 .post-body h3 {
   margin: 1.8em 0 0.5em;
-  font-family: "Space Grotesk", sans-serif;
+  font-family: var(--sans);
   font-weight: 600;
   font-size: 1.2rem;
   color: var(--ink);
@@ -1365,13 +1378,12 @@ body {
 }
 
 .post-body :not(pre) > code {
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-family: var(--mono);
   font-size: 0.88em;
   color: var(--ink);
 }
 
 .post-body .code {
-  border-radius: 10px;
   background: rgba(54, 56, 60, 0.35);
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
@@ -1397,21 +1409,10 @@ body {
   padding-inline: clamp(20px, 3vw, 32px);
 }
 
-/* Small monospace tag above the headline */
-.about-label {
-  display: inline-block;
-  margin: 0 0 clamp(14px, 2vh, 20px);
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 0.72rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--accent);
-}
-
 /* Large opening headline */
 .about-heading {
   margin: 0;
-  font-family: "Space Grotesk", sans-serif;
+  font-family: var(--sans);
   font-weight: 600;
   font-size: clamp(2.2rem, 5vw, 4rem);
   line-height: 1.06;
@@ -1444,7 +1445,6 @@ body {
 .about-callout {
   margin-top: clamp(48px, 7vh, 80px);
   padding: clamp(24px, 3vw, 36px) clamp(24px, 3vw, 40px);
-  border-radius: 16px;
   background: rgba(16, 185, 129, 0.05);
   border: 1px solid rgba(16, 185, 129, 0.22);
   display: grid;
@@ -1455,7 +1455,6 @@ body {
 
 .about-callout-bar {
   align-self: stretch;
-  border-radius: 3px;
   background: var(--accent);
   opacity: 0.7;
 }
@@ -1482,7 +1481,7 @@ body {
 
 .about-origins-label {
   margin: 0 0 clamp(20px, 3vh, 32px);
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-family: var(--mono);
   font-size: 0.72rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -1538,7 +1537,7 @@ body {
 /* Sized to sit at the same optical weight as a logo beside it, so the row
    reads as one strip even while the two treatments are mixed. */
 .about-origins-name {
-  font-family: "Space Grotesk", sans-serif;
+  font-family: var(--sans);
   font-weight: 500;
   font-size: clamp(0.82rem, 1.15vw, 0.95rem);
   letter-spacing: -0.005em;
@@ -1560,7 +1559,7 @@ body {
 
 .about-close-text {
   margin: 0;
-  font-family: "Space Grotesk", sans-serif;
+  font-family: var(--sans);
   font-weight: 600;
   font-size: clamp(1.6rem, 3.5vw, 2.8rem);
   line-height: 1.1;
@@ -1570,7 +1569,7 @@ body {
 
 .about-close-sub {
   margin: clamp(10px, 1.5vh, 16px) 0 0;
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-family: var(--mono);
   font-size: 0.72rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -1655,7 +1654,7 @@ body {
 .careers-title {
   margin: 0;
   text-align: left;
-  font-family: "Space Grotesk", sans-serif;
+  font-family: var(--sans);
   font-weight: 600;
   font-size: clamp(1.9rem, 4.5vw, 3rem);
   line-height: 1.1;
@@ -1709,7 +1708,6 @@ body {
 }
 
 .skel {
-  border-radius: 8px;
   background: linear-gradient(
     90deg,
     rgba(255, 255, 255, 0.06) 25%,
@@ -1734,7 +1732,6 @@ body {
 .skel-pill {
   width: 92px;
   height: 26px;
-  border-radius: 999px;
 }
 
 .skel-line {
@@ -1763,7 +1760,6 @@ body {
 
 /* Each role — subtle glass to echo the top bar and the problem cards. */
 .job-card {
-  border-radius: 16px;
   background: rgba(54, 56, 60, 0.35);
   border: 1px solid rgba(255, 255, 255, 0.08);
   padding: clamp(24px, 2.5vw, 36px);
@@ -1780,7 +1776,7 @@ body {
 
 .job-title {
   margin: 0;
-  font-family: "Space Grotesk", sans-serif;
+  font-family: var(--sans);
   font-weight: 600;
   font-size: clamp(1.25rem, 2.2vw, 1.6rem);
   line-height: 1.25;
@@ -1801,9 +1797,8 @@ body {
   color: var(--page);
   background: var(--ink);
   border: 1px solid var(--ink);
-  border-radius: 8px;
   padding: 9px 18px;
-  cursor: pointer;
+  cursor: var(--cursor-press);
   transition: color 0.18s ease, background 0.18s ease, border-color 0.18s ease,
     box-shadow 0.18s ease;
 }
@@ -1828,7 +1823,6 @@ body {
 
 .job-meta-item {
   padding: 4px 12px;
-  border-radius: 999px;
   border: 1px solid rgba(255, 255, 255, 0.14);
   font-size: 0.82rem;
   color: rgba(255, 255, 255, 0.78);
@@ -1894,7 +1888,6 @@ body {
    the nav CTA. */
 .job-apply {
   appearance: none;
-  border-radius: 999px;
   background: var(--ink);
   border: 1px solid var(--ink);
   color: var(--page);
@@ -1902,7 +1895,7 @@ body {
   font-size: 0.95rem;
   font-weight: 600;
   padding: 11px 28px;
-  cursor: pointer;
+  cursor: var(--cursor-press);
   transition: color 0.18s ease, background 0.18s ease, border-color 0.18s ease,
     box-shadow 0.18s ease, transform 0.1s ease;
 }
@@ -1940,7 +1933,6 @@ body {
   position: relative;
   width: 100%;
   max-width: 560px;
-  border-radius: 18px;
   background: #14161a;
   border: 1px solid rgba(255, 255, 255, 0.1);
   padding: clamp(28px, 4vw, 44px);
@@ -1956,12 +1948,11 @@ body {
   display: grid;
   place-items: center;
   border: 0;
-  border-radius: 999px;
   background: transparent;
   color: rgba(255, 255, 255, 0.6);
   font-size: 26px;
   line-height: 1;
-  cursor: pointer;
+  cursor: var(--cursor-press);
 }
 
 .apply-close:hover {
@@ -1971,7 +1962,7 @@ body {
 
 .apply-title {
   margin: 0;
-  font-family: "Space Grotesk", sans-serif;
+  font-family: var(--sans);
   font-weight: 600;
   font-size: clamp(1.4rem, 3vw, 1.8rem);
   letter-spacing: -0.01em;
@@ -2020,7 +2011,6 @@ body {
   color: var(--ink);
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 10px;
   padding: 11px 13px;
   outline: none;
   transition: border-color 0.15s ease, background 0.15s ease;
@@ -2048,10 +2038,9 @@ body {
   color: var(--ink);
   background: rgba(255, 255, 255, 0.1);
   border: 0;
-  border-radius: 7px;
   padding: 6px 12px;
   margin-right: 12px;
-  cursor: pointer;
+  cursor: var(--cursor-press);
 }
 
 .apply-actions {
@@ -2066,9 +2055,8 @@ body {
   font-family: inherit;
   font-size: 0.95rem;
   font-weight: 600;
-  border-radius: 999px;
   padding: 11px 24px;
-  cursor: pointer;
+  cursor: var(--cursor-press);
   transition: opacity 0.15s ease, background 0.15s ease;
 }
 
@@ -2091,7 +2079,7 @@ body {
 
 .apply-submit:disabled {
   opacity: 0.55;
-  cursor: default;
+  cursor: var(--cursor-dot);
 }
 
 .apply-cancel {
@@ -2128,7 +2116,7 @@ body {
 }
 
 .apply-key span {
-  font-family: "Space Grotesk", monospace;
+  font-family: var(--sans);
   color: var(--ink);
 }
 
@@ -2150,7 +2138,6 @@ body {
     min-height: 100vh;
     min-height: 100dvh;
     border: 0;
-    border-radius: 0;
     animation: apply-sheet-up 0.34s cubic-bezier(0.4, 0, 0.2, 1);
   }
 }
@@ -2195,7 +2182,7 @@ body {
 
 /* A 404 with no way out is a dead end for readers and crawlers alike. */
 .notfound-home {
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-family: var(--mono);
   font-size: 0.72rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -2245,7 +2232,7 @@ body {
 
 .footer-copy,
 .footer-links {
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-family: var(--mono);
   font-size: 12px;
   letter-spacing: 0.02em;
   color: rgba(255, 255, 255, 0.34);

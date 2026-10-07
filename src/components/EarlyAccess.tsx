@@ -2,8 +2,7 @@ import { useState } from "react";
 
 // The page's last section: the inquiry form. POSTs to api/waitlist.ts, which
 // emails it to the team. Copy and the book-a-call link on the left, the form
-// on the right. The section id stays "early-access" so existing links to it
-// still land, though the heading no longer says that.
+// on the right. Old links to #early-access are redirected here by App.
 const WAITLIST_URL = "/api/waitlist";
 
 const CALL_URL = "https://calendar.app.google/rTHDeEVQ63XULVzD8";
@@ -52,7 +51,7 @@ export function EarlyAccess() {
   }
 
   return (
-    <section className="access" id="early-access" aria-labelledby="access-title">
+    <section className="access" id="access" aria-labelledby="access-title">
       <div className="wrap access-grid">
         <div className="access-copy">
           <h2 className="h2" id="access-title">

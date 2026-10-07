@@ -17,7 +17,7 @@ const LINKS = [
   { href: "/#use-cases", label: "Domains" },
   { href: "/news", label: "News" },
   { href: "/about", label: "About" },
-  { href: "/careers", label: "Careers" },
+  { href: "https://www.demo.bijectai.com/", label: "Login" },
 ];
 
 export function TopBar() {
@@ -101,7 +101,7 @@ export function TopBar() {
           <a className="brand" href="/" aria-label="biject home">
             <img className="brand-logo" src="/logo.png" alt="biject" />
           </a>
-          <a className="nav-cta" href="/#early-access" ref={ctaRef}>
+          <a className="nav-cta" href="/#access" ref={ctaRef}>
             Get started
           </a>
           {/* Corner menu button — only shown below the mobile breakpoint, where
@@ -156,7 +156,7 @@ export function TopBar() {
             ))}
             <a
               className="nav-menu-cta"
-              href="/#early-access"
+              href="/#access"
               onClick={() => setMenuOpen(false)}
             >
               Get started

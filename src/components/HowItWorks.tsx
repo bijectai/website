@@ -3,8 +3,8 @@ import { Code, type CodeLine } from "./Code";
 // Three steps split by hairlines (title | body). Still an <ol>, since the
 // order is the point, but the steps carry no printed numbers: the hairlines
 // and the reading order already say "in sequence". Step one shows the Lean
-// behind the SDK preview's DENY so the policy is something you can read, not
-// a box on a diagram.
+// behind the home page's SDK preview DENY so the policy is something you can
+// read, not a box on a diagram. Lives on the About page.
 const POLICY: CodeLine[] = [
   [["com", "-- policies/no_test_tampering.lean"]],
   [["kw", "def"], ["plain", " noTestTampering (a : Action) : Prop :="]],

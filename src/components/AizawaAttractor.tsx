@@ -71,10 +71,20 @@ const STEPS_PER_FRAME = 2; // integration steps per 60Hz frame (a rate, see SIM_
 const GREEN_RATIO = 0.05; // 5% of particles are green
 const SCALE_FACTOR = 0.2; // attractor radius relative to min(viewport)
 // When the page lays out a .hero-stage box, the cloud is framed to it instead:
-// centered on the box, scaled so the shape's ~3-unit span fills its shorter
-// side. CSS owns the hero layout; this just follows it.
+// scaled off the box's shorter side (1/3 would fit the shape's ~3-unit span
+// to it exactly; this runs 1.25× that, so the cloud spills past the box),
+// and centered on the box sideways. On a landscape box (desktop) it's also
+// pulled up from the box's middle toward the middle of the first screen
+// (STAGE_LIFT: 0 = the box, 1 = the screen), so it runs up behind the
+// headline. A portrait box (a phone) already has room above and below the
+// cloud, so there it stays centered in the box, clear of the headline.
+// CSS owns the hero layout; this just follows it.
 const STAGE_SELECTOR = ".hero-stage";
-const STAGE_FILL = 1 / 3;
+const STAGE_FILL = (1 / 3) * 1.25;
+const STAGE_LIFT = 1;
+// Caps the scale so the cloud's span never passes ~90% of the screen's
+// width: on a phone the box is barely wider than the cloud already.
+const MAX_WIDTH_SCALE = 0.3;
 const MIN_STAGE = 96; // px; below this the stage hides the cloud (see place())
 const VERTICAL_OFFSET = 0.06; // shift the cloud's center down, as a fraction of viewport height
 const FOCAL = 9; // perspective focal length (attractor units)
@@ -543,8 +553,10 @@ export function AizawaAttractor() {
       visible = !r || Math.min(r.width, r.height) >= MIN_STAGE;
       if (r && visible) {
         cx = r.left + r.width / 2;
-        cy = r.top + window.scrollY + r.height / 2;
-        scale = Math.min(r.width, r.height) * STAGE_FILL;
+        const boxMid = r.top + window.scrollY + r.height / 2;
+        const lift = r.width > r.height ? STAGE_LIFT : 0;
+        cy = boxMid + (height / 2 - boxMid) * lift;
+        scale = Math.min(Math.min(r.width, r.height) * STAGE_FILL, width * MAX_WIDTH_SCALE);
       } else {
         cx = width / 2;
         cy = height / 2 + height * VERTICAL_OFFSET;

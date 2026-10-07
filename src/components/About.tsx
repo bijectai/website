@@ -2,8 +2,10 @@ import { useState } from "react";
 import type { CSSProperties } from "react";
 
 import { Footer } from "./Footer";
+import { HowItWorks } from "./HowItWorks";
 import { ProofField } from "./ProofField";
 import { TopBar } from "./TopBar";
+import { WhyNotJudge } from "./WhyNotJudge";
 
 // Where the team comes from. Each entry expects an optional logo at
 // /logos/<file>.svg; until that file exists the name renders as a typographic
@@ -63,8 +65,7 @@ export function About() {
       <main className="about">
         <div className="about-inner">
 
-          {/* Opening — label + headline */}
-          <p className="about-label">R&amp;P Lab</p>
+          {/* Opening — headline */}
           <h1 className="about-heading">
             Trust what<br />
             you can <em>prove.</em>
@@ -75,13 +76,13 @@ export function About() {
             <p className="about-body-text">
               Biject is founded under a simple primitive: if you can't prove it,
               you can't trust it. Our goal is to become the operational backbone
-              of the world — starting with formally verified guardrails that
-              return machine-checked proofs, not probabilities.
+              of the world. We're starting with formally verified guardrails
+              that return machine-checked proofs, not probabilities.
             </p>
             <p className="about-body-text">
               Every deployment generates hand-written and verified Lean
               formalizations. This is the foundational dataset the industry
-              lacks — and we're building it one proof at a time.
+              lacks, and we're building it one proof at a time.
             </p>
           </div>
 
@@ -90,12 +91,21 @@ export function About() {
             <div className="about-callout-bar" aria-hidden="true" />
             <p className="about-callout-text">
               In the long term, these formalizations power our in-house{" "}
-              <strong>auto formalization model</strong> — closing the loop
+              <strong>auto formalization model</strong>, which closes the loop
               between real-world operations and machine-verified reasoning at
               scale.
             </p>
           </div>
+        </div>
 
+        {/* The thesis behind the opening (why a proof kernel and not another
+            model), then the method (how a policy becomes a signed verdict).
+            Full sections with their own .wrap, so they sit between the two
+            .about-inner runs rather than inside one. */}
+        <WhyNotJudge />
+        <HowItWorks />
+
+        <div className="about-inner">
           {/* Provenance — where the team comes from */}
           <div className="about-origins">
             <p className="about-origins-label">Brought to you by minds from</p>
