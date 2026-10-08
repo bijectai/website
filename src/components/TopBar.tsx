@@ -17,7 +17,7 @@ const LINKS = [
   { href: "/#use-cases", label: "Domains" },
   { href: "/news", label: "News" },
   { href: "/about", label: "About" },
-  { href: "/404", label: "Login" },
+  { href: "https://demo.bijectai.com/", label: "Login" },
 ];
 
 export function TopBar() {
