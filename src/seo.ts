@@ -29,6 +29,8 @@ export type PageSeo = {
   description: string;
   /** Overrides the default "biject | <name>" document title. */
   title?: string;
+  /** Routes used for testing can be served without appearing in search results. */
+  indexable?: boolean;
 };
 
 /** Every route the app serves, keyed by normalized pathname. Drives the sitemap. */
@@ -63,6 +65,13 @@ export const PAGES: Record<string, PageSeo> = {
     description:
       "Open roles at biject. Help us formalize the world's rules in Lean and compile them into decision kernels that are mathematically proven correct.",
   },
+  "/surject": {
+    name: "Surject",
+    title: "Surject: provable guardrails for AI coding agents",
+    description:
+      "Surject turns the rules in your repo's AGENTS.md and docs into Lean proofs your AI coding agent can't edit, skip, or talk its way around. Free, from biject.",
+    indexable: false,
+  },
 };
 
 const NOT_FOUND: PageSeo = {
@@ -91,7 +100,7 @@ export function seoFor(pathname: string): PageMeta {
     title: page?.title ?? `${SITE_NAME} | ${(page ?? NOT_FOUND).name}`,
     description: (page ?? NOT_FOUND).description,
     url: SITE_URL + key,
-    indexable: page !== undefined,
+    indexable: page !== undefined && page.indexable !== false,
   };
 }
 
@@ -161,7 +170,9 @@ export function renderHeadTags(pathname: string): string {
 
 /** The sitemap listing every indexable route. */
 export function renderSitemap(): string {
-  const urls = Object.keys(PAGES)
+  const urls = Object.entries(PAGES)
+    .filter(([, page]) => page.indexable !== false)
+    .map(([path]) => path)
     .map((path) => `  <url><loc>${SITE_URL}${path}</loc></url>`)
     .join("\n");
   return `<?xml version="1.0" encoding="UTF-8"?>

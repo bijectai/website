@@ -9,6 +9,7 @@ import { News } from "./components/News";
 import { NewsPost } from "./components/NewsPost";
 import { NotFound } from "./components/NotFound";
 import { ProofField } from "./components/ProofField";
+import { Surject } from "./components/Surject";
 import { SdkPreview } from "./components/SdkPreview";
 import { TopBar } from "./components/TopBar";
 import { UseCases } from "./components/UseCases";
@@ -61,6 +62,9 @@ export default function App() {
   }
   if (path === "/careers" || path === "/careers/") {
     return <Careers />;
+  }
+  if (path === "/surject" || path === "/surject/") {
+    return <Surject />;
   }
   if (path !== "/") {
     return <NotFound />;
