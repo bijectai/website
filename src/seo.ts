@@ -67,7 +67,7 @@ export const PAGES: Record<string, PageSeo> = {
   },
   "/surject": {
     name: "Surject",
-    title: "Surject: provable guardrails for AI coding agents",
+    title: "biject | Surject",
     description:
       "Surject turns the rules in your repo's AGENTS.md and docs into Lean proofs your AI coding agent can't edit, skip, or talk its way around. Free, from biject.",
     indexable: false,

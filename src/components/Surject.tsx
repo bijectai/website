@@ -554,7 +554,10 @@ export function Surject() {
         <GlyphLens imgRef={imgRef} />
 
         <a className="sj-home sj-glass" href="/">
-          From biject <span aria-hidden="true">↗</span>
+          From biject{" "}
+          <svg className="sj-home-arrow" viewBox="0 0 10 10" aria-hidden="true" focusable="false">
+            <path d="M2.5 7.5 7.5 2.5M3.5 2.5h4v4" />
+          </svg>
         </a>
 
         <div className="sj-hero-copy">
