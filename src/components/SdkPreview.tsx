@@ -20,19 +20,25 @@ export function SdkPreview() {
     <section className="sdk" id="sdk" aria-labelledby="sdk-title">
       <div className="wrap sdk-grid">
         <div className="sdk-copy">
-          {/* Plain words first: what the gate does, before any of how. */}
+          {/* Plain words, but the claim only a proof check can make: the
+              rule holds no matter what the action says. */}
           <h2 className="h2 h2-set" id="sdk-title">
-            <span className="h2-line">Check every action</span>{" "}
-            <span className="h2-line">before it runs.</span>
+            <span className="h2-line">Rules your agent</span>{" "}
+            <span className="h2-line">can’t talk around.</span>
           </h2>
           <p className="body">
-            You tell us your rules. Before your agent uses a tool, biject
-            checks the action against them and answers ALLOW or DENY.
+            Most guardrails ask an AI model whether an action looks safe, and
+            a model can be talked into yes.
           </p>
           <p className="body">
-            On DENY, the tool call never happens. Every answer names the rule
-            that decided it and is signed, so you have a record you can prove
-            later.
+            biject writes your rules in Lean 4, the language mathematicians
+            use to check proofs. Before every tool call, a proof kernel checks
+            the action against them. If the rules don’t hold, the call doesn’t
+            run.
+          </p>
+          <p className="body">
+            Same action, same answer, every time. Each answer names the rule
+            and is signed, so you can show why later.
           </p>
         </div>
 
