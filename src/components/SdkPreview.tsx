@@ -20,25 +20,21 @@ export function SdkPreview() {
     <section className="sdk" id="sdk" aria-labelledby="sdk-title">
       <div className="wrap sdk-grid">
         <div className="sdk-copy">
-          {/* Plain words, but the claim only a proof check can make: the
-              rule holds no matter what the action says. */}
+          {/* What you get, told through the snippet's own example. The why
+              (judge vs. kernel) and the how (Lean, signatures) live on the
+              About page, so they stay out of here. */}
           <h2 className="h2 h2-set" id="sdk-title">
-            <span className="h2-line">Rules your agent</span>{" "}
-            <span className="h2-line">can’t talk around.</span>
+            <span className="h2-line">Your rules hold.</span>{" "}
+            <span className="h2-line">Every time.</span>
           </h2>
           <p className="body">
-            Most guardrails ask an AI model whether an action looks safe, and
-            a model can be talked into yes.
+            Say your coding agent must never touch your tests. Add one check
+            before it uses a tool. When it tries to edit tests/, the edit is
+            blocked and you’re told which rule stopped it.
           </p>
           <p className="body">
-            biject writes your rules in Lean 4, the language mathematicians
-            use to check proofs. Before every tool call, a proof kernel checks
-            the action against them. If the rules don’t hold, the call doesn’t
-            run.
-          </p>
-          <p className="body">
-            Same action, same answer, every time. Each answer names the rule
-            and is signed, so you can show why later.
+            Not most of the time. Not until someone finds the right words.
+            Every time, with a signed record to prove it.
           </p>
         </div>
 
