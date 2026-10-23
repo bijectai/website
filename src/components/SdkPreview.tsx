@@ -10,7 +10,7 @@ const SNIPPET: CodeLine[] = [
   [["kw", "from"], ["plain", " biject "], ["kw", "import"], ["plain", " Gate"]],
   [],
   [["plain", "gate = Gate.load("], ["str", '"policies/no_test_tampering.lean"'], ["plain", ")"]],
-  [["plain", "verdict = gate.check(action)"]],
+  [["plain", "verdict = gate.check(action)  "], ["com", "# before the tool runs"]],
   [["verdict", "# DENY  rule: tests/ is read-only for this agent"]],
   [["com", "# sig:  ed25519:9f3a…  chain: merkle:41c0…"]],
 ];
@@ -20,24 +20,19 @@ export function SdkPreview() {
     <section className="sdk" id="sdk" aria-labelledby="sdk-title">
       <div className="wrap sdk-grid">
         <div className="sdk-copy">
-          {/* The gate as its signature. aria-label spells the formula out, so
-              the section isn't announced as "times, right arrow". */}
-          <h2
-            className="h2 h2-set"
-            id="sdk-title"
-            aria-label="Policy and action map to a signed verdict."
-          >
-            <span className="h2-line">Policy × Action</span>{" "}
-            <span className="h2-line">→ Signed verdict.</span>
+          {/* Plain words first: what the gate does, before any of how. */}
+          <h2 className="h2 h2-set" id="sdk-title">
+            <span className="h2-line">Check every action</span>{" "}
+            <span className="h2-line">before it runs.</span>
           </h2>
           <p className="body">
-            Load a policy written in Lean 4. Pass the action your agent is
-            about to take. The gate answers ALLOW or DENY, names the rule that
-            decided it, and signs the result.
+            You tell us your rules. Before your agent uses a tool, biject
+            checks the action against them and answers ALLOW or DENY.
           </p>
           <p className="body">
-            The check runs before the tool call. On DENY, the call doesn’t
-            happen.
+            On DENY, the tool call never happens. Every answer names the rule
+            that decided it and is signed, so you have a record you can prove
+            later.
           </p>
         </div>
 
