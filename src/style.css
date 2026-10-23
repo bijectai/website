@@ -774,7 +774,7 @@ button:disabled {
 }
 
 /* The headline's set lines never re-wrap: sized to the copy column (cqi), so
-   the longest, "→ Signed verdict." (~8.6em), always fits. */
+   the longest, "Your rules hold.", always fits. */
 .sdk-copy {
   container-type: inline-size;
 }

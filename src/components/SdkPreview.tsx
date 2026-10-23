@@ -10,7 +10,7 @@ const SNIPPET: CodeLine[] = [
   [["kw", "from"], ["plain", " biject "], ["kw", "import"], ["plain", " Gate"]],
   [],
   [["plain", "gate = Gate.load("], ["str", '"policies/no_test_tampering.lean"'], ["plain", ")"]],
-  [["plain", "verdict = gate.check(action)"]],
+  [["plain", "verdict = gate.check(action)  "], ["com", "# before the tool runs"]],
   [["verdict", "# DENY  rule: tests/ is read-only for this agent"]],
   [["com", "# sig:  ed25519:9f3a…  chain: merkle:41c0…"]],
 ];
@@ -20,24 +20,21 @@ export function SdkPreview() {
     <section className="sdk" id="sdk" aria-labelledby="sdk-title">
       <div className="wrap sdk-grid">
         <div className="sdk-copy">
-          {/* The gate as its signature. aria-label spells the formula out, so
-              the section isn't announced as "times, right arrow". */}
-          <h2
-            className="h2 h2-set"
-            id="sdk-title"
-            aria-label="Policy and action map to a signed verdict."
-          >
-            <span className="h2-line">Policy × Action</span>{" "}
-            <span className="h2-line">→ Signed verdict.</span>
+          {/* What you get, told through the snippet's own example. The why
+              (judge vs. kernel) and the how (Lean, signatures) live on the
+              About page, so they stay out of here. */}
+          <h2 className="h2 h2-set" id="sdk-title">
+            <span className="h2-line">Your rules hold.</span>{" "}
+            <span className="h2-line">Every time.</span>
           </h2>
           <p className="body">
-            Load a policy written in Lean 4. Pass the action your agent is
-            about to take. The gate answers ALLOW or DENY, names the rule that
-            decided it, and signs the result.
+            Say your coding agent must never touch your tests. Add one check
+            before it uses a tool. When it tries to edit tests/, the edit is
+            blocked and you’re told which rule stopped it.
           </p>
           <p className="body">
-            The check runs before the tool call. On DENY, the call doesn’t
-            happen.
+            Not most of the time. Not until someone finds the right words.
+            Every time, with a signed record to prove it.
           </p>
         </div>
 
