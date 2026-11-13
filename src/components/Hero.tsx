@@ -4,9 +4,8 @@
 // the ProofField covers the top of the screen and fades out before it reaches
 // the attractor.
 //
-// The copy is the headline alone: no sub-line, no buttons of its own. The top
-// bar's "Get started" is the one call to action on the first screen. The stage
-// takes the room that leaves, so the attractor sits larger.
+// The copy is the headline and one sub-line, no buttons of its own. The top
+// bar's "Get started" is the one call to action on the first screen.
 //
 // Paint order, back to front: ProofField, attractor canvas, copy (Hero). App
 // renders them in that order; the field and the canvas share z-index 0, so
@@ -20,6 +19,10 @@ export function Hero() {
           <span className="hero-line">Conquering Ambiguity</span>{" "}
           <span className="hero-line">in Every Workflow.</span>
         </h1>
+        <p className="hero-sub">
+          We turn written rules into machine-checked specs, then enforce them
+          on every agent action.
+        </p>
       </div>
       <div className="wrap hero-stage" aria-hidden="true" />
     </div>

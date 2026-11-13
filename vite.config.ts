@@ -67,4 +67,7 @@ function seo(): Plugin {
 
 export default defineConfig({
   plugins: [react(), seo()],
+  // Every browser the site targets supports <link rel="modulepreload">
+  // natively, so Vite's polyfill only adds dead weight to the bundle.
+  build: { modulePreload: { polyfill: false } },
 });
