@@ -245,7 +245,7 @@ const ATTRACTORS: Attractor[] = [
 const gA: number[] = [0, 0, 0];
 const gB: number[] = [0, 0, 0];
 
-// One Euler step under a single attractor's normalized field, mutating u.
+// One Euler step under a single attractor's normalized field, updating u.
 function stepField(u: Vec3, a: Attractor) {
   a.deriv(a.cx + a.L * u.x, a.cy + a.L * u.y, a.cz + a.L * u.z, gA);
   u.x += (gA[0] / a.L) * a.dt;
@@ -253,7 +253,7 @@ function stepField(u: Vec3, a: Attractor) {
   u.z += (gA[2] / a.L) * a.dt;
 }
 
-// One Euler step under the homotopy H(u, t) = (1-t)·f_a + t·f_b, mutating u.
+// One Euler step under the homotopy H(u, t) = (1-t)·f_a + t·f_b, updating u.
 function stepBlend(u: Vec3, a: Attractor, b: Attractor, t: number) {
   a.deriv(a.cx + a.L * u.x, a.cy + a.L * u.y, a.cz + a.L * u.z, gA);
   b.deriv(b.cx + b.L * u.x, b.cy + b.L * u.y, b.cz + b.L * u.z, gB);

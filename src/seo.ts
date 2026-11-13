@@ -41,17 +41,17 @@ export const PAGES: Record<string, PageSeo> = {
     // what the site is for, for search results and link previews.
     title: "biject",
     description:
-      "Type-checked guardrails for AI agents. Policies in Lean 4, every tool call checked by a proof kernel, every verdict signed. In private beta.",
+      "We turn written rules into machine-checked specs, then enforce them on every agent action.",
   },
   "/about": {
     name: "About",
     description:
-      "biject is an R&P lab built on one primitive: if you can't prove it, you can't trust it. We build guardrails that return machine-checked proofs.",
+      "biject is an R&P lab built on one primitive: if you can't prove it, you can't trust it. We turn written rules into machine-checked specs.",
   },
   "/news": {
     name: "News",
     description:
-      "Research and writing from biject on type-checked guardrails for AI agents: policies in Lean 4, checked by a proof kernel, with signed verdicts.",
+      "Research and writing from biject on turning written rules into machine-checked specs and enforcing them on every agent action.",
   },
   // One page per post, named and described by its entry in src/news.ts.
   ...Object.fromEntries(
@@ -64,13 +64,6 @@ export const PAGES: Record<string, PageSeo> = {
     name: "Careers",
     description:
       "Open roles at biject. Help us formalize the world's rules in Lean and compile them into decision kernels that are mathematically proven correct.",
-  },
-  "/surject": {
-    name: "Surject",
-    title: "biject | Surject",
-    description:
-      "Surject turns the rules in your repo's AGENTS.md and docs into Lean proofs your AI coding agent can't edit, skip, or talk its way around. Free, from biject.",
-    indexable: false,
   },
 };
 
@@ -124,7 +117,7 @@ const escapeHtml = (value: string) => value.replace(/[&<>"]/g, (c) => ESCAPES[c]
 /**
  * The route's SEO block as an HTML string, markers included.
  *
- * Build-time only — the running app mutates the live tags instead of
+ * Build-time only — the running app updates the live tags instead of
  * re-rendering them.
  */
 export function renderHeadTags(pathname: string): string {

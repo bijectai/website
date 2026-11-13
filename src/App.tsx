@@ -2,17 +2,14 @@ import { useEffect } from "react";
 import { About } from "./components/About";
 import { AizawaAttractor } from "./components/AizawaAttractor";
 import { Careers } from "./components/Careers";
-import { EarlyAccess } from "./components/EarlyAccess";
 import { Footer } from "./components/Footer";
 import { Hero } from "./components/Hero";
+import { HowItWorks } from "./components/HowItWorks";
 import { News } from "./components/News";
 import { NewsPost } from "./components/NewsPost";
 import { NotFound } from "./components/NotFound";
 import { ProofField } from "./components/ProofField";
-import { Surject } from "./components/Surject";
-import { SdkPreview } from "./components/SdkPreview";
 import { TopBar } from "./components/TopBar";
-import { UseCases } from "./components/UseCases";
 import { findPost } from "./news";
 import { applySeo, routeKey } from "./seo";
 
@@ -23,14 +20,8 @@ export default function App() {
   // once mounted — and again after web fonts load, since they shift layout
   // enough to throw the landing position off. No-op when there's no hash.
   useEffect(() => {
-    let id = window.location.hash.slice(1);
+    const id = window.location.hash.slice(1);
     if (!id) return;
-    // The inquiry form's anchor used to be #early-access; old links still
-    // land on it, and the address bar shows the current name.
-    if (id === "early-access") {
-      id = "access";
-      history.replaceState(null, "", `${window.location.pathname}${window.location.search}#access`);
-    }
     const jump = () =>
       document.getElementById(id)?.scrollIntoView({ behavior: "instant" });
     jump();
@@ -63,9 +54,6 @@ export default function App() {
   if (path === "/careers" || path === "/careers/") {
     return <Careers />;
   }
-  if (path === "/surject" || path === "/surject/") {
-    return <Surject />;
-  }
   if (path !== "/") {
     return <NotFound />;
   }
@@ -81,9 +69,7 @@ export default function App() {
       <div className="hero-spacer" aria-hidden="true" />
       <TopBar />
       <main id="app">
-        <SdkPreview />
-        <UseCases />
-        <EarlyAccess />
+        <HowItWorks />
       </main>
       <Footer />
     </>

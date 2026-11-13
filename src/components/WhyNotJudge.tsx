@@ -33,7 +33,7 @@ export function WhyNotJudge() {
           <span className="h2-line">A kernel can’t.</span>
         </h2>
         <p className="body judge-lede">
-          LLM judges and prompt guardrails read the same text an attacker
+          LLM judges and prompt filters read the same text an attacker
           writes. One well-placed line in a file, a tool result, or a commit
           message can change their answer. The kernel doesn’t take
           instructions. It checks whether the action satisfies the policy.
@@ -43,7 +43,7 @@ export function WhyNotJudge() {
           <thead>
             <tr>
               <td />
-              <th scope="col">LLM judge or prompt guardrail</th>
+              <th scope="col">LLM judge or prompt filter</th>
               <th scope="col">Biject gate</th>
             </tr>
           </thead>

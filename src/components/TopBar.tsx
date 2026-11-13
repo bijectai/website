@@ -10,14 +10,11 @@ import { useEffect, useRef, useState } from "react";
 // sliding in behind the corner items so the bar "catches" the logo + CTA —
 // and at that moment the links slide from centered to a right-aligned group
 // hugging the CTA, and persist there.
-// Shared by the inline links and the mobile menu. Absolute "/#…" paths so
-// the section links still land when clicked from /about or /careers.
+// Shared by the inline links and the mobile menu.
 const LINKS = [
-  // The anchor keeps its original id so existing /#use-cases links still land.
-  { href: "/#use-cases", label: "Domains" },
   { href: "/news", label: "News" },
   { href: "/about", label: "About" },
-  { href: "https://access.bijectai.com/", label: "Login" },
+  { href: "/careers", label: "Careers" },
 ];
 
 export function TopBar() {
@@ -101,7 +98,7 @@ export function TopBar() {
           <a className="brand" href="/" aria-label="biject home">
             <img className="brand-logo" src="/logo.png" alt="biject" />
           </a>
-          <a className="nav-cta" href="/#access" ref={ctaRef}>
+          <a className="nav-cta" href="mailto:dev@bijectai.com" ref={ctaRef}>
             Get started
           </a>
           {/* Corner menu button — only shown below the mobile breakpoint, where
@@ -156,7 +153,7 @@ export function TopBar() {
             ))}
             <a
               className="nav-menu-cta"
-              href="/#access"
+              href="mailto:dev@bijectai.com"
               onClick={() => setMenuOpen(false)}
             >
               Get started
