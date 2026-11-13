@@ -4,7 +4,6 @@ import { AizawaAttractor } from "./components/AizawaAttractor";
 import { Careers } from "./components/Careers";
 import { Footer } from "./components/Footer";
 import { Hero } from "./components/Hero";
-import { HowItWorks } from "./components/HowItWorks";
 import { News } from "./components/News";
 import { NewsPost } from "./components/NewsPost";
 import { NotFound } from "./components/NotFound";
@@ -63,15 +62,12 @@ export default function App() {
       {/* Back to front: background type, attractor, headline. */}
       <ProofField hero />
       <AizawaAttractor />
-      <Hero />
-      {/* Pushes the bar down to the bottom of the first screen; from there
-          the sticky TopBar rides up on scroll and locks to the top. */}
-      <div className="hero-spacer" aria-hidden="true" />
-      <TopBar />
-      <main id="app">
-        <HowItWorks />
-      </main>
-      <Footer />
+      {/* One screen: the hero fills what the nav bar and footer leave. */}
+      <div className="home">
+        <Hero />
+        <TopBar />
+        <Footer />
+      </div>
     </>
   );
 }

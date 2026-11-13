@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { CSSProperties } from "react";
 
 import { Footer } from "./Footer";
+import { HowItWorks } from "./HowItWorks";
 import { ProofField } from "./ProofField";
 import { TopBar } from "./TopBar";
 import { WhyNotJudge } from "./WhyNotJudge";
@@ -84,9 +85,10 @@ export function About() {
           </div>
         </div>
 
-        {/* Why a proof kernel and not another model. A full section with its
-            own .wrap, so it sits between the two .about-inner runs rather
-            than inside one. */}
+        {/* What we do in three steps, then why a proof kernel and not another
+            model. Full sections with their own .wrap, so they sit between
+            the two .about-inner runs rather than inside one. */}
+        <HowItWorks />
         <WhyNotJudge />
 
         <div className="about-inner">

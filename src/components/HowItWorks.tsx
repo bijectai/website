@@ -1,4 +1,4 @@
-// The home page's three-step strip, split by hairlines (title | body). Still
+// The About page's three-step strip, split by hairlines (title | body). Still
 // an <ol>, since the order is the point, but the steps carry no printed
 // numbers: the hairlines and the reading order already say "in sequence".
 const STEPS = [

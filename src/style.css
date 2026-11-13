@@ -120,38 +120,38 @@ button:disabled {
   /* purely decorative; never steals clicks */
 }
 
-/* Page content sits above the fixed attractor canvas. Real sections now
-   provide the page's height. */
-#app {
-  position: relative;
-  z-index: 1;
-}
-
 /* ============================================================
-   Hero
-   One centered column: the copy in the upper middle, then the stage
-   the attractor frames itself to, running down to the nav bar's
-   resting slot. Behind them, the proof field (below) covers the top
-   of the screen and fades out before the attractor.
+   Home
+   One screen, no scroll: the hero takes whatever height is left
+   after the nav bar (at rest, a --bar-gap above the footer) and the
+   footer. Behind them, the proof field covers the top of the screen
+   and fades out before the attractor.
 
    Paint order, back to front: proof field, attractor canvas, copy.
    The field and the canvas share z-index 0; the field comes first in
    the document, so it paints underneath the particles.
    ============================================================ */
+.home {
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+}
+
+.home .topbar {
+  margin-bottom: var(--bar-gap);
+}
+
+/* The copy in the upper middle, then the stage the attractor frames
+   itself to, running down to the nav bar. */
 .hero {
-  /* The nav bar rests a --bar-gap above the bottom of the first screen. */
-  --hero-floor: calc(var(--nav-h) + var(--bar-gap) * 2);
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 100vh;
-  height: 100svh;
+  position: relative;
   z-index: 1;
+  flex: 1;
   display: flex;
   flex-direction: column;
   padding-top: calc(var(--bar-gap) + var(--nav-h) + clamp(24px, 12vh, 150px));
-  padding-bottom: var(--hero-floor);
+  padding-bottom: var(--bar-gap);
   pointer-events: none;
 }
 
@@ -242,19 +242,6 @@ button:disabled {
   .hero-line {
     display: block;
   }
-}
-
-/* ============================================================
-   Hero spacer
-   Empty layout block that fills (almost) the first screen so the
-   top bar's natural flow position lands at the bottom of the hero.
-   Leaves a --bar-gap breathing gap beneath the bar, matching the
-   inset it sticks to at the top once scrolled.
-   ============================================================ */
-.hero-spacer {
-  height: calc(100vh - var(--nav-h) - var(--bar-gap));
-  height: calc(100svh - var(--nav-h) - var(--bar-gap));
-  pointer-events: none;
 }
 
 /* ============================================================
@@ -664,11 +651,6 @@ button:disabled {
   }
 }
 
-/* Land anchored sections below the stuck bar, not under it. */
-#app section[id] {
-  scroll-margin-top: calc(var(--bar-gap) + var(--nav-h) + 24px);
-}
-
 .h2 {
   margin: 0;
   max-width: 18ch;
@@ -758,8 +740,10 @@ button:disabled {
   padding-block: 0 clamp(72px, 10vh, 120px);
 }
 
-/* On the About page the judge section follows the body copy, so it needs its
-   own room above; below, the origins row brings its own margin. */
+/* On the About page the steps and the judge section follow the body copy in
+   turn, so each needs its own room above; below, the origins row brings its
+   own margin. */
+.about .how,
 .about .judge {
   padding-block: clamp(80px, 12vh, 136px) 0;
 }
