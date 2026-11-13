@@ -120,39 +120,56 @@ button:disabled {
   /* purely decorative; never steals clicks */
 }
 
-/* Page content sits above the fixed attractor canvas. Real sections now
-   provide the page's height. */
-#app {
-  position: relative;
-  z-index: 1;
-}
-
 /* ============================================================
-   Hero
-   One centered column: the copy in the upper middle, then the stage
-   the attractor frames itself to, running down to the nav bar's
-   resting slot. Behind them, the proof field (below) covers the top
-   of the screen and fades out before the attractor.
+   Home
+   One screen, no scroll: the hero takes whatever height is left
+   after the nav bar (at rest, a --bar-gap above the footer) and the
+   footer. Behind them, the proof field covers the top of the screen
+   and fades out before the attractor.
 
    Paint order, back to front: proof field, attractor canvas, copy.
    The field and the canvas share z-index 0; the field comes first in
    the document, so it paints underneath the particles.
    ============================================================ */
-.hero {
-  /* The nav bar rests a --bar-gap above the bottom of the first screen. */
-  --hero-floor: calc(var(--nav-h) + var(--bar-gap) * 2);
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 100vh;
-  height: 100svh;
-  z-index: 1;
+.home {
+  min-height: 100vh;
+  min-height: 100svh;
   display: flex;
   flex-direction: column;
-  padding-top: calc(var(--bar-gap) + var(--nav-h) + clamp(24px, 12vh, 150px));
-  padding-bottom: var(--hero-floor);
+}
+
+.home .topbar {
+  margin-bottom: 12px;
+}
+
+/* The copy in the upper middle, then the stage the attractor frames
+   itself to, running down to the nav bar. One gap (--g) sets the rhythm:
+   below the corner logo, between the copy and the stage, and (less of
+   it, since the cloud rarely fills its stage to the bottom edge) above
+   the nav. It scales with the screen's height. */
+.hero {
+  --g: clamp(32px, 8vh, 80px);
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding-top: calc(var(--bar-gap) + var(--nav-h) + var(--g));
+  padding-bottom: calc(var(--g) * 0.3);
   pointer-events: none;
+}
+
+/* Below the nav breakpoint the links fold into the corner menu, so the bar
+   would only leave an empty band above the footer. The stage takes that
+   room, with a full gap beneath it. */
+@media (max-width: 900px) {
+  .home .topbar {
+    display: none;
+  }
+
+  .hero {
+    padding-bottom: var(--g);
+  }
 }
 
 /* The background type (ProofField): rows of small Lean 4 with "proof, not
@@ -218,18 +235,21 @@ button:disabled {
   text-wrap: balance;
 }
 
+/* Phones: smaller, so the sub-line sets in two even lines. */
+@media (max-width: 600px) {
+  .hero-sub {
+    max-width: 34ch;
+    font-size: 0.9rem;
+    line-height: 1.55;
+  }
+}
+
 /* The attractor's frame: everything left between the copy and the nav
    bar. Empty; AizawaAttractor reads its box. */
 .hero-stage {
   flex: 1;
   min-height: 0;
-  margin-top: clamp(12px, 3vh, 36px);
-}
-
-@media (max-width: 900px) {
-  .hero {
-    padding-top: calc(var(--bar-gap) + var(--nav-h) + clamp(16px, 5vh, 48px));
-  }
+  margin-top: var(--g);
 }
 
 /* Phones: one line would be too small, so break after "Ambiguity" — sized to
@@ -242,19 +262,6 @@ button:disabled {
   .hero-line {
     display: block;
   }
-}
-
-/* ============================================================
-   Hero spacer
-   Empty layout block that fills (almost) the first screen so the
-   top bar's natural flow position lands at the bottom of the hero.
-   Leaves a --bar-gap breathing gap beneath the bar, matching the
-   inset it sticks to at the top once scrolled.
-   ============================================================ */
-.hero-spacer {
-  height: calc(100vh - var(--nav-h) - var(--bar-gap));
-  height: calc(100svh - var(--nav-h) - var(--bar-gap));
-  pointer-events: none;
 }
 
 /* ============================================================
@@ -664,11 +671,6 @@ button:disabled {
   }
 }
 
-/* Land anchored sections below the stuck bar, not under it. */
-#app section[id] {
-  scroll-margin-top: calc(var(--bar-gap) + var(--nav-h) + 24px);
-}
-
 .h2 {
   margin: 0;
   max-width: 18ch;
@@ -758,8 +760,10 @@ button:disabled {
   padding-block: 0 clamp(72px, 10vh, 120px);
 }
 
-/* On the About page the judge section follows the body copy, so it needs its
-   own room above; below, the origins row brings its own margin. */
+/* On the About page the steps and the judge section follow the body copy in
+   turn, so each needs its own room above; below, the origins row brings its
+   own margin. */
+.about .how,
 .about .judge {
   padding-block: clamp(80px, 12vh, 136px) 0;
 }
@@ -1855,53 +1859,34 @@ button:disabled {
 }
 
 /* ============================================================
-   Footer — a single bar with the beta note on the left and
-   links + copyright on the right.
+   Footer — the copyright line, centered on a hairline.
    ============================================================ */
 .footer {
   position: relative;
   z-index: 1;
-  overflow: hidden;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .footer-bar {
-  position: relative;
   max-width: var(--maxw);
   margin-inline: auto;
-  padding: 28px var(--gutter) 36px;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
+  padding: 22px var(--gutter);
+  text-align: center;
 }
 
-.footer-copy,
-.footer-links {
+.footer-copy {
   font-family: var(--mono);
   font-size: 12px;
   letter-spacing: 0.02em;
   color: rgba(255, 255, 255, 0.34);
 }
 
-.footer-links {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 22px;
-}
+@media (max-width: 600px) {
+  .footer-bar {
+    padding-block: 16px;
+  }
 
-.footer-links a {
-  color: inherit;
-  text-decoration: none;
-  transition: color 0.2s;
-}
-
-.footer-links a:hover {
-  color: var(--ink);
-}
-
-.footer-tag {
-  letter-spacing: 0.04em;
+  .footer-copy {
+    font-size: 11px;
+  }
 }

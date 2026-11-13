@@ -20,8 +20,9 @@ export function Hero() {
           <span className="hero-line">in Every Workflow.</span>
         </h1>
         <p className="hero-sub">
-          We turn written rules into machine-checked specs, then enforce them
-          on every agent action.
+          We turn written rules into{" "}
+          <span style={{ whiteSpace: "nowrap" }}>machine-checked</span> specs,
+          then enforce them on every agent action.
         </p>
       </div>
       <div className="wrap hero-stage" aria-hidden="true" />
