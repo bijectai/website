@@ -1846,6 +1846,13 @@ button:disabled {
   font-weight: 500;
 }
 
+/* Sits close under the 404, then the usual gap before the link home. */
+.notfound-sub {
+  margin: -16px 0 0;
+  font-size: clamp(0.95rem, 1.4vw, 1.05rem);
+  color: rgba(255, 255, 255, 0.6);
+}
+
 /* A 404 with no way out is a dead end for readers and crawlers alike. */
 .notfound-home {
   font-family: var(--mono);
