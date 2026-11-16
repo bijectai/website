@@ -1,0 +1,447 @@
+{
+  "assessment-results": {
+    "uuid": "3b4c3673-2d3e-5cc9-afb1-1d61e18ccd24",
+    "metadata": {
+      "title": "Biject Assess: sample assessment results (illustrative)",
+      "last-modified": "2026-11-16T15:00:00Z",
+      "version": "0.1-sample",
+      "oscal-version": "1.1.2",
+      "props": [
+        {
+          "name": "sample",
+          "ns": "https://www.bijectai.com/ns/oscal",
+          "value": "true"
+        }
+      ],
+      "remarks": "ILLUSTRATIVE SAMPLE. This file shows the shape of a Biject Assess evidence package. It describes a seeded test system, not a real one. Hashes, signatures and the Merkle chain are placeholders, and evidence links point into a bundle that is not included."
+    },
+    "import-ap": {
+      "href": "#sample-assessment-plan",
+      "remarks": "The assessment plan is not included in this sample."
+    },
+    "results": [
+      {
+        "uuid": "244de80b-c172-5c0a-bb66-59d79815061e",
+        "title": "Seeded test system: account and session controls",
+        "description": "One run of the Biject agent against a seeded open-source admin console. The agent collected facts read-only; the kernel checked each fact set against its approved spec.",
+        "start": "2026-11-16T15:00:00Z",
+        "end": "2026-11-16T15:06:00Z",
+        "props": [
+          {
+            "name": "scope-policy",
+            "ns": "https://www.bijectai.com/ns/oscal",
+            "value": "read-only; hosts: admin.target.test; no form submissions; no downloads"
+          },
+          {
+            "name": "blocked-actions",
+            "ns": "https://www.bijectai.com/ns/oscal",
+            "value": "1"
+          }
+        ],
+        "reviewed-controls": {
+          "control-selections": [
+            {
+              "include-controls": [
+                {
+                  "control-id": "ac-7"
+                },
+                {
+                  "control-id": "ac-12"
+                },
+                {
+                  "control-id": "ia-5.1"
+                }
+              ]
+            }
+          ]
+        },
+        "observations": [
+          {
+            "uuid": "7cc9841a-9c60-543b-b335-5e8fc69fd6b9",
+            "title": "AC-7a: limit of consecutive invalid logon attempts",
+            "description": "Account lockout threshold is set to 3 consecutive failed attempts.",
+            "props": [
+              {
+                "name": "fact-confidence",
+                "ns": "https://www.bijectai.com/ns/oscal",
+                "value": "high"
+              },
+              {
+                "name": "facts",
+                "ns": "https://www.bijectai.com/ns/oscal",
+                "value": "{\"max_failed_attempts\":3}"
+              }
+            ],
+            "methods": [
+              "TEST"
+            ],
+            "types": [
+              "control-objective"
+            ],
+            "relevant-evidence": [
+              {
+                "href": "#evidence/ac7a-1",
+                "description": "screenshot: settings/security, Account lockout panel",
+                "props": [
+                  {
+                    "name": "sha256",
+                    "ns": "https://www.bijectai.com/ns/oscal",
+                    "value": "0000000000000000000000000000000000000000000000000000000000000000"
+                  }
+                ]
+              },
+              {
+                "href": "#evidence/ac7a-2",
+                "description": "config: auth.yaml, lockout block",
+                "props": [
+                  {
+                    "name": "sha256",
+                    "ns": "https://www.bijectai.com/ns/oscal",
+                    "value": "0000000000000000000000000000000000000000000000000000000000000000"
+                  }
+                ]
+              }
+            ],
+            "collected": "2026-11-16T15:00:00Z"
+          },
+          {
+            "uuid": "10f48cd4-b0ed-59d9-8e64-dd754966af12",
+            "title": "AC-7b: automatic action when the limit is exceeded",
+            "description": "Accounts lock for 30 minutes after the threshold is reached.",
+            "props": [
+              {
+                "name": "fact-confidence",
+                "ns": "https://www.bijectai.com/ns/oscal",
+                "value": "high"
+              },
+              {
+                "name": "facts",
+                "ns": "https://www.bijectai.com/ns/oscal",
+                "value": "{\"lockout_action\":\"lock_account\",\"lockout_minutes\":30}"
+              }
+            ],
+            "methods": [
+              "TEST"
+            ],
+            "types": [
+              "control-objective"
+            ],
+            "relevant-evidence": [
+              {
+                "href": "#evidence/ac7b-1",
+                "description": "screenshot: settings/security, Account lockout panel",
+                "props": [
+                  {
+                    "name": "sha256",
+                    "ns": "https://www.bijectai.com/ns/oscal",
+                    "value": "0000000000000000000000000000000000000000000000000000000000000000"
+                  }
+                ]
+              },
+              {
+                "href": "#evidence/ac7b-2",
+                "description": "config: auth.yaml, lockout block",
+                "props": [
+                  {
+                    "name": "sha256",
+                    "ns": "https://www.bijectai.com/ns/oscal",
+                    "value": "0000000000000000000000000000000000000000000000000000000000000000"
+                  }
+                ]
+              }
+            ],
+            "collected": "2026-11-16T15:00:00Z"
+          },
+          {
+            "uuid": "3dde817a-2983-5861-b507-5fe9d44e53fd",
+            "title": "IA-5(1)(h): password composition and complexity rules",
+            "description": "Minimum password length is 8. The agency parameter requires 12. Reuse history is 24.",
+            "props": [
+              {
+                "name": "fact-confidence",
+                "ns": "https://www.bijectai.com/ns/oscal",
+                "value": "high"
+              },
+              {
+                "name": "facts",
+                "ns": "https://www.bijectai.com/ns/oscal",
+                "value": "{\"min_length\":8,\"reuse_history\":24}"
+              }
+            ],
+            "methods": [
+              "TEST"
+            ],
+            "types": [
+              "control-objective"
+            ],
+            "relevant-evidence": [
+              {
+                "href": "#evidence/ia51h-1",
+                "description": "screenshot: settings/security, Password policy panel",
+                "props": [
+                  {
+                    "name": "sha256",
+                    "ns": "https://www.bijectai.com/ns/oscal",
+                    "value": "0000000000000000000000000000000000000000000000000000000000000000"
+                  }
+                ]
+              },
+              {
+                "href": "#evidence/ia51h-2",
+                "description": "config: auth.yaml, password block",
+                "props": [
+                  {
+                    "name": "sha256",
+                    "ns": "https://www.bijectai.com/ns/oscal",
+                    "value": "0000000000000000000000000000000000000000000000000000000000000000"
+                  }
+                ]
+              }
+            ],
+            "collected": "2026-11-16T15:00:00Z"
+          },
+          {
+            "uuid": "30c46c35-1ae2-586f-87da-e544ee623f77",
+            "title": "AC-12: automatic session termination",
+            "description": "Idle timeout reads 15, but the field shows no unit. Flagged for a reviewer to confirm minutes.",
+            "props": [
+              {
+                "name": "fact-confidence",
+                "ns": "https://www.bijectai.com/ns/oscal",
+                "value": "low"
+              },
+              {
+                "name": "facts",
+                "ns": "https://www.bijectai.com/ns/oscal",
+                "value": "{\"idle_timeout_minutes\":15}"
+              }
+            ],
+            "methods": [
+              "TEST"
+            ],
+            "types": [
+              "control-objective"
+            ],
+            "relevant-evidence": [
+              {
+                "href": "#evidence/ac12-1",
+                "description": "screenshot: settings/sessions, Idle timeout field",
+                "props": [
+                  {
+                    "name": "sha256",
+                    "ns": "https://www.bijectai.com/ns/oscal",
+                    "value": "0000000000000000000000000000000000000000000000000000000000000000"
+                  }
+                ]
+              }
+            ],
+            "collected": "2026-11-16T15:00:00Z"
+          }
+        ],
+        "findings": [
+          {
+            "uuid": "dedcd310-1ac8-58fe-aaac-b3d97d7206a7",
+            "title": "AC-7a: limit of consecutive invalid logon attempts",
+            "description": "Kernel verdict: SATISFIED.",
+            "props": [
+              {
+                "name": "verdict",
+                "ns": "https://www.bijectai.com/ns/oscal",
+                "value": "SATISFIED"
+              },
+              {
+                "name": "spec",
+                "ns": "https://www.bijectai.com/ns/oscal",
+                "value": "lockout_after_failed_attempts (max := ac-07_odp.01)"
+              },
+              {
+                "name": "parameters",
+                "ns": "https://www.bijectai.com/ns/oscal",
+                "value": "{\"ac-07_odp.01\":\"3\"}"
+              },
+              {
+                "name": "kernel-ms",
+                "ns": "https://www.bijectai.com/ns/oscal",
+                "value": "1.1"
+              },
+              {
+                "name": "signature",
+                "ns": "https://www.bijectai.com/ns/oscal",
+                "value": "ed25519:PLACEHOLDER"
+              },
+              {
+                "name": "chain",
+                "ns": "https://www.bijectai.com/ns/oscal",
+                "value": "merkle:PLACEHOLDER"
+              }
+            ],
+            "target": {
+              "type": "objective-id",
+              "target-id": "ac-7_obj.a",
+              "status": {
+                "state": "satisfied",
+                "reason": "pass"
+              }
+            },
+            "related-observations": [
+              {
+                "observation-uuid": "7cc9841a-9c60-543b-b335-5e8fc69fd6b9"
+              }
+            ]
+          },
+          {
+            "uuid": "6b903992-dfac-5488-a9fe-af486b3c4898",
+            "title": "AC-7b: automatic action when the limit is exceeded",
+            "description": "Kernel verdict: SATISFIED.",
+            "props": [
+              {
+                "name": "verdict",
+                "ns": "https://www.bijectai.com/ns/oscal",
+                "value": "SATISFIED"
+              },
+              {
+                "name": "spec",
+                "ns": "https://www.bijectai.com/ns/oscal",
+                "value": "lockout_duration_at_least (minutes := ac-07_odp.04)"
+              },
+              {
+                "name": "parameters",
+                "ns": "https://www.bijectai.com/ns/oscal",
+                "value": "{\"ac-07_odp.03\":\"lock the account or node for a time period\",\"ac-07_odp.04\":\"30 minutes\"}"
+              },
+              {
+                "name": "kernel-ms",
+                "ns": "https://www.bijectai.com/ns/oscal",
+                "value": "0.9"
+              },
+              {
+                "name": "signature",
+                "ns": "https://www.bijectai.com/ns/oscal",
+                "value": "ed25519:PLACEHOLDER"
+              },
+              {
+                "name": "chain",
+                "ns": "https://www.bijectai.com/ns/oscal",
+                "value": "merkle:PLACEHOLDER"
+              }
+            ],
+            "target": {
+              "type": "objective-id",
+              "target-id": "ac-7_obj.b",
+              "status": {
+                "state": "satisfied",
+                "reason": "pass"
+              }
+            },
+            "related-observations": [
+              {
+                "observation-uuid": "10f48cd4-b0ed-59d9-8e64-dd754966af12"
+              }
+            ]
+          },
+          {
+            "uuid": "ef79b1a8-38d7-52f6-b3c4-627c3cb61050",
+            "title": "IA-5(1)(h): password composition and complexity rules",
+            "description": "Kernel verdict: NOT_SATISFIED.",
+            "props": [
+              {
+                "name": "verdict",
+                "ns": "https://www.bijectai.com/ns/oscal",
+                "value": "NOT_SATISFIED"
+              },
+              {
+                "name": "spec",
+                "ns": "https://www.bijectai.com/ns/oscal",
+                "value": "password_policy_meets (min_length := 12, reuse_history := 24)"
+              },
+              {
+                "name": "parameters",
+                "ns": "https://www.bijectai.com/ns/oscal",
+                "value": "{\"ia-05.01_odp.02\":\"minimum length 12; last 24 passwords may not be reused\"}"
+              },
+              {
+                "name": "kernel-ms",
+                "ns": "https://www.bijectai.com/ns/oscal",
+                "value": "1.4"
+              },
+              {
+                "name": "signature",
+                "ns": "https://www.bijectai.com/ns/oscal",
+                "value": "ed25519:PLACEHOLDER"
+              },
+              {
+                "name": "chain",
+                "ns": "https://www.bijectai.com/ns/oscal",
+                "value": "merkle:PLACEHOLDER"
+              }
+            ],
+            "target": {
+              "type": "objective-id",
+              "target-id": "ia-5.1_obj.h",
+              "status": {
+                "state": "not-satisfied",
+                "reason": "fail"
+              }
+            },
+            "related-observations": [
+              {
+                "observation-uuid": "3dde817a-2983-5861-b507-5fe9d44e53fd"
+              }
+            ]
+          },
+          {
+            "uuid": "7614efe6-48f8-590f-a617-a36924f116d8",
+            "title": "AC-12: automatic session termination",
+            "description": "Kernel verdict: NEEDS_REVIEW.",
+            "props": [
+              {
+                "name": "verdict",
+                "ns": "https://www.bijectai.com/ns/oscal",
+                "value": "NEEDS_REVIEW"
+              },
+              {
+                "name": "spec",
+                "ns": "https://www.bijectai.com/ns/oscal",
+                "value": "session_terminates_after (idle_minutes := 15)"
+              },
+              {
+                "name": "parameters",
+                "ns": "https://www.bijectai.com/ns/oscal",
+                "value": "{\"ac-12_odp\":\"15 minutes of inactivity\"}"
+              },
+              {
+                "name": "kernel-ms",
+                "ns": "https://www.bijectai.com/ns/oscal",
+                "value": "1.0"
+              },
+              {
+                "name": "signature",
+                "ns": "https://www.bijectai.com/ns/oscal",
+                "value": "ed25519:PLACEHOLDER"
+              },
+              {
+                "name": "chain",
+                "ns": "https://www.bijectai.com/ns/oscal",
+                "value": "merkle:PLACEHOLDER"
+              }
+            ],
+            "target": {
+              "type": "objective-id",
+              "target-id": "ac-12_obj",
+              "status": {
+                "state": "not-satisfied",
+                "reason": "other"
+              }
+            },
+            "related-observations": [
+              {
+                "observation-uuid": "30c46c35-1ae2-586f-87da-e544ee623f77"
+              }
+            ],
+            "remarks": "Low-confidence fact. Needs a reviewer before this verdict counts."
+          }
+        ]
+      }
+    ]
+  }
+}
