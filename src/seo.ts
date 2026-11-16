@@ -68,7 +68,7 @@ export const PAGES: Record<string, PageSeo> = {
   // Unlisted: sent by link only. noindex keeps it out of search results and
   // the sitemap; robots.txt deliberately doesn't name it, since a Disallow
   // line would advertise the path.
-  "/assess": {
+  "/audit-agent": {
     name: "Assess",
     title: "Biject Assess | Audit agents for NIST controls",
     description:

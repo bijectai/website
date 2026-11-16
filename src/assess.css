@@ -1,5 +1,5 @@
 /* ============================================================
-   /assess — Biject Assess. A standalone page; it reuses the site's
+   /audit-agent — Biject Assess. A standalone page; it reuses the site's
    type scale, hairlines and form fields (style.css), and adds the
    pipeline diagram. Imported by Assess.tsx, so it ships in that
    page's chunk only. Every class here is prefixed as-, pipe- or

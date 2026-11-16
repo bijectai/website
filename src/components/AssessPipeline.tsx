@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
-// The /assess page's centerpiece: the four-stage audit pipeline with the
+// The /audit-agent page's centerpiece: the four-stage audit pipeline with the
 // scope gate under "Investigate". The kernel shows up twice (the gate and
 // "Prove"), and that's the story the animation tells.
 //

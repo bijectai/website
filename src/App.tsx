@@ -60,7 +60,7 @@ export default function App() {
     return <Careers />;
   }
   // Unlisted: no page on the site links here (see Assess.tsx).
-  if (key === "/assess") {
+  if (key === "/audit-agent") {
     return (
       <Suspense fallback={null}>
         <Assess />
