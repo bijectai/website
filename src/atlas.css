@@ -1,9 +1,8 @@
 /* ============================================================
    /atlas — Biject Atlas. A standalone page; it reuses the site's
-   type scale, hairlines and form fields (style.css), and adds the
+   type scale and hairlines (style.css), and adds the
    pipeline diagram. Imported by Atlas.tsx, so it ships in that
-   page's chunk only. Every class here is prefixed as-, pipe- or
-   pilot-.
+   page's chunk only. Every class here is prefixed as- or pipe-.
    ============================================================ */
 .atlas {
   position: relative;
@@ -1069,74 +1068,41 @@
   color: var(--ink);
 }
 
-.pilot-form {
+/* The email card that stands where a form would. */
+.as-email {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  align-items: flex-start;
+  gap: 16px;
   padding: clamp(22px, 3vw, 32px);
   background: #14161a;
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
 }
 
-.pilot-form select {
-  font-family: inherit;
-  font-size: 0.98rem;
-  width: 100%;
-  color: var(--ink);
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  padding: 11px 13px;
-  outline: none;
-  transition: border-color 0.15s ease, background 0.15s ease;
-}
-
-.pilot-form select:focus {
-  border-color: var(--accent);
-}
-
-.pilot-form option {
-  color: var(--color-ink);
-}
-
-.pilot-form input::placeholder {
-  color: rgba(255, 255, 255, 0.3);
-}
-
-.pilot-hp {
-  position: absolute;
-  left: -10000px;
-  width: 1px;
-  height: 1px;
-  opacity: 0;
-}
-
-.pilot-actions {
-  display: flex;
-  justify-content: flex-start;
-  margin-top: 4px;
-}
-
-.pilot-form .apply-error a,
-.pilot-done a {
-  color: inherit;
-}
-
-.pilot-done-title {
+.as-email-label {
   margin: 0;
   font-size: 1.15rem;
   font-weight: 600;
   color: var(--ink);
 }
 
-.pilot-done-text {
+.as-email-text,
+.as-email-alt {
   margin: 0;
   font-size: 0.95rem;
+  line-height: 1.6;
   color: rgba(255, 255, 255, 0.66);
 }
 
-@media (max-width: 540px) {
-  .pilot-actions .apply-submit {
-    width: 100%;
-  }
+.as-email-alt {
+  font-size: 0.88rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Selectable as plain text, for readers whose browser has no mail app. */
+.as-email-addr {
+  font-family: var(--mono);
+  color: var(--ink);
+  user-select: all;
 }
