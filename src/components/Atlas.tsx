@@ -257,7 +257,6 @@ export function Atlas() {
                 See a sample evidence package
               </a>
             </div>
-            <p className="as-brandline">Proof, not probability.</p>
           </div>
         </section>
 

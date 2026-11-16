@@ -1823,9 +1823,12 @@ button:disabled {
 }
 
 /* ============================================================
-   Default 404 page — centered white text on the black page.
+   Default 404 page — centered white text over the background type.
    ============================================================ */
 .notfound {
+  /* Above the ProofField, like every page's <main>. */
+  position: relative;
+  z-index: 1;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
