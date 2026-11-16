@@ -1,6 +1,6 @@
 // Pilot request endpoint.
 //
-// The /audit-agent page's "Start with one system" form POSTs here; this mails the
+// The /atlas page's "Start with one system" form POSTs here; this mails the
 // request to the team through Resend, with the sender set as reply-to so it
 // can be answered straight from the notification. Same provider and key as
 // api/waitlist.ts.
@@ -107,11 +107,11 @@ const ROWS: [keyof PilotRequest, string][] = [
 ];
 
 export function subjectFor(request: PilotRequest): string {
-  return `Pilot request: ${request.organization} (${request.framework})`;
+  return `Atlas pilot request: ${request.organization} (${request.framework})`;
 }
 
 export function textBody(request: PilotRequest): string {
-  return ["Pilot request from /audit-agent", "", ...ROWS.map(([k, l]) => `${l}: ${request[k]}`)].join(
+  return ["Atlas pilot request from /atlas", "", ...ROWS.map(([k, l]) => `${l}: ${request[k]}`)].join(
     "\n",
   );
 }
@@ -128,7 +128,7 @@ export function htmlBody(request: PilotRequest): string {
   };
   return [
     `<div style="font-family:system-ui,sans-serif;font-size:14px;line-height:1.5;color:#111;">`,
-    `<p style="margin:0 0 12px;color:#666;">Pilot request from /audit-agent</p>`,
+    `<p style="margin:0 0 12px;color:#666;">Atlas pilot request from /atlas</p>`,
     `<table style="border-collapse:collapse;">`,
     ...ROWS.map(row),
     `</table></div>`,

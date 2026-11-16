@@ -2,7 +2,7 @@
   "assessment-results": {
     "uuid": "3b4c3673-2d3e-5cc9-afb1-1d61e18ccd24",
     "metadata": {
-      "title": "Biject Assess: sample assessment results (illustrative)",
+      "title": "Biject Atlas: sample assessment results (illustrative)",
       "last-modified": "2026-11-16T15:00:00Z",
       "version": "0.1-sample",
       "oscal-version": "1.1.2",
@@ -13,7 +13,7 @@
           "value": "true"
         }
       ],
-      "remarks": "ILLUSTRATIVE SAMPLE. This file shows the shape of a Biject Assess evidence package. It describes a seeded test system, not a real one. Hashes, signatures and the Merkle chain are placeholders, and evidence links point into a bundle that is not included."
+      "remarks": "ILLUSTRATIVE SAMPLE. This file shows the shape of a Biject Atlas evidence package. It describes a seeded test system, not a real one. Hashes, signatures and the Merkle chain are placeholders, and evidence links point into a bundle that is not included."
     },
     "import-ap": {
       "href": "#sample-assessment-plan",

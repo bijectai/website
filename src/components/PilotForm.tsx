@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-// The /audit-agent page's pilot request. Inline, not a modal: it is the page's
+// The /atlas page's pilot request. Inline, not a modal: it is the page's
 // last section and its one ask. Posts to api/pilot.ts, which mails it to
 // dev@bijectai.com.
 //

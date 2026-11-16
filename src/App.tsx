@@ -14,8 +14,8 @@ import { applySeo, routeKey } from "./seo";
 
 // Its own chunk, so the copy of an unlisted page doesn't ship in the bundle
 // every other page loads.
-const Assess = lazy(() =>
-  import("./components/Assess").then((m) => ({ default: m.Assess })),
+const Atlas = lazy(() =>
+  import("./components/Atlas").then((m) => ({ default: m.Atlas })),
 );
 
 export default function App() {
@@ -59,11 +59,11 @@ export default function App() {
   if (path === "/careers" || path === "/careers/") {
     return <Careers />;
   }
-  // Unlisted: no page on the site links here (see Assess.tsx).
-  if (key === "/audit-agent") {
+  // Unlisted: no page on the site links here (see Atlas.tsx).
+  if (key === "/atlas") {
     return (
       <Suspense fallback={null}>
-        <Assess />
+        <Atlas />
       </Suspense>
     );
   }

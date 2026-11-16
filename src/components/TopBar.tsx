@@ -21,7 +21,7 @@ const LINKS: NavLink[] = [
 
 const CTA: NavLink = { href: "mailto:dev@bijectai.com", label: "Get started" };
 
-// A standalone page (e.g. /audit-agent) can swap in its own in-page links and
+// A standalone page (e.g. /atlas) can swap in its own in-page links and
 // call to action; every other page gets the site nav.
 export function TopBar({
   links = LINKS,

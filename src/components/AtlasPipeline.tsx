@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
-// The /audit-agent page's centerpiece: the four-stage audit pipeline with the
+// The /atlas page's centerpiece: the four-stage audit pipeline with the
 // scope gate under "Investigate". The kernel shows up twice (the gate and
 // "Prove"), and that's the story the animation tells.
 //
@@ -52,7 +52,7 @@ function prefersReducedMotion(): boolean {
   return window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
 }
 
-export function AssessPipeline() {
+export function AtlasPipeline() {
   const figRef = useRef<HTMLElement>(null);
   const [step, setStep] = useState(0);
   const [playing, setPlaying] = useState(false);
