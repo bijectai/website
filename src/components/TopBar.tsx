@@ -11,13 +11,25 @@ import { useEffect, useRef, useState } from "react";
 // and at that moment the links slide from centered to a right-aligned group
 // hugging the CTA, and persist there.
 // Shared by the inline links and the mobile menu.
-const LINKS = [
+export type NavLink = { href: string; label: string };
+
+const LINKS: NavLink[] = [
   { href: "/news", label: "News" },
   { href: "/about", label: "About" },
   { href: "/careers", label: "Careers" },
 ];
 
-export function TopBar() {
+const CTA: NavLink = { href: "mailto:dev@bijectai.com", label: "Get started" };
+
+// A standalone page (e.g. /atlas) can swap in its own in-page links and
+// call to action; every other page gets the site nav.
+export function TopBar({
+  links = LINKS,
+  cta = CTA,
+}: {
+  links?: NavLink[];
+  cta?: NavLink;
+} = {}) {
   const barRef = useRef<HTMLElement>(null);
   const ctaRef = useRef<HTMLAnchorElement>(null);
   // The mobile nav: the centered links collapse into a corner button below a
@@ -44,13 +56,13 @@ export function TopBar() {
 
   useEffect(() => {
     const bar = barRef.current;
-    const cta = ctaRef.current;
-    if (!bar || !cta) return;
+    const ctaEl = ctaRef.current;
+    if (!bar || !ctaEl) return;
 
     // Reserve exactly the CTA's width (plus a gap) so the right-aligned
     // links clear the CTA once it's caught into the bar's right slot.
     const setClearance = () => {
-      const w = cta.getBoundingClientRect().width;
+      const w = ctaEl.getBoundingClientRect().width;
       bar.style.setProperty("--cta-clearance", `${Math.ceil(w + 24)}px`);
     };
 
@@ -98,8 +110,8 @@ export function TopBar() {
           <a className="brand" href="/" aria-label="biject home">
             <img className="brand-logo" src="/logo.png" alt="biject" />
           </a>
-          <a className="nav-cta" href="mailto:dev@bijectai.com" ref={ctaRef}>
-            Get started
+          <a className="nav-cta" href={cta.href} ref={ctaRef}>
+            {cta.label}
           </a>
           {/* Corner menu button — only shown below the mobile breakpoint, where
               the inline links + CTA are hidden. */}
@@ -124,7 +136,7 @@ export function TopBar() {
         <nav className="topbar-inner" aria-label="Primary">
           <span className="nav-spacer nav-spacer-left" aria-hidden="true" />
           <div className="nav-links">
-            {LINKS.map((link) => (
+            {links.map((link) => (
               <a key={link.href} href={link.href}>
                 {link.label}
               </a>
@@ -146,17 +158,17 @@ export function TopBar() {
         />
         <div className="nav-menu-inner">
           <nav className="nav-menu-panel" aria-label="Primary">
-            {LINKS.map((link) => (
+            {links.map((link) => (
               <a key={link.href} href={link.href} onClick={() => setMenuOpen(false)}>
                 {link.label}
               </a>
             ))}
             <a
               className="nav-menu-cta"
-              href="mailto:dev@bijectai.com"
+              href={cta.href}
               onClick={() => setMenuOpen(false)}
             >
-              Get started
+              {cta.label}
             </a>
           </nav>
         </div>

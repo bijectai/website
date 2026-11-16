@@ -1,0 +1,1142 @@
+/* ============================================================
+   /atlas — Biject Atlas. A standalone page; it reuses the site's
+   type scale, hairlines and form fields (style.css), and adds the
+   pipeline diagram. Imported by Atlas.tsx, so it ships in that
+   page's chunk only. Every class here is prefixed as-, pipe- or
+   pilot-.
+   ============================================================ */
+.atlas {
+  position: relative;
+  z-index: 1;
+  padding-bottom: clamp(64px, 10vh, 120px);
+}
+
+/* Anchored sections land below the sticky bar, not under it. */
+.atlas [id] {
+  scroll-margin-top: calc(var(--nav-h) + var(--bar-gap) * 2);
+}
+
+.as-kicker {
+  margin: 0 0 14px;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.as-title {
+  margin: 0;
+  max-width: 24ch;
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: clamp(1.8rem, 3.4vw, 2.75rem);
+  line-height: 1.08;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+  text-wrap: balance;
+}
+
+.as-lede {
+  margin-top: clamp(18px, 2.5vh, 26px);
+}
+
+.as-section {
+  padding-top: clamp(80px, 12vh, 136px);
+}
+
+.as-section a:not(.as-btn) {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 255, 255, 0.35);
+  text-underline-offset: 3px;
+  transition: color 0.18s ease, text-decoration-color 0.18s ease;
+}
+
+.as-section a:not(.as-btn):hover {
+  color: var(--accent);
+  text-decoration-color: var(--accent);
+}
+
+/* Heading on the left, copy on the right. */
+.as-split {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(24px, 5vw, 80px);
+  align-items: start;
+}
+
+.as-split .as-lede {
+  margin-top: 0;
+}
+
+@media (max-width: 860px) {
+  .as-split {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.as-small {
+  margin: 16px 0 0;
+  font-size: 0.88rem;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+/* ---- Hero ----------------------------------------------------- */
+.as-hero {
+  padding-top: clamp(96px, 16vh, 180px);
+}
+
+.as-hero-title {
+  margin: 0;
+  max-width: 18ch;
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: clamp(2.4rem, 5.6vw, 4.5rem);
+  line-height: 1.04;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  text-wrap: balance;
+}
+
+.as-hero-sub {
+  margin: clamp(22px, 3vh, 32px) 0 0;
+  max-width: 58ch;
+  font-size: clamp(1.02rem, 1.4vw, 1.2rem);
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.as-ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: clamp(28px, 4vh, 40px);
+}
+
+.as-btn {
+  display: inline-flex;
+  align-items: center;
+  font-family: inherit;
+  font-size: 0.98rem;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  text-decoration: none;
+  color: var(--ink);
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 8px;
+  padding: 14px 22px;
+  transition: color 0.18s ease, background 0.18s ease, border-color 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.as-btn:hover {
+  border-color: var(--ink);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.as-btn-primary {
+  color: var(--page);
+  background: var(--ink);
+  border-color: var(--ink);
+}
+
+.as-btn-primary:hover {
+  color: #fff;
+  background: var(--accent);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.14);
+}
+
+.as-brandline {
+  margin: clamp(40px, 6vh, 64px) 0 0;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+@media (max-width: 540px) {
+  .as-btn {
+    width: 100%;
+    justify-content: center;
+    white-space: normal;
+    text-align: center;
+  }
+}
+
+/* ---- How it works: the pipeline figure ------------------------ */
+.pipe {
+  --pg: clamp(20px, 2.6vw, 40px);
+  --kernel: var(--accent);
+  margin: clamp(36px, 5vh, 56px) 0 0;
+  padding: clamp(20px, 3vw, 36px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.pipe-head {
+  margin: 0 0 clamp(20px, 3vh, 30px);
+  font-weight: 600;
+  font-size: 1.02rem;
+  color: var(--ink);
+}
+
+.pipe-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-areas:
+    "formalize investigate prove package"
+    ".         vlink       .     ."
+    ".         gate        hlink blocked";
+  column-gap: var(--pg);
+}
+
+.pipe-formalize { grid-area: formalize; }
+.pipe-investigate { grid-area: investigate; }
+.pipe-prove { grid-area: prove; }
+.pipe-package { grid-area: package; }
+.pipe-vlink { grid-area: vlink; }
+.pipe-gate { grid-area: gate; }
+.pipe-hlink { grid-area: hlink; }
+.pipe-blocked { grid-area: blocked; }
+
+.pipe-node {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px 16px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 10px;
+  background: var(--page);
+  opacity: 0.42;
+  transition: opacity 0.4s ease, border-color 0.4s ease, background 0.4s ease,
+    box-shadow 0.4s ease, transform 0.4s ease;
+}
+
+.pipe-node.is-kernel {
+  border-color: rgba(16, 185, 129, 0.45);
+  background: rgba(16, 185, 129, 0.05);
+}
+
+.pipe-node.is-done {
+  opacity: 1;
+}
+
+.pipe-node.is-active {
+  opacity: 1;
+  border-color: var(--ink);
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.06);
+  transform: translateY(-2px);
+}
+
+.pipe-node.is-kernel.is-active {
+  border-color: var(--kernel);
+  background: rgba(16, 185, 129, 0.12);
+  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.14), 0 0 28px rgba(16, 185, 129, 0.18);
+}
+
+.pipe-node.is-deny,
+.pipe-node.is-kernel.is-deny {
+  border-color: var(--color-red);
+  background: rgba(239, 68, 68, 0.1);
+  box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.16), 0 0 28px rgba(239, 68, 68, 0.2);
+  animation: pipe-shake 0.42s ease;
+}
+
+.pipe-node.is-blocked.is-active,
+.pipe-node.is-blocked.is-done {
+  border-color: rgba(239, 68, 68, 0.6);
+}
+
+.pipe-node.is-blocked.is-active {
+  background: rgba(239, 68, 68, 0.08);
+  box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.12);
+}
+
+.pipe-num {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.pipe-name {
+  font-weight: 600;
+  font-size: 0.98rem;
+  color: var(--ink);
+}
+
+.pipe-text {
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.62);
+}
+
+/* Arrows between the four stages: a hairline across the column gap. */
+.pipe-formalize::after,
+.pipe-investigate::after,
+.pipe-prove::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 100%;
+  width: var(--pg);
+  height: 1px;
+  background: linear-gradient(to right, rgba(255, 255, 255, 0.28) calc(100% - 7px), transparent 0);
+}
+
+.pipe-formalize::before,
+.pipe-investigate::before,
+.pipe-prove::before {
+  content: "";
+  position: absolute;
+  top: calc(50% - 4px);
+  left: calc(100% + var(--pg) - 7px);
+  border: 4px solid transparent;
+  border-left: 6px solid rgba(255, 255, 255, 0.4);
+}
+
+/* Investigate <-> gate: "each action" down, "allowed" back up. */
+.pipe-vlink {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  height: 64px;
+}
+
+.pipe-v {
+  position: relative;
+  display: flex;
+  align-items: center;
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  color: rgba(255, 255, 255, 0.4);
+  white-space: nowrap;
+  transition: color 0.3s ease;
+}
+
+.pipe-v::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.24);
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+.pipe-v-down {
+  flex-direction: row-reverse;
+  padding-right: 10px;
+}
+
+.pipe-v-down::before {
+  right: 0;
+}
+
+.pipe-v-up {
+  padding-left: 10px;
+}
+
+.pipe-v-up::before {
+  left: 0;
+}
+
+.pipe-v::after {
+  content: "";
+  position: absolute;
+  border: 4px solid transparent;
+}
+
+.pipe-v-down::after {
+  bottom: -2px;
+  right: -4px;
+  border-top: 6px solid rgba(255, 255, 255, 0.4);
+  border-bottom: 0;
+}
+
+.pipe-v-up::after {
+  top: -2px;
+  left: -4px;
+  border-bottom: 6px solid rgba(255, 255, 255, 0.4);
+  border-top: 0;
+}
+
+.pipe-v.is-pulse {
+  color: var(--ink);
+}
+
+.pipe-v.is-pulse::before {
+  background: var(--kernel);
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.7);
+}
+
+.pipe.is-denying .pipe-v-down.is-pulse::before {
+  background: var(--color-red);
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.7);
+}
+
+/* Gate -> blocked: spans the empty column and both gaps. */
+.pipe-hlink {
+  position: relative;
+  align-self: center;
+  margin-inline: calc(-1 * var(--pg));
+  height: 1px;
+  background: rgba(255, 255, 255, 0.2);
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+.pipe-hlink::after {
+  content: "";
+  position: absolute;
+  right: -1px;
+  top: -4px;
+  border: 4px solid transparent;
+  border-left: 6px solid rgba(255, 255, 255, 0.4);
+  border-right: 0;
+}
+
+.pipe-hlink span {
+  position: absolute;
+  left: 50%;
+  bottom: 8px;
+  transform: translateX(-50%);
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  white-space: nowrap;
+  color: rgba(255, 255, 255, 0.4);
+  transition: color 0.3s ease;
+}
+
+.pipe-hlink.is-pulse {
+  background: var(--color-red);
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.7);
+}
+
+.pipe-hlink.is-pulse span {
+  color: var(--color-red);
+}
+
+/* The narration under the boxes. */
+.pipe-log {
+  margin: clamp(22px, 3vh, 30px) 0 0;
+  padding: 14px 16px;
+  list-style: none;
+  min-height: calc(7 * 1.7em + 28px);
+  font-family: var(--mono);
+  font-size: 0.76rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.66);
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+}
+
+.pipe-log li {
+  display: flex;
+  gap: 12px;
+  opacity: 0;
+  transform: translateY(3px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.pipe-log li.is-shown {
+  opacity: 1;
+  transform: none;
+}
+
+.pipe-log-who {
+  flex: 0 0 4.6rem;
+  color: rgba(255, 255, 255, 0.38);
+}
+
+.pipe-log-text {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.pipe-log li.is-ok .pipe-log-text {
+  color: var(--accent);
+}
+
+.pipe-log li.is-deny .pipe-log-text {
+  color: var(--color-red);
+}
+
+.pipe-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.pipe-legend {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.pipe-swatch {
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+  border: 1px solid rgba(16, 185, 129, 0.6);
+  background: rgba(16, 185, 129, 0.12);
+}
+
+.pipe-replay {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 6px;
+  padding: 7px 12px;
+  transition: color 0.18s ease, border-color 0.18s ease, opacity 0.18s ease;
+}
+
+.pipe-replay:hover:not(:disabled) {
+  color: var(--ink);
+  border-color: var(--ink);
+}
+
+.pipe-replay:disabled {
+  opacity: 0.35;
+}
+
+@keyframes pipe-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  50% { transform: translateX(4px); }
+  75% { transform: translateX(-2px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pipe-node,
+  .pipe-log li {
+    transition: none;
+  }
+
+  .pipe-node.is-deny {
+    animation: none;
+  }
+}
+
+/* Narrow screens: one column. The gate and its blocked box sit side by
+   side under Investigate, then Prove and Package follow. */
+@media (max-width: 820px) {
+  .pipe-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-areas:
+      "formalize   formalize"
+      "investigate investigate"
+      "vlink       ."
+      "gate        blocked"
+      "prove       prove"
+      "package     package";
+    row-gap: 0;
+    column-gap: 12px;
+  }
+
+  .pipe-hlink {
+    display: none;
+  }
+
+  /* Both labels sit to the right of their lines, so neither runs off the
+     figure's left edge. */
+  .pipe-vlink {
+    height: 52px;
+    justify-content: flex-start;
+    gap: 14px;
+    padding-left: 28px;
+  }
+
+  .pipe-v-down {
+    flex-direction: row;
+    padding-right: 0;
+    padding-left: 10px;
+  }
+
+  .pipe-v-down::before {
+    right: auto;
+    left: 0;
+  }
+
+  .pipe-v-down::after {
+    right: auto;
+    left: -4px;
+  }
+
+  .pipe-gate,
+  .pipe-blocked {
+    margin-bottom: 28px;
+  }
+
+  .pipe-formalize,
+  .pipe-prove {
+    margin-bottom: 28px;
+  }
+
+  /* Stage arrows turn downward. */
+  .pipe-formalize::after,
+  .pipe-prove::after {
+    top: 100%;
+    left: 50%;
+    width: 1px;
+    height: 28px;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.28) calc(100% - 7px), transparent 0);
+  }
+
+  .pipe-formalize::before,
+  .pipe-prove::before {
+    top: calc(100% + 21px);
+    left: calc(50% - 4px);
+    border: 4px solid transparent;
+    border-top: 6px solid rgba(255, 255, 255, 0.4);
+    border-bottom: 0;
+  }
+
+  .pipe-investigate::after,
+  .pipe-investigate::before {
+    display: none;
+  }
+
+  .pipe-blocked .pipe-name::before {
+    content: "← out of scope";
+    display: block;
+    margin-bottom: 4px;
+    font-family: var(--mono);
+    font-size: 0.66rem;
+    font-weight: 400;
+    color: rgba(239, 68, 68, 0.8);
+  }
+
+  .pipe-log-who {
+    flex-basis: 3.8rem;
+  }
+}
+
+/* Captions under the figure: the same story, as text. */
+.as-captions {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(16px, 2.6vw, 40px);
+  margin: clamp(28px, 4vh, 40px) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.as-captions h3,
+.as-deliverable h3,
+.as-download h3,
+.as-limits h3 {
+  margin: 0;
+  font-size: 0.98rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.as-captions p,
+.as-deliverable p,
+.as-download p {
+  margin: 6px 0 0;
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.as-gate-caption {
+  margin: 20px 0 0;
+  max-width: 72ch;
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.as-gate-caption strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+@media (max-width: 900px) {
+  .as-captions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 520px) {
+  .as-captions {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.as-callout {
+  margin-top: clamp(36px, 5vh, 56px);
+  padding-left: clamp(16px, 2vw, 24px);
+  border-left: 2px solid var(--accent);
+}
+
+/* ---- What you get --------------------------------------------- */
+.as-get {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(24px, 4vw, 56px);
+  align-items: start;
+  margin-top: clamp(32px, 5vh, 48px);
+}
+
+.as-deliverable {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.as-deliverable li {
+  padding-block: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.as-verdict {
+  margin: 0;
+  min-width: 0;
+}
+
+.as-verdict figcaption {
+  margin-bottom: 10px;
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.as-verdict pre {
+  margin: 0;
+  padding: clamp(16px, 2vw, 22px);
+  overflow-x: auto;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.82);
+  background: rgba(54, 56, 60, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+}
+
+.as-note {
+  margin-top: clamp(28px, 4vh, 40px);
+}
+
+.as-download {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px clamp(24px, 4vw, 48px);
+  margin-top: clamp(32px, 5vh, 48px);
+  padding: clamp(20px, 3vw, 28px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+}
+
+.as-download p {
+  max-width: 60ch;
+}
+
+.as-download-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.as-demo {
+  margin: clamp(32px, 5vh, 48px) 0 0;
+}
+
+.as-demo-frame {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  background: #000;
+}
+
+.as-demo-frame iframe,
+.as-demo-frame video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.as-demo figcaption {
+  margin-top: 10px;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+@media (max-width: 860px) {
+  .as-get {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .as-download {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+/* ---- Human oversight: reuses .compare -------------------------- */
+.as-table tbody th {
+  width: 18%;
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.as-table tbody td:nth-child(2) {
+  width: 26%;
+}
+
+/* .compare stacks each row on phones; drop the desktop column widths. */
+@media (max-width: 720px) {
+  .as-table tbody th,
+  .as-table tbody td:nth-child(2) {
+    width: auto;
+  }
+}
+
+/* ---- The gated auditor ---------------------------------------- */
+.as-guards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 24px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.as-guards li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  font-size: 0.92rem;
+  color: var(--ink);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  border-radius: 8px;
+  background: rgba(16, 185, 129, 0.05);
+}
+
+.as-guards li::before {
+  content: "";
+  flex: 0 0 auto;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+@media (max-width: 520px) {
+  .as-guards {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ---- Coverage ------------------------------------------------- */
+.as-coverage {
+  width: 100%;
+  margin-top: clamp(28px, 4vh, 40px);
+  border-collapse: collapse;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.as-coverage th,
+.as-coverage td {
+  padding: 14px 20px 14px 0;
+  text-align: left;
+  vertical-align: top;
+  font-weight: 400;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.as-coverage thead th {
+  padding-top: 0;
+  border-top: 0;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.as-coverage tbody th {
+  width: 9rem;
+  font-family: var(--mono);
+  font-size: 0.88rem;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.as-coverage tbody td:nth-child(2) {
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.as-coverage tbody td:last-child,
+.as-coverage thead th:last-child {
+  width: 7rem;
+  padding-right: 0;
+  text-align: right;
+}
+
+.as-coverage tbody tr:last-child > * {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.as-status {
+  display: inline-block;
+  padding: 3px 9px;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.as-status.is-covered {
+  border-color: rgba(16, 185, 129, 0.5);
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--accent);
+}
+
+@media (max-width: 600px) {
+  .as-coverage tbody th {
+    width: auto;
+    white-space: normal;
+  }
+
+  .as-coverage thead th:nth-child(2) {
+    visibility: hidden;
+  }
+
+  .as-coverage tr {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    padding-block: 14px;
+  }
+
+  .as-coverage thead tr {
+    border-top: 0;
+    padding-top: 0;
+  }
+
+  .as-coverage th,
+  .as-coverage td,
+  .as-coverage tbody tr:last-child > * {
+    padding: 0;
+    border: 0;
+  }
+
+  .as-coverage tbody tr:last-child {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  }
+
+  .as-coverage tbody td:nth-child(2) {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    margin-top: 6px;
+  }
+
+  .as-coverage tbody td:last-child {
+    grid-column: 2;
+    grid-row: 1;
+    width: auto;
+  }
+
+  .as-coverage thead th:nth-child(2) {
+    display: none;
+  }
+}
+
+/* ---- Deployment and security ---------------------------------- */
+.as-qa {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 clamp(24px, 4vw, 56px);
+  margin: clamp(28px, 4vh, 40px) 0 0;
+}
+
+.as-qa > div {
+  padding-block: 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.as-qa dt {
+  font-weight: 600;
+  font-size: 0.98rem;
+  color: var(--ink);
+}
+
+.as-qa dd {
+  margin: 8px 0 0;
+  font-size: 0.94rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.66);
+}
+
+.as-limits {
+  margin-top: clamp(32px, 5vh, 48px);
+  padding: clamp(20px, 3vw, 28px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.as-limits ul {
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.as-limits li {
+  margin-top: 10px;
+  max-width: 80ch;
+  font-size: 0.94rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.66);
+}
+
+.as-limits strong {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+@media (max-width: 760px) {
+  .as-qa {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ---- Research ------------------------------------------------- */
+.as-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 24px;
+  margin: 24px 0 0;
+  font-size: 0.94rem;
+}
+
+/* ---- Pilot ---------------------------------------------------- */
+.as-pilot .as-head {
+  margin-bottom: clamp(18px, 2.5vh, 26px);
+}
+
+.as-pilot-list {
+  margin: 28px 0 0;
+}
+
+.as-pilot-list > div {
+  display: grid;
+  grid-template-columns: 6rem minmax(0, 1fr);
+  gap: 16px;
+  padding-block: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.as-pilot-list > div:last-child {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.as-pilot-list dt {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  line-height: 1.75;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.as-pilot-list dd {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--ink);
+}
+
+.pilot-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: clamp(22px, 3vw, 32px);
+  background: #14161a;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+}
+
+.pilot-form select {
+  font-family: inherit;
+  font-size: 0.98rem;
+  width: 100%;
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  padding: 11px 13px;
+  outline: none;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.pilot-form select:focus {
+  border-color: var(--accent);
+}
+
+.pilot-form option {
+  color: var(--color-ink);
+}
+
+.pilot-form input::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.pilot-hp {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.pilot-actions {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 4px;
+}
+
+.pilot-form .apply-error a,
+.pilot-done a {
+  color: inherit;
+}
+
+.pilot-done-title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.pilot-done-text {
+  margin: 0;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.66);
+}
+
+@media (max-width: 540px) {
+  .pilot-actions .apply-submit {
+    width: 100%;
+  }
+}

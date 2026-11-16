@@ -65,6 +65,16 @@ export const PAGES: Record<string, PageSeo> = {
     description:
       "Open roles at biject. Help us formalize the world's rules in Lean and compile them into decision kernels that are mathematically proven correct.",
   },
+  // Unlisted: sent by link only. noindex keeps it out of search results and
+  // the sitemap; robots.txt deliberately doesn't name it, since a Disallow
+  // line would advertise the path.
+  "/atlas": {
+    name: "Atlas",
+    title: "Biject Atlas | Audit agents for NIST controls",
+    description:
+      "Audit agents that collect evidence against NIST controls and return a signed, machine-checked verdict for every assessment objective.",
+    indexable: false,
+  },
 };
 
 const NOT_FOUND: PageSeo = {

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { Suspense, lazy, useEffect } from "react";
 import { About } from "./components/About";
 import { AizawaAttractor } from "./components/AizawaAttractor";
 import { Careers } from "./components/Careers";
@@ -11,6 +11,12 @@ import { ProofField } from "./components/ProofField";
 import { TopBar } from "./components/TopBar";
 import { findPost } from "./news";
 import { applySeo, routeKey } from "./seo";
+
+// Its own chunk, so the copy of an unlisted page doesn't ship in the bundle
+// every other page loads.
+const Atlas = lazy(() =>
+  import("./components/Atlas").then((m) => ({ default: m.Atlas })),
+);
 
 export default function App() {
   // Arriving at e.g. /#research from another page is a full navigation: the
@@ -52,6 +58,14 @@ export default function App() {
   }
   if (path === "/careers" || path === "/careers/") {
     return <Careers />;
+  }
+  // Unlisted: no page on the site links here (see Atlas.tsx).
+  if (key === "/atlas") {
+    return (
+      <Suspense fallback={null}>
+        <Atlas />
+      </Suspense>
+    );
   }
   if (path !== "/") {
     return <NotFound />;
