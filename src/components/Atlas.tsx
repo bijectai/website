@@ -1,5 +1,6 @@
 import { AtlasPipeline } from "./AtlasPipeline";
 import { Footer } from "./Footer";
+import { ProofField } from "./ProofField";
 import { TopBar, type NavLink } from "./TopBar";
 import "../atlas.css";
 
@@ -230,6 +231,8 @@ const PILOT = [
 export function Atlas() {
   return (
     <>
+      {/* The site's background type, same as every other page. */}
+      <ProofField />
       <div className="topbar-gap" aria-hidden="true" />
       <TopBar links={NAV} cta={PILOT_CTA} />
 
