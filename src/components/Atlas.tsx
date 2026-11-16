@@ -1,6 +1,6 @@
 import { AtlasPipeline } from "./AtlasPipeline";
 import { Footer } from "./Footer";
-import { PilotForm } from "./PilotForm";
+import { ProofField } from "./ProofField";
 import { TopBar, type NavLink } from "./TopBar";
 import "../atlas.css";
 
@@ -62,7 +62,34 @@ const NAV: NavLink[] = [
   { href: "#coverage", label: "Coverage" },
 ];
 
-const PILOT_CTA: NavLink = { href: "#pilot", label: "Scope a pilot" };
+/**
+ * Every "Scope a pilot" button opens an email to the team, pre-filled with
+ * the four things the spec asks a pilot request for. No form, no backend.
+ */
+const PILOT_EMAIL = "dev@bijectai.com";
+const PILOT_MAILTO =
+  `mailto:${PILOT_EMAIL}?` +
+  [
+    ["subject", "Atlas pilot request"],
+    [
+      "body",
+      [
+        "Hi Biject team,",
+        "",
+        "We'd like to scope an Atlas pilot.",
+        "",
+        "Name:",
+        "Organization:",
+        "Framework we answer to (800-53, 800-171/CMMC, AI RMF, other):",
+        "Type of system:",
+        "",
+      ].join("\r\n"),
+    ],
+  ]
+    .map(([k, v]) => `${k}=${encodeURIComponent(v)}`)
+    .join("&");
+
+const PILOT_CTA: NavLink = { href: PILOT_MAILTO, label: "Scope a pilot" };
 
 const CAPTIONS = [
   {
@@ -204,6 +231,8 @@ const PILOT = [
 export function Atlas() {
   return (
     <>
+      {/* The site's background type, same as every other page. */}
+      <ProofField />
       <div className="topbar-gap" aria-hidden="true" />
       <TopBar links={NAV} cta={PILOT_CTA} />
 
@@ -221,14 +250,13 @@ export function Atlas() {
               machine-checked verdict for every assessment objective.
             </p>
             <div className="as-ctas">
-              <a className="as-btn as-btn-primary" href="#pilot">
+              <a className="as-btn as-btn-primary" href={PILOT_MAILTO}>
                 Scope a pilot
               </a>
               <a className="as-btn" href="#sample">
                 See a sample evidence package
               </a>
             </div>
-            <p className="as-brandline">Proof, not probability.</p>
           </div>
         </section>
 
@@ -585,7 +613,20 @@ export function Atlas() {
                 ))}
               </dl>
             </div>
-            <PilotForm />
+            <div className="as-email">
+              <p className="as-email-label">Scope a pilot by email</p>
+              <p className="as-email-text">
+                Tell us your name, organization, the framework you answer to
+                (800-53, 800-171/CMMC, AI RMF or other) and the type of system.
+                The button opens an email with those questions filled in.
+              </p>
+              <a className="as-btn as-btn-primary" href={PILOT_MAILTO}>
+                Email {PILOT_EMAIL}
+              </a>
+              <p className="as-email-alt">
+                No email app? Write to <span className="as-email-addr">{PILOT_EMAIL}</span>.
+              </p>
+            </div>
           </div>
         </section>
       </main>

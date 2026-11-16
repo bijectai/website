@@ -1823,9 +1823,12 @@ button:disabled {
 }
 
 /* ============================================================
-   Default 404 page — centered white text on the black page.
+   Default 404 page — centered white text over the background type.
    ============================================================ */
 .notfound {
+  /* Above the ProofField, like every page's <main>. */
+  position: relative;
+  z-index: 1;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -1841,6 +1844,13 @@ button:disabled {
   color: var(--ink);
   font-size: clamp(20px, 4vw, 32px);
   font-weight: 500;
+}
+
+/* Sits close under the 404, then the usual gap before the link home. */
+.notfound-sub {
+  margin: -16px 0 0;
+  font-size: clamp(0.95rem, 1.4vw, 1.05rem);
+  color: rgba(255, 255, 255, 0.6);
 }
 
 /* A 404 with no way out is a dead end for readers and crawlers alike. */
